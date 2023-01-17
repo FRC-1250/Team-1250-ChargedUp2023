@@ -23,5 +23,8 @@ public final class Constants {
   //Elevator 
   public static final int ElevatorSpark_CAN_ID = 9; 
   public static final int Elevator_CAN_ID = 10;
+
+  public static final int MIN_COMPRESSOR_PRESSURE = 100;
+  public static final int MAX_COMPRESSOR_PRESSURE = 120;
   
 }
