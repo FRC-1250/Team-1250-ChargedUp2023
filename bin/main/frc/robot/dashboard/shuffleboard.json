@@ -1,0 +1,151 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Pose",
+              "_title": "Pose"
+            }
+          },
+          "6,0": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.0 Front left module current state",
+              "_title": "2.0 Front left module current state"
+            }
+          },
+          "2,0": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.0 Front left module desired state",
+              "_title": "2.0 Front left module desired state"
+            }
+          },
+          "6,1": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.1 Front right module current state",
+              "_title": "2.1 Front right module current state"
+            }
+          },
+          "2,1": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.1 Front right module desired state",
+              "_title": "2.1 Front right module desired state"
+            }
+          },
+          "6,2": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.2 Rear left module current state",
+              "_title": "2.2 Rear left module current state"
+            }
+          },
+          "2,2": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.2 Rear left module desired state",
+              "_title": "2.2 Rear left module desired state"
+            }
+          },
+          "6,3": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.3 Rear right module current state",
+              "_title": "2.3 Rear right module current state"
+            }
+          },
+          "2,3": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/2.3 Rear right module desired state",
+              "_title": "2.3 Rear right module desired state"
+            }
+          },
+          "0,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Pigeon heading",
+              "_title": "Pigeon heading",
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -6.400000095367432,
+    "y": -6.400000095367432,
+    "width": 1472.800048828125,
+    "height": 876.7999877929688
+  }
+}

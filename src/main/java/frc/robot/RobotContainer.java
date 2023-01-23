@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DriveSwerve;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,6 +31,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Elevator elevator = new Elevator();
   private final RevPneumaticModule revPneumaticModule = new RevPneumaticModule(Constants.MIN_COMPRESSOR_PRESSURE, Constants.MAX_COMPRESSOR_PRESSURE);
+<<<<<<< Updated upstream
+=======
+  private final Limelight limelight = new Limelight();
+  private final XboxController xboxController = new XboxController(0);
+  private final JoystickButton rbumper = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
+  private final Drivetrain m_swerve = new Drivetrain();
+>>>>>>> Stashed changes
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -34,10 +46,6 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-  }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
@@ -53,8 +61,31 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
 
+
+
+   public RobotContainer() {
+    configureButtonBindings();
+    m_swerve.setDefaultCommand(
+            new DriveSwerve(
+                    xboxController::getRightBumper,
+                    0.75,
+                    xboxController::getLeftY,
+                    xboxController::getLeftX,
+                    xboxController::getRightX,
+                    true,
+                    m_swerve));
+}
+/**
+ * Use this method to define your button->command mappings. Buttons can be
+ * created by
+ * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+ * subclasses ({@link
+ * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
+ * passing it to a
+ * {@link JoystickButton}.
+ */
+  private void configureButtonBindings() {
   }
 
   /**
