@@ -13,8 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -50,38 +48,38 @@ public class Drivetrain extends SubsystemBase {
   public static final double maxDriveAcceleration = 2.0575;
 
   private final SwerveModuleTalonFX frontLeftModule = new SwerveModuleTalonFX(
-      Constants.FRONT_LEFT_DRIVE_TALON_CAN_ID,
-      Constants.FRONT_LEFT_TURNING_TALON_CAN_ID,
-      Constants.FRONT_LEFT_CANCODER_CAN_ID,
-      Constants.FRONT_LEFT_CANCODER_OFFSET);
+      Constants.Drivetrain.FRONT_LEFT_DRIVE_TALON_CAN_ID,
+      Constants.Drivetrain.FRONT_LEFT_TURNING_TALON_CAN_ID,
+      Constants.Drivetrain.FRONT_LEFT_CANCODER_CAN_ID,
+      Constants.Drivetrain.FRONT_LEFT_CANCODER_OFFSET);
 
   private final SwerveModuleTalonFX frontRightModule = new SwerveModuleTalonFX(
-      Constants.FRONT_RIGHT_DRIVE_TALON_CAN_ID,
-      Constants.FRONT_RIGHT_TURNING_TALON_CAN_ID,
-      Constants.FRONT_RIGHT_CANCODER_CAN_ID,
-      Constants.FRONT_RIGHT_CANCODER_OFFSET);
+      Constants.Drivetrain.FRONT_RIGHT_DRIVE_TALON_CAN_ID,
+      Constants.Drivetrain.FRONT_RIGHT_TURNING_TALON_CAN_ID,
+      Constants.Drivetrain.FRONT_RIGHT_CANCODER_CAN_ID,
+      Constants.Drivetrain.FRONT_RIGHT_CANCODER_OFFSET);
 
   private final SwerveModuleTalonFX rearLeftModule = new SwerveModuleTalonFX(
-      Constants.REAR_LEFT_DRIVE_TALON_CAN_ID,
-      Constants.REAR_LEFT_TURNING_TALON_CAN_ID,
-      Constants.REAR_LEFT_CANCODER_CAN_ID,
-      Constants.REAR_LEFT_CANCODER_OFFSET);
+      Constants.Drivetrain.REAR_LEFT_DRIVE_TALON_CAN_ID,
+      Constants.Drivetrain.REAR_LEFT_TURNING_TALON_CAN_ID,
+      Constants.Drivetrain.REAR_LEFT_CANCODER_CAN_ID,
+      Constants.Drivetrain.REAR_LEFT_CANCODER_OFFSET);
 
   private final SwerveModuleTalonFX rearRightModule = new SwerveModuleTalonFX(
-      Constants.REAR_RIGHT_DRIVE_TALON_CAN_ID,
-      Constants.REAR_RIGHT_TURNING_TALON_CAN_ID,
-      Constants.REAR_RIGHT_CANCODER_CAN_ID,
-      Constants.REAR_RIGHT_CANCODER_OFFSET);
+      Constants.Drivetrain.REAR_RIGHT_DRIVE_TALON_CAN_ID,
+      Constants.Drivetrain.REAR_RIGHT_TURNING_TALON_CAN_ID,
+      Constants.Drivetrain.REAR_RIGHT_CANCODER_CAN_ID,
+      Constants.Drivetrain.REAR_RIGHT_CANCODER_OFFSET);
 
   private final WPI_Pigeon2 pidgey = new WPI_Pigeon2(
-      Constants.PIDGEON_CAN_ID,
+      Constants.Drivetrain.PIDGEON_CAN_ID,
       Constants.CANIVORE_BUS_NAME);
 
   public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-      Constants.FRONT_LEFT_MODULE_LOCATION,
-      Constants.FRONT_RIGHT_MODULE_LOCATION,
-      Constants.REAR_LEFT_MODULE_LOCATION,
-      Constants.REAR_RIGHT_MODULE_LOCATION);
+      Constants.Drivetrain.FRONT_LEFT_MODULE_LOCATION,
+      Constants.Drivetrain.FRONT_RIGHT_MODULE_LOCATION,
+      Constants.Drivetrain.REAR_LEFT_MODULE_LOCATION,
+      Constants.Drivetrain.REAR_RIGHT_MODULE_LOCATION);
 
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       kinematics, pidgey.getRotation2d(),
