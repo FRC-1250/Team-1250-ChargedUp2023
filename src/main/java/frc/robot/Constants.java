@@ -14,6 +14,14 @@ public final class Constants {
   public static final int TALONFX_PRIMARY_PID_LOOP_ID = 0;
   public static final int TALONFX_SECONDARY_PID_LOOP_ID = 1;
 
+  public static final class Arm {
+    public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 0.0, 0.0);
+    public static final int TALON_CAN_ID = 0;
+    public static final int BRAKE_SOLENOID_PORT = 0;
+    public static final int ANGLE_SOLENOID_PORT = 0;
+    public static final int LIMIT_SWITCH_PORT = 0;
+  }
+
   public final static class RevPneumaticModule {
     public static final int MIN_COMPRESSOR_PRESSURE = 100;
     public static final int MAX_COMPRESSOR_PRESSURE = 120;
