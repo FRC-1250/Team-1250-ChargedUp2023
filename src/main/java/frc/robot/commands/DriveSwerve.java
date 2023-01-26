@@ -10,6 +10,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveSwerve extends CommandBase {
@@ -61,9 +62,9 @@ public class DriveSwerve extends CommandBase {
     ySpeed = m_yspeedLimiter.calculate(ySpeed);
     rotSpeed = m_rotLimiter.calculate(rotSpeed);
 
-    xSpeed = xSpeed * Drivetrain.maxDriveSpeed;
-    ySpeed = ySpeed * Drivetrain.maxDriveSpeed;
-    rotSpeed = rotSpeed * Drivetrain.maxTurningSpeed;
+    xSpeed = xSpeed * Constants.Drivetrain.MAX_DRIVE_SPEED;
+    ySpeed = ySpeed * Constants.Drivetrain.MAX_DRIVE_SPEED;
+    rotSpeed = rotSpeed * Constants.Drivetrain.MAX_DRIVE_SPEED;
 
     drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
   }

@@ -19,34 +19,6 @@ import frc.robot.Constants;
 import frc.robot.modules.SwerveModuleTalonFX;
 
 public class Drivetrain extends SubsystemBase {
-  /**
-   * The maxmimum velocity that the swerve modules is capable of in meters per
-   * second (m/s).
-   * This value can be derived mathimatically OR will be available from the
-   * manufacturer of the
-   * swerve module.
-   * 
-   * @see <a href=
-   *      "https://www.swervedrivespecialties.com/products/mk4-swerve-module">MK4
-   *      Swerve Module L1 - Standard </a>
-   */
-  public static final double maxDriveSpeed = 4.115;
-
-  /**
-   * The maxmimum angular velocity that the swerve module is capable of in
-   * rotations per second.
-   * This value is easy to represent as some multiple of PI.
-   * <p>
-   * For example: 2 * Math.PI is 1 rotation per second.
-   * Other options (2, 3, 4, 6, 2pi)
-   */
-  public static final double maxTurningSpeed = Math.PI; // rotation per second
-
-  /**
-   * The acceleration of the swerve module.
-   */
-  public static final double maxDriveAcceleration = 2.0575;
-
   private final SwerveModuleTalonFX frontLeftModule = new SwerveModuleTalonFX(
       Constants.Drivetrain.FRONT_LEFT_DRIVE_TALON_CAN_ID,
       Constants.Drivetrain.FRONT_LEFT_TURNING_TALON_CAN_ID,
@@ -75,14 +47,8 @@ public class Drivetrain extends SubsystemBase {
       Constants.Drivetrain.PIDGEON_CAN_ID,
       Constants.CANIVORE_BUS_NAME);
 
-  public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-      Constants.Drivetrain.FRONT_LEFT_MODULE_LOCATION,
-      Constants.Drivetrain.FRONT_RIGHT_MODULE_LOCATION,
-      Constants.Drivetrain.REAR_LEFT_MODULE_LOCATION,
-      Constants.Drivetrain.REAR_RIGHT_MODULE_LOCATION);
-
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
-      kinematics, pidgey.getRotation2d(),
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+      Constants.Drivetrain.KINEMATICS, pidgey.getRotation2d(),
       new SwerveModulePosition[] {
           frontLeftModule.getPosition(),
           frontRightModule.getPosition(),
@@ -113,7 +79,7 @@ public class Drivetrain extends SubsystemBase {
       speeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
     }
 
-    setModuleStates(kinematics.toSwerveModuleStates(speeds));
+    setModuleStates(Constants.Drivetrain.KINEMATICS.toSwerveModuleStates(speeds));
   }
 
   /**
@@ -122,7 +88,7 @@ public class Drivetrain extends SubsystemBase {
    * @param desiredStates The desired SwerveModule states.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxDriveSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Drivetrain.MAX_DRIVE_SPEED);
 
     frontLeftModule.setDesiredState(desiredStates[0]);
     SmartDashboard.putString("2.0 Front left module current state", frontLeftModule.getState().toString());
@@ -170,12 +136,17 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    /* odometry.resetPosition(pose, pidgey.getRotation2d()); */
+    odometry.resetPosition(pidgey.getRotation2d(), new SwerveModulePosition[] {
+        frontLeftModule.getPosition(),
+        frontRightModule.getPosition(),
+        rearLeftModule.getPosition(),
+        rearLeftModule.getPosition()
+    }, pose);
   }
 
   @Override
   public void periodic() { // Update the pose
-    Pose2d m_pose = m_odometry.update(pidgey.getRotation2d(),
+    Pose2d m_pose = odometry.update(pidgey.getRotation2d(),
         new SwerveModulePosition[] {
             frontLeftModule.getPosition(), frontRightModule.getPosition(),
             rearLeftModule.getPosition(), rearRightModule.getPosition()
@@ -185,6 +156,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putString("Pose",
         String.format("X: %.2f, Y: %.2f, Deg: %.2f ", m_pose.getX(), m_pose.getY(), m_pose.getRotation().getDegrees()));
     SmartDashboard.putString("Pose in inches",
-        String.format("X: %.2f, Y: %.2f, Deg: %.2f ", Units.metersToInches(m_pose.getX()), Units.metersToInches(m_pose.getY()), m_pose.getRotation().getDegrees()));
+        String.format("X: %.2f, Y: %.2f, Deg: %.2f ", Units.metersToInches(m_pose.getX()),
+            Units.metersToInches(m_pose.getY()), m_pose.getRotation().getDegrees()));
   }
 }

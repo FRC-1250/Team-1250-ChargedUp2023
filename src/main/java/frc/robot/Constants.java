@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.util.PIDGains;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -36,11 +38,39 @@ public final class Constants {
 
   public final static class Drivetrain {
     /**
+     * The maxmimum velocity that the swerve modules is capable of in meters per
+     * second (m/s).
+     * This value can be derived mathimatically OR will be available from the
+     * manufacturer of the
+     * swerve module.
+     * 
+     * @see <a href=
+     *      "https://www.swervedrivespecialties.com/products/mk4-swerve-module">MK4
+     *      Swerve Module L1 - Standard </a>
+     */
+    public static final double MAX_DRIVE_SPEED = 4.115;
+
+    /**
+     * The maxmimum angular velocity that the swerve module is capable of in
+     * rotations per second.
+     * This value is easy to represent as some multiple of PI.
+     * <p>
+     * For example: 2 * Math.PI is 1 rotation per second.
+     * Other options (2, 3, 4, 6, 2pi)
+     */
+    public static final double MAX_TURNING_SPEED = Math.PI; // rotation per second
+
+    /**
+     * The acceleration of the swerve module.
+     */
+    public static final double MAX_DRIVE_ACCELERATION = 2.0575;
+
+    /**
      * The disatance between the centers of the right and left wheels on the robot.
      * This value must be in the same unit as {@wheelBase}.
      */
-
     private static final double TRACK_WIDTH = Units.inchesToMeters(32);
+
     /**
      * The distance between the front and back wheels on the robot.
      * This value must be in the same unit as {@trackWidth}.
@@ -51,6 +81,15 @@ public final class Constants {
     public static final Translation2d FRONT_RIGHT_MODULE_LOCATION = new Translation2d(WHEELBASE / 2, -TRACK_WIDTH / 2);
     public static final Translation2d REAR_LEFT_MODULE_LOCATION = new Translation2d(-WHEELBASE / 2, TRACK_WIDTH / 2);
     public static final Translation2d REAR_RIGHT_MODULE_LOCATION = new Translation2d(-WHEELBASE / 2, -TRACK_WIDTH / 2);
+
+    public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
+        FRONT_LEFT_MODULE_LOCATION,
+        FRONT_RIGHT_MODULE_LOCATION,
+        REAR_LEFT_MODULE_LOCATION,
+        REAR_RIGHT_MODULE_LOCATION);
+
+    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_DRIVE_SPEED,
+        MAX_DRIVE_ACCELERATION).setKinematics(KINEMATICS);
 
     public static final int FRONT_LEFT_TURNING_TALON_CAN_ID = 17;
     public static final int FRONT_LEFT_DRIVE_TALON_CAN_ID = 18;
