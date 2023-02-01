@@ -26,19 +26,19 @@ public final class Constants {
     public static final int AMP_RESET_THRESHOLD = 10;
   }
 
-  public final static class RevPneumaticModule {
+  public final static class RevPneumaticModuleCalibration {
     public static final int MIN_COMPRESSOR_PRESSURE = 100;
     public static final int MAX_COMPRESSOR_PRESSURE = 120;
   }
 
-  public final static class Elevator {
+  public final static class ElevatorCalibration {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 0.0, 0.0);
     public static final int TALON_CAN_ID = 0;
     public static final int BRAKE_SOLENOID_PORT = 2;
     public static final int LIMIT_SWITCH_PORT = 3;
   }
 
-  public final static class Drivetrain {
+  public final static class DrivetrainCalibration {
     /**
      * The maxmimum velocity that the swerve modules is capable of in meters per
      * second (m/s).

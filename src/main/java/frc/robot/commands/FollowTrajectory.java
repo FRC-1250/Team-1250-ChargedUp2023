@@ -54,7 +54,7 @@ public class FollowTrajectory extends CommandBase {
 
     desiredState = (PathPlannerState) trajectory.sample(timer.get());
     desiredChasisSpeeds = this.controller.calculate(pose, desiredState);
-    drivetrain.setModuleStates(Constants.Drivetrain.KINEMATICS.toSwerveModuleStates(desiredChasisSpeeds));
+    drivetrain.setModuleStates(Constants.DrivetrainCalibration.KINEMATICS.toSwerveModuleStates(desiredChasisSpeeds));
   }
 
   @Override

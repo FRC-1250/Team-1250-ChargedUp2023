@@ -27,8 +27,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final Elevator elevator = new Elevator();
   private final RevPneumaticModule revPneumaticModule = new RevPneumaticModule(
-      Constants.RevPneumaticModule.MIN_COMPRESSOR_PRESSURE,
-      Constants.RevPneumaticModule.MAX_COMPRESSOR_PRESSURE);
+      Constants.RevPneumaticModuleCalibration.MIN_COMPRESSOR_PRESSURE,
+      Constants.RevPneumaticModuleCalibration.MAX_COMPRESSOR_PRESSURE);
   private final Limelight limelight = new Limelight();
   private final Arm arm = new Arm();
 

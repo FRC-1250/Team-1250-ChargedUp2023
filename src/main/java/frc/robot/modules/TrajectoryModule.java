@@ -91,7 +91,7 @@ public class TrajectoryModule {
 
     private PathPlannerTrajectory getStraightAndRotateCCW() {
       return PathPlanner.generatePath(
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION),
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION),
           new PathPoint(new Translation2d(3, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
           new PathPoint(new Translation2d(5, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45)),
           new PathPoint(new Translation2d(7, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(90)));
@@ -99,14 +99,14 @@ public class TrajectoryModule {
 
     private PathPlannerTrajectory getStraight() {
       return PathPlanner.generatePath(
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION),
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION),
           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
           new PathPoint(new Translation2d(2, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)));
     }
 
     private PathPlannerTrajectory getSnake() {
       return PathPlanner.generatePath(
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION),
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION),
           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
           new PathPoint(new Translation2d(1, 1), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
           new PathPoint(new Translation2d(2, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
@@ -115,7 +115,7 @@ public class TrajectoryModule {
 
     private PathPlannerTrajectory getFigureEight() {
       return PathPlanner.generatePath(
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION),
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION),
           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
           new PathPoint(new Translation2d(1, 1), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
           new PathPoint(new Translation2d(2, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
@@ -128,23 +128,23 @@ public class TrajectoryModule {
 
     private PathPlannerTrajectory getForwardsTwo() {
       return PathPlanner.loadPath("Forward Two Meters",
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION));
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
     }
     private PathPlannerTrajectory getBackwardsTwo() {
       return PathPlanner.loadPath("Back Two Meters",
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION));
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
     }
     private PathPlannerTrajectory getCornerTurn() {
       return PathPlanner.loadPath("Corner Turn",
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION));
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
     }
     private PathPlannerTrajectory getCCWRotation() {
       return PathPlanner.loadPath("CCW Rotation & Transition",
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION));
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
     }
     private PathPlannerTrajectory getTestingPath() {
       return PathPlanner.loadPath("Testing Path",
-          new PathConstraints(Constants.Drivetrain.MAX_AUTO_DRIVE_SPEED, Constants.Drivetrain.MAX_DRIVE_ACCELERATION));
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
     }
   }
 }

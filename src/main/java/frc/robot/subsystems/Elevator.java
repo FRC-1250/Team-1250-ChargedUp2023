@@ -25,17 +25,17 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  private WPI_TalonFX ElevatorTalon = new WPI_TalonFX(Constants.Elevator.TALON_CAN_ID);
-  private Solenoid ElevatorBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.Elevator.BRAKE_SOLENOID_PORT);
-  private DigitalInput ElevatorLimitswitch = new DigitalInput(Constants.Elevator.LIMIT_SWITCH_PORT);
+  private WPI_TalonFX ElevatorTalon = new WPI_TalonFX(Constants.ElevatorCalibration.TALON_CAN_ID);
+  private Solenoid ElevatorBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorCalibration.BRAKE_SOLENOID_PORT);
+  private DigitalInput ElevatorLimitswitch = new DigitalInput(Constants.ElevatorCalibration.LIMIT_SWITCH_PORT);
 
   /** Creates a new Elevator. */
   public Elevator() {
-    ElevatorTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Elevator.PID_GAINS.kP,
+    ElevatorTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ElevatorCalibration.PID_GAINS.kP,
         Constants.CONFIG_TIMEOUT_MS);
-    ElevatorTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Elevator.PID_GAINS.kI,
+    ElevatorTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ElevatorCalibration.PID_GAINS.kI,
         Constants.CONFIG_TIMEOUT_MS);
-    ElevatorTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Elevator.PID_GAINS.kD,
+    ElevatorTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ElevatorCalibration.PID_GAINS.kD,
         Constants.CONFIG_TIMEOUT_MS);
   }
 

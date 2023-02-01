@@ -62,9 +62,9 @@ public class DriveSwerve extends CommandBase {
     ySpeed = m_yspeedLimiter.calculate(ySpeed);
     rotSpeed = m_rotLimiter.calculate(rotSpeed);
 
-    xSpeed = xSpeed * Constants.Drivetrain.MAX_DRIVE_SPEED;
-    ySpeed = ySpeed * Constants.Drivetrain.MAX_DRIVE_SPEED;
-    rotSpeed = rotSpeed * Constants.Drivetrain.MAX_DRIVE_SPEED;
+    xSpeed = xSpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
+    ySpeed = ySpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
+    rotSpeed = rotSpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
 
     drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
   }

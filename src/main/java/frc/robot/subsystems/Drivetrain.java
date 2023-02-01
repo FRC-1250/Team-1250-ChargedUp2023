@@ -20,35 +20,35 @@ import frc.robot.modules.SwerveModuleTalonFX;
 
 public class Drivetrain extends SubsystemBase {
   private final SwerveModuleTalonFX frontLeftModule = new SwerveModuleTalonFX(
-      Constants.Drivetrain.FRONT_LEFT_DRIVE_TALON_CAN_ID,
-      Constants.Drivetrain.FRONT_LEFT_TURNING_TALON_CAN_ID,
-      Constants.Drivetrain.FRONT_LEFT_CANCODER_CAN_ID,
-      Constants.Drivetrain.FRONT_LEFT_CANCODER_OFFSET);
+      Constants.DrivetrainCalibration.FRONT_LEFT_DRIVE_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.FRONT_LEFT_TURNING_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.FRONT_LEFT_CANCODER_CAN_ID,
+      Constants.DrivetrainCalibration.FRONT_LEFT_CANCODER_OFFSET);
 
   private final SwerveModuleTalonFX frontRightModule = new SwerveModuleTalonFX(
-      Constants.Drivetrain.FRONT_RIGHT_DRIVE_TALON_CAN_ID,
-      Constants.Drivetrain.FRONT_RIGHT_TURNING_TALON_CAN_ID,
-      Constants.Drivetrain.FRONT_RIGHT_CANCODER_CAN_ID,
-      Constants.Drivetrain.FRONT_RIGHT_CANCODER_OFFSET);
+      Constants.DrivetrainCalibration.FRONT_RIGHT_DRIVE_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.FRONT_RIGHT_TURNING_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.FRONT_RIGHT_CANCODER_CAN_ID,
+      Constants.DrivetrainCalibration.FRONT_RIGHT_CANCODER_OFFSET);
 
   private final SwerveModuleTalonFX rearLeftModule = new SwerveModuleTalonFX(
-      Constants.Drivetrain.REAR_LEFT_DRIVE_TALON_CAN_ID,
-      Constants.Drivetrain.REAR_LEFT_TURNING_TALON_CAN_ID,
-      Constants.Drivetrain.REAR_LEFT_CANCODER_CAN_ID,
-      Constants.Drivetrain.REAR_LEFT_CANCODER_OFFSET);
+      Constants.DrivetrainCalibration.REAR_LEFT_DRIVE_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.REAR_LEFT_TURNING_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.REAR_LEFT_CANCODER_CAN_ID,
+      Constants.DrivetrainCalibration.REAR_LEFT_CANCODER_OFFSET);
 
   private final SwerveModuleTalonFX rearRightModule = new SwerveModuleTalonFX(
-      Constants.Drivetrain.REAR_RIGHT_DRIVE_TALON_CAN_ID,
-      Constants.Drivetrain.REAR_RIGHT_TURNING_TALON_CAN_ID,
-      Constants.Drivetrain.REAR_RIGHT_CANCODER_CAN_ID,
-      Constants.Drivetrain.REAR_RIGHT_CANCODER_OFFSET);
+      Constants.DrivetrainCalibration.REAR_RIGHT_DRIVE_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.REAR_RIGHT_TURNING_TALON_CAN_ID,
+      Constants.DrivetrainCalibration.REAR_RIGHT_CANCODER_CAN_ID,
+      Constants.DrivetrainCalibration.REAR_RIGHT_CANCODER_OFFSET);
 
   private final WPI_Pigeon2 pidgey = new WPI_Pigeon2(
-      Constants.Drivetrain.PIDGEON_CAN_ID,
+      Constants.DrivetrainCalibration.PIDGEON_CAN_ID,
       Constants.CANIVORE_BUS_NAME);
 
   private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      Constants.Drivetrain.KINEMATICS, pidgey.getRotation2d(),
+      Constants.DrivetrainCalibration.KINEMATICS, pidgey.getRotation2d(),
       new SwerveModulePosition[] {
           frontLeftModule.getPosition(),
           frontRightModule.getPosition(),
@@ -79,7 +79,7 @@ public class Drivetrain extends SubsystemBase {
       speeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
     }
 
-    setModuleStates(Constants.Drivetrain.KINEMATICS.toSwerveModuleStates(speeds));
+    setModuleStates(Constants.DrivetrainCalibration.KINEMATICS.toSwerveModuleStates(speeds));
   }
 
   /**
@@ -88,7 +88,7 @@ public class Drivetrain extends SubsystemBase {
    * @param desiredStates The desired SwerveModule states.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Drivetrain.MAX_DRIVE_SPEED);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DrivetrainCalibration.MAX_DRIVE_SPEED);
 
     frontLeftModule.setDesiredState(desiredStates[0]);
     SmartDashboard.putString("2.0 Front left module current state", frontLeftModule.getState().toString());
