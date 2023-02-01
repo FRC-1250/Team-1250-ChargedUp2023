@@ -40,6 +40,7 @@ public class SwerveModuleTalonFX {
         driveTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Drivetrain.DRIVE_TALON_VELOCITY_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Drivetrain.DRIVE_TALON_VELOCITY_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.setNeutralMode(NeutralMode.Brake);
+        driveTalon.setSelectedSensorPosition(0, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
     }
 
     private void configureCanCoder(double canCoderOffsetDegrees) {
@@ -61,7 +62,6 @@ public class SwerveModuleTalonFX {
         turningTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Drivetrain.TURNING_TALON_POSITION_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Drivetrain.TURNING_TALON_POSITION_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Drivetrain.TURNING_TALON_POSITION_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
-        turningTalon.setNeutralMode(NeutralMode.Coast);
     }
 
     public SwerveModuleState getState() {
@@ -74,7 +74,10 @@ public class SwerveModuleTalonFX {
         double mk4iL1DriveRatio = 1 / 8.14; // Drive gear ratio for SES mk4i module
         double RotationToDistanceMath = 2*Math.PI*wheelRadius/talonFXintegratedSensorResolution*mk4iL1DriveRatio;
         return new SwerveModulePosition(driveTalon.getSelectedSensorPosition() * RotationToDistanceMath, getFromHeading());
+    }
     
+    public void resetPosition() {
+        driveTalon.setSelectedSensorPosition(0, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
     }
 
     public void setDesiredState(SwerveModuleState desiredState) {

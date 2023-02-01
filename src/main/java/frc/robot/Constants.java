@@ -8,6 +8,7 @@ import frc.robot.util.PIDGains;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -16,12 +17,13 @@ public final class Constants {
   public static final int TALONFX_PRIMARY_PID_LOOP_ID = 0;
   public static final int TALONFX_SECONDARY_PID_LOOP_ID = 1;
 
-  public static final class Arm {
+  public static final class ArmCalibrations {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 0.0, 0.0);
-    public static final int TALON_CAN_ID = 0;
+    public static final int TALON_CAN_ID = 46;
     public static final int BRAKE_SOLENOID_PORT = 0;
-    public static final int ANGLE_SOLENOID_PORT = 0;
+    public static final int ANGLE_SOLENOID_PORT = 1;
     public static final int LIMIT_SWITCH_PORT = 0;
+    public static final int AMP_RESET_THRESHOLD = 10;
   }
 
   public final static class RevPneumaticModule {
@@ -32,8 +34,8 @@ public final class Constants {
   public final static class Elevator {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 0.0, 0.0);
     public static final int TALON_CAN_ID = 0;
-    public static final int BRAKE_SOLENOID_PORT = 0;
-    public static final int LIMIT_SWITCH_PORT = 0;
+    public static final int BRAKE_SOLENOID_PORT = 2;
+    public static final int LIMIT_SWITCH_PORT = 3;
   }
 
   public final static class Drivetrain {
@@ -51,6 +53,16 @@ public final class Constants {
     public static final double MAX_DRIVE_SPEED = 4.115;
 
     /**
+     * @see MAX_DRIVE_SPEED
+     */
+    public static final double MAX_AUTO_DRIVE_SPEED = 4.115;
+
+     /**
+     * The acceleration of the swerve module.
+     */
+    public static final double MAX_DRIVE_ACCELERATION = 3;
+
+    /**
      * The maxmimum angular velocity that the swerve module is capable of in
      * rotations per second.
      * This value is easy to represent as some multiple of PI.
@@ -61,9 +73,11 @@ public final class Constants {
     public static final double MAX_TURNING_SPEED = Math.PI; // rotation per second
 
     /**
-     * The acceleration of the swerve module.
+     * @see MAX_TURNING_SPEED
      */
-    public static final double MAX_DRIVE_ACCELERATION = 2.0575;
+    public static final double MAX_AUTO_TURNING_SPEED = Math.PI;
+    public static final double MAX_TURNING_ACCELERATION = Math.PI;
+   
 
     /**
      * The disatance between the centers of the right and left wheels on the robot.
@@ -88,9 +102,13 @@ public final class Constants {
         REAR_LEFT_MODULE_LOCATION,
         REAR_RIGHT_MODULE_LOCATION);
 
-    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_DRIVE_SPEED,
+    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_AUTO_DRIVE_SPEED,
         MAX_DRIVE_ACCELERATION).setKinematics(KINEMATICS);
 
+    public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS =
+    new TrapezoidProfile.Constraints(
+        MAX_TURNING_SPEED, MAX_TURNING_ACCELERATION);
+  
     public static final int FRONT_LEFT_TURNING_TALON_CAN_ID = 17;
     public static final int FRONT_LEFT_DRIVE_TALON_CAN_ID = 18;
     public static final int FRONT_LEFT_CANCODER_CAN_ID = 19;

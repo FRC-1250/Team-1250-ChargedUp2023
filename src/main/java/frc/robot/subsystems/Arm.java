@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -15,41 +16,73 @@ import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
   public Arm() {
-    ArmTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Arm.PID_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);
-    ArmTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Arm.PID_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
-    ArmTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.Arm.PID_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
+    talon.configFactoryDefault(Constants.CONFIG_TIMEOUT_MS);
+    talon.setNeutralMode(NeutralMode.Brake);
+    talon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ArmCalibrations.PID_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);
+    talon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ArmCalibrations.PID_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
+    talon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ArmCalibrations.PID_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
   }
 
-  private WPI_TalonFX ArmTalon = new WPI_TalonFX(Constants.Arm.TALON_CAN_ID);
-  private Solenoid ArmBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.Arm.BRAKE_SOLENOID_PORT);
-  private DigitalInput LimitSwitch = new DigitalInput(Constants.Arm.LIMIT_SWITCH_PORT);
-  private Solenoid ArmAngle = new Solenoid(PneumaticsModuleType.REVPH, Constants.Arm.ANGLE_SOLENOID_PORT);
+  public enum ArmPosition {
+    TOP_NODE(100),
+    MID_NODE(50),
+    LOW_NODE(0),
+    HOME(0);
 
-  public boolean GetLimitSwitchState() {
-    return LimitSwitch.get();
+    public final double positionInTicks;
+
+    ArmPosition(double positionInTickets) {
+      this.positionInTicks = positionInTickets;
+    }
   }
 
-  public void SetPosition(Double tickcount) {
-    ArmTalon.set(TalonFXControlMode.Position, tickcount);
+  private WPI_TalonFX talon = new WPI_TalonFX(Constants.ArmCalibrations.TALON_CAN_ID);
+  private Solenoid airBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.ArmCalibrations.BRAKE_SOLENOID_PORT);
+  private DigitalInput limitSwitch = new DigitalInput(Constants.ArmCalibrations.LIMIT_SWITCH_PORT);
+  private Solenoid angleToggle = new Solenoid(PneumaticsModuleType.REVPH, Constants.ArmCalibrations.ANGLE_SOLENOID_PORT);
+
+  public boolean getLimitSwitchState() {
+    return limitSwitch.get();
+  }
+
+  public void setPosition(Double tickcount) {
+    talon.set(TalonFXControlMode.Position, tickcount);
+  }
+
+  public double getPosition() {
+    return talon.getSelectedSensorPosition();
+  }
+
+  public void resetPosition() {
+    talon.setSelectedSensorPosition(0);
   }
 
   public void enableBrake() {
-    ArmBrake
-        .set(true);
+    airBrake.set(true);
   }
 
   public void disableBrake() {
-    ArmBrake
-        .set(false);
+    airBrake.set(false);
   }
 
   public void extendArm() {
-    ArmAngle.set(true);
-
+    angleToggle.set(true);
   }
 
   public void retractArm() {
-    ArmAngle.set(false);
+    angleToggle.set(false);
+  }
+
+  public void setSpeed(Double speed) {
+    talon.set(speed);
+  }
+
+  private double getOutputCurrent() {
+    return talon.getStatorCurrent();
+  }
+
+  public boolean isAmpThresholdReached() {
+    return getOutputCurrent() > Constants.ArmCalibrations.AMP_RESET_THRESHOLD;
   }
 
   @Override

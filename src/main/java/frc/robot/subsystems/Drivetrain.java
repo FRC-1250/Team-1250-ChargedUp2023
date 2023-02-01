@@ -57,7 +57,7 @@ public class Drivetrain extends SubsystemBase {
       }, new Pose2d(0, 0, new Rotation2d()));
 
   public Drivetrain() {
-    pidgey.reset();
+    
   }
 
   /**
@@ -140,12 +140,22 @@ public class Drivetrain extends SubsystemBase {
         frontLeftModule.getPosition(),
         frontRightModule.getPosition(),
         rearLeftModule.getPosition(),
-        rearLeftModule.getPosition()
+        rearRightModule.getPosition()
     }, pose);
   }
 
-  @Override
-  public void periodic() { // Update the pose
+  public void resetDriveTalonPosition() {
+    frontLeftModule.resetPosition();
+    frontRightModule.resetPosition();
+    rearLeftModule.resetPosition();
+    rearRightModule.resetPosition();
+  }
+
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+  private void updatePose() {
     Pose2d m_pose = odometry.update(pidgey.getRotation2d(),
         new SwerveModulePosition[] {
             frontLeftModule.getPosition(), frontRightModule.getPosition(),
@@ -158,5 +168,10 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putString("Pose in inches",
         String.format("X: %.2f, Y: %.2f, Deg: %.2f ", Units.metersToInches(m_pose.getX()),
             Units.metersToInches(m_pose.getY()), m_pose.getRotation().getDegrees()));
+  }
+
+  @Override
+  public void periodic() { // Update the pose
+    updatePose();
   }
 }
