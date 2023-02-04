@@ -15,11 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveSwerve;
 import frc.robot.commands.ResetPoseAndHeading;
 import frc.robot.commands.Arm.SetArmSpeed;
 import frc.robot.modules.TrajectoryModule;
 import frc.robot.subsystems.Arm;
+import frc.robot.commands.TrackTarget;
 import frc.robot.subsystems.Drivetrain;
 
 public class RobotContainer {
@@ -41,6 +43,8 @@ public class RobotContainer {
   private final TrajectoryModule trajectoryModule = new TrajectoryModule(field2d, drivetrain);
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
+  Trigger xButton = new Trigger(xboxController::getXButton);
+  
   public RobotContainer() {
     configureAutoCommands();
     configureDefaultCommands();
@@ -60,6 +64,7 @@ public class RobotContainer {
     backButton.onTrue(new ResetPoseAndHeading(drivetrain));
     YButton.whileTrue(new SetArmSpeed(arm, -0.1)); 
     AButton.whileTrue(new SetArmSpeed(arm, 0.2));
+    xButton.whileTrue(new TrackTarget(limelight, drivetrain));
   }
 
   private void configureAutoCommands() {
