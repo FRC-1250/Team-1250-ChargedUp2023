@@ -13,17 +13,17 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
   public static final String CANIVORE_BUS_NAME = "Party Bus";
-  public static final int CONFIG_TIMEOUT_MS = 30;
+  public static final int CONFIG_TIMEOUT_MS = 10;
   public static final int TALONFX_PRIMARY_PID_LOOP_ID = 0;
   public static final int TALONFX_SECONDARY_PID_LOOP_ID = 1;
 
   public static final class ArmCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 0.0, 0.0);
+    public static final PIDGains PID_GAINS = new PIDGains(0.05, 0.0, 0.0, 0.0);
     public static final int TALON_CAN_ID = 46;
     public static final int BRAKE_SOLENOID_PORT = 0;
-    public static final int ANGLE_SOLENOID_PORT = 1;
-    public static final int LIMIT_SWITCH_PORT = 0;
-    public static final int AMP_RESET_THRESHOLD = 10;
+    public static final int ANGLE_SOLENOID_FORWARD_PORT = 1;
+    public static final int ANGLE_SOLENOID_REVERSE_PORT = 2;
+    public static final int AMP_RESET_THRESHOLD = 50;
   }
 
   public final static class RevPneumaticModuleCalibration {
@@ -34,7 +34,7 @@ public final class Constants {
   public final static class ElevatorCalibration {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 0.0, 0.0);
     public static final int TALON_CAN_ID = 0;
-    public static final int BRAKE_SOLENOID_PORT = 2;
+    public static final int BRAKE_SOLENOID_PORT = 5;
     public static final int LIMIT_SWITCH_PORT = 3;
   }
 

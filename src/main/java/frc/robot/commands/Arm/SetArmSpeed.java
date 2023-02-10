@@ -11,22 +11,25 @@ public class SetArmSpeed extends CommandBase {
   private final Arm cmd_arm;
   private final Double cmd_talonSpeed;
 
-  /** Creates a new SetArmTalonSpeed. */
   public SetArmSpeed(Arm arm, Double talonSpeed) {
     cmd_arm = arm;
     cmd_talonSpeed = talonSpeed;
     addRequirements(arm);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void initialize() {
+    cmd_arm.disableBrake();
+  }
+
   @Override
   public void execute() {
     cmd_arm.setSpeed(cmd_talonSpeed);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     cmd_arm.setSpeed(0.0);
+    cmd_arm.enableBrake();
   }
 }

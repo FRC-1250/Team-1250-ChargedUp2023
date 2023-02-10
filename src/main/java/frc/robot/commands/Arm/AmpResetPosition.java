@@ -18,7 +18,7 @@ public class AmpResetPosition extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setSpeed(0.2);
+    cmd_arm.setSpeed(-0.2);
   }
 
   @Override
@@ -29,6 +29,6 @@ public class AmpResetPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return cmd_arm.isAmpThresholdReached();
+    return cmd_arm.isReverseLocked();
   }
 }

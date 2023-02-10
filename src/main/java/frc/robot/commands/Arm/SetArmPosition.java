@@ -23,6 +23,12 @@ public class SetArmPosition extends CommandBase {
   }
 
   @Override
+  public void initialize() {
+    cmd_arm.disableBrake();
+    cmd_arm.setPIDProfile(cmd_positionInTicks);
+  }
+
+  @Override
   public void execute() {
     cmd_arm.setPosition(cmd_positionInTicks);
   }
@@ -30,10 +36,11 @@ public class SetArmPosition extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     cmd_arm.setSpeed(0.0);
+    cmd_arm.enableBrake();
   }
 
   @Override
   public boolean isFinished() {
-    return Math.abs(cmd_arm.getPosition() - cmd_positionInTicks) < 100 ;
+    return Math.abs(cmd_arm.getPosition() - cmd_positionInTicks) < 100;
   }
 }

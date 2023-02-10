@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveSwerve;
 import frc.robot.commands.ResetPoseAndHeading;
+import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.Arm.SetArmSpeed;
 import frc.robot.modules.TrajectoryModule;
 import frc.robot.subsystems.Arm;
@@ -38,6 +39,9 @@ public class RobotContainer {
   Trigger backButton = new Trigger(xboxController::getBackButton);
   Trigger YButton = new Trigger(xboxController::getYButton);
   Trigger AButton = new Trigger(xboxController::getAButton);
+  Trigger LeftBumper = new Trigger(xboxController::getLeftBumper);
+  Trigger RightBumper = new Trigger(xboxController::getRightBumper);
+  Trigger bButton = new Trigger(xboxController::getBButton);
   
   private final Field2d field2d = new Field2d();
   private final TrajectoryModule trajectoryModule = new TrajectoryModule(field2d, drivetrain);
@@ -61,10 +65,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    backButton.onTrue(new ResetPoseAndHeading(drivetrain));
-    YButton.whileTrue(new SetArmSpeed(arm, -0.1)); 
-    AButton.whileTrue(new SetArmSpeed(arm, 0.2));
-    xButton.whileTrue(new TrackTarget(limelight, drivetrain));
+
   }
 
   private void configureAutoCommands() {
