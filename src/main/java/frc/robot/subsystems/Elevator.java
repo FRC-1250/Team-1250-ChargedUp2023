@@ -4,57 +4,110 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Elevator extends SubsystemBase {
-  public enum ElevatorHeight {
-    TOP_NODE(100),
-    MID_NODE(50),
-    LOW_NODE(0);
+  public enum ElevatorPosition {
+    TOP_NODE(42424),
+    MID_NODE(30883),
+    LOW_NODE(10000),
+    HOME(0);
 
-    public final double heightInTicks;
+    public final double positionInTicks;
 
-    ElevatorHeight(double heightInTicks) {
-      this.heightInTicks = heightInTicks;
+    ElevatorPosition(double e_positionInTicks) {
+      positionInTicks = e_positionInTicks;
     }
   }
 
-  private WPI_TalonFX ElevatorTalon = new WPI_TalonFX(Constants.ElevatorCalibration.TALON_CAN_ID);
-  private Solenoid ElevatorBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorCalibration.BRAKE_SOLENOID_PORT);
-  private DigitalInput ElevatorLimitswitch = new DigitalInput(Constants.ElevatorCalibration.LIMIT_SWITCH_PORT);
+  public enum PIDProfile {
+    UP(0),
+    DOWN(1);
 
-  /** Creates a new Elevator. */
-  public Elevator() {
-    ElevatorTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ElevatorCalibration.PID_GAINS.kP,
-        Constants.CONFIG_TIMEOUT_MS);
-    ElevatorTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ElevatorCalibration.PID_GAINS.kI,
-        Constants.CONFIG_TIMEOUT_MS);
-    ElevatorTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.ElevatorCalibration.PID_GAINS.kD,
-        Constants.CONFIG_TIMEOUT_MS);
+    public final int id;
+
+    PIDProfile(int e_id) {
+      id = e_id;
+    }
   }
 
-  public boolean GetLimitSwitchState() {
-    return ElevatorLimitswitch.get();
+  private WPI_TalonFX talon = new WPI_TalonFX(Constants.ElevatorCalibration.TALON_CAN_ID);
+  private Solenoid airBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorCalibration.BRAKE_SOLENOID_PORT);
+
+  public Elevator() {
+    talon.setNeutralMode(NeutralMode.Brake);
+
+    SlotConfiguration upSlotConfiguration = new SlotConfiguration();
+    upSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
+    upSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
+    upSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
+    upSlotConfiguration.closedLoopPeakOutput = 0.5;
+
+    SlotConfiguration downSlotConfiguration = new SlotConfiguration();
+    downSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
+    downSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
+    downSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
+    downSlotConfiguration.closedLoopPeakOutput = 0.2;
+
+    TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+    talonFXConfiguration.slot0 = upSlotConfiguration;
+    talonFXConfiguration.slot1 = downSlotConfiguration;
+    talonFXConfiguration.closedloopRamp = 0.5;
+    talonFXConfiguration.clearPositionOnLimitR = true;
+    talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+    talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
+  }
+
+  private void setPIDProfile(PIDProfile pidProfile) {
+    talon.selectProfileSlot(pidProfile.id, 0);
+  }
+
+  public void setPIDProfile(double targetPosition) {
+    var direction = Math.signum(targetPosition - getPosition());
+    if (direction == 1) {
+      setPIDProfile(Elevator.PIDProfile.UP);
+    } else if (direction == -1) {
+      setPIDProfile(Elevator.PIDProfile.DOWN);
+    }
+  }
+
+  public void setPercentOutput(double speed) {
+    talon.set(TalonFXControlMode.PercentOutput, speed);
   }
 
   public void SetPosition(Double tickcount) {
-    ElevatorTalon.set(TalonFXControlMode.Position, tickcount);
+    talon.set(TalonFXControlMode.Position, tickcount);
+  }
+
+  public double getPosition() {
+    return talon.getSelectedSensorPosition();
+  }
+
+  public void resetPosition() {
+    talon.setSelectedSensorPosition(0);
   }
 
   public void enableBrake() {
-    ElevatorBrake
-        .set(true);
+    airBrake.set(true);
   }
 
   public void disableBrake() {
-    ElevatorBrake
-        .set(false);
+    airBrake.set(false);
+  }
+
+  public boolean isRevLimitSwitchClosed() {
+    return talon.isRevLimitSwitchClosed() == 1;
   }
 
   @Override

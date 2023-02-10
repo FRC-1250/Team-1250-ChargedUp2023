@@ -20,6 +20,8 @@ import frc.robot.commands.DriveSwerve;
 import frc.robot.commands.ResetPoseAndHeading;
 import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.Arm.SetArmSpeed;
+import frc.robot.commands.Elevator.SetElevatorPercentOutput;
+import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.modules.TrajectoryModule;
 import frc.robot.subsystems.Arm;
 import frc.robot.commands.TrackTarget;
@@ -39,9 +41,8 @@ public class RobotContainer {
   Trigger backButton = new Trigger(xboxController::getBackButton);
   Trigger YButton = new Trigger(xboxController::getYButton);
   Trigger AButton = new Trigger(xboxController::getAButton);
-  Trigger LeftBumper = new Trigger(xboxController::getLeftBumper);
-  Trigger RightBumper = new Trigger(xboxController::getRightBumper);
-  Trigger bButton = new Trigger(xboxController::getBButton);
+  Trigger leftBumper = new Trigger(xboxController::getLeftBumper);
+  Trigger rightBumper = new Trigger(xboxController::getRightBumper);
   
   private final Field2d field2d = new Field2d();
   private final TrajectoryModule trajectoryModule = new TrajectoryModule(field2d, drivetrain);
@@ -65,9 +66,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-
   }
-
   private void configureAutoCommands() {
     autoChooser.setDefaultOption("Straight Forward", trajectoryModule.getForwardsTwoCommand());
     autoChooser.addOption("Straight Back", trajectoryModule.getBackwardsTwoCommand());
