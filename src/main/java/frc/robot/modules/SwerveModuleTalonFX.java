@@ -41,6 +41,7 @@ public class SwerveModuleTalonFX {
         driveTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.DRIVE_TALON_VELOCITY_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.setNeutralMode(NeutralMode.Brake);
         driveTalon.setSelectedSensorPosition(0, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
+        driveTalon.configAllowableClosedloopError(Constants.TALONFX_PRIMARY_PID_LOOP_ID, 40, Constants.CONFIG_TIMEOUT_MS);
     }
 
     private void configureCanCoder(double canCoderOffsetDegrees) {
@@ -62,6 +63,7 @@ public class SwerveModuleTalonFX {
         turningTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
+        turningTalon.configAllowableClosedloopError(Constants.TALONFX_PRIMARY_PID_LOOP_ID, 40, Constants.CONFIG_TIMEOUT_MS);
     }
 
     public SwerveModuleState getState() {

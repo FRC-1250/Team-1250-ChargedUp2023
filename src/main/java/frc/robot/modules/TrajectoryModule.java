@@ -65,6 +65,10 @@ public class TrajectoryModule {
   public FollowTrajectory getTestingPathCommand() {
     return new FollowTrajectory(trajectorySet.testingPath, holonomicDriveController, field2d, true, drivetrain);
   }
+  public FollowTrajectory getBottomConeCubeCommand() {
+    return new FollowTrajectory(trajectorySet.bottomConeCube, holonomicDriveController, field2d, true, drivetrain);
+  }
+
 
   private class TrajectorySet {
     public final PathPlannerTrajectory straight;
@@ -76,6 +80,7 @@ public class TrajectoryModule {
     public final PathPlannerTrajectory cornerTurn;
     public final PathPlannerTrajectory CCWRotate;
     public final PathPlannerTrajectory testingPath;
+    public final PathPlannerTrajectory bottomConeCube;
 
     public TrajectorySet() {
       straight = getStraight();
@@ -87,6 +92,7 @@ public class TrajectoryModule {
       cornerTurn = getCornerTurn();
       CCWRotate = getCCWRotation();
       testingPath = getTestingPath();
+      bottomConeCube = getBottomConeCube();
     }
 
     private PathPlannerTrajectory getStraightAndRotateCCW() {
@@ -144,6 +150,10 @@ public class TrajectoryModule {
     }
     private PathPlannerTrajectory getTestingPath() {
       return PathPlanner.loadPath("Testing Path",
+          new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
+    }
+    private PathPlannerTrajectory getBottomConeCube() {
+      return PathPlanner.loadPath("Bottom Cone, Cube",
           new PathConstraints(Constants.DrivetrainCalibration.MAX_AUTO_DRIVE_SPEED, Constants.DrivetrainCalibration.MAX_DRIVE_ACCELERATION));
     }
   }

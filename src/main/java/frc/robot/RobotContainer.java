@@ -72,7 +72,8 @@ public class RobotContainer {
     autoChooser.addOption("Straight Back", trajectoryModule.getBackwardsTwoCommand());
     autoChooser.addOption("Forward 90 Right", trajectoryModule.getCornerTurnCommand());
     autoChooser.addOption("CCWRotation", trajectoryModule.getCCWRotationCommand());
-    autoChooser.addOption("New Testing Paths", trajectoryModule.getTestingPathCommand());
+    autoChooser.addOption("Top Cone, Cone", trajectoryModule.getTestingPathCommand()); //This is the "Testing Path" in Path Planner
+    autoChooser.addOption("Bottom Cone and Cube", trajectoryModule.getBottomConeCubeCommand());
     SmartDashboard.putData(autoChooser);
   }
 
