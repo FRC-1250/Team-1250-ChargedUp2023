@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Swerve;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -17,7 +17,6 @@ public class TrackTarget extends CommandBase {
   private double xCorrect = 0;
   private double yCorrect = 0;
   private double rotCorrect = 0;
-  private Double[] targetposeincameraspace;
   private double tx;
   private double ty;
 
@@ -26,23 +25,17 @@ public class TrackTarget extends CommandBase {
     this.drivetrain = drivetrain;
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    targetposeincameraspace = limelight.getcamtran();
     tx = limelight.getXOffset();
     ty = limelight.getYOffset();
-    if (tx < -1 || tx > 1) {
+    if (isXOutsideBounds()) {
       xCorrect = tx * kP;
     } else {
       xCorrect = 0;
     }
-    if (ty < -1 || ty > 1) {
+
+    if (isYOutsideBounds()) {
       yCorrect = ty * kP;
     } else {
       yCorrect = 0;
@@ -53,19 +46,23 @@ public class TrackTarget extends CommandBase {
       rotCorrect = -drivetrain.getHeading() * KProt;
     }
     drivetrain.drive(yCorrect, xCorrect, rotCorrect, true);
-
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drivetrain.drive(0, 0, 0, true);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !isXOutsideBounds() && !isYOutsideBounds();
   }
 
+  private boolean isXOutsideBounds() {
+    return tx < -1 || tx > 1;
+  }
+
+  private boolean isYOutsideBounds() {
+    return ty < -1 || ty > 1;
+  }
 }

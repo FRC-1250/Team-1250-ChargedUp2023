@@ -14,7 +14,7 @@ public class RevPneumaticModule extends SubsystemBase {
    * Hide the compressor so that the disable functionality is not directly
    * available through this class!
    */
-  private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  private final Compressor compressor = new Compressor(20, PneumaticsModuleType.REVPH);
 
   /**
    * Enable the rev module in DIGITAL mode.

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
@@ -11,22 +12,31 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ElevatorCalibration;
 
 public class Elevator extends SubsystemBase {
   public enum ElevatorPosition {
-    TOP_NODE(42424),
-    MID_NODE(30883),
-    LOW_NODE(10000),
-    HOME(0);
+    HARD_LIMIT(58),
+    SOFT_LIMIT(50),
+    TOP_CONE(46),
+    SUBSTATION(37.375),
+    TOP_CUBE(35.5),
+    MID_CONE(34),
+    MID_CUBE(23.5),
+    HYBIRD(15),
+    FLOOR(15),
+    HOME(1);
 
     public final double positionInTicks;
+    public final double positionInInches;
 
-    ElevatorPosition(double e_positionInTicks) {
-      positionInTicks = e_positionInTicks;
+    ElevatorPosition(double e_positionInInches) {
+      positionInInches = e_positionInInches;
+      positionInTicks = e_positionInInches * ElevatorCalibration.INCHES_TO_TICK_CONVERSION;
     }
   }
 
@@ -41,11 +51,15 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  private WPI_TalonFX talon = new WPI_TalonFX(Constants.ElevatorCalibration.TALON_CAN_ID);
-  private Solenoid airBrake = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorCalibration.BRAKE_SOLENOID_PORT);
+  private final WPI_TalonFX talon = new WPI_TalonFX(Constants.ElevatorCalibration.TALON_CAN_ID);
+  private final Solenoid airBrake;
+  private final PneumaticHub pneumaticHub;
 
-  public Elevator() {
+  public Elevator(PneumaticHub subPneumaticHub) {
+    pneumaticHub = subPneumaticHub;
+    airBrake = pneumaticHub.makeSolenoid(Constants.ElevatorCalibration.BRAKE_SOLENOID_PORT);
     talon.setNeutralMode(NeutralMode.Brake);
+    talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
     SlotConfiguration upSlotConfiguration = new SlotConfiguration();
     upSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
@@ -57,9 +71,11 @@ public class Elevator extends SubsystemBase {
     downSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
     downSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
     downSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
-    downSlotConfiguration.closedLoopPeakOutput = 0.2;
+    downSlotConfiguration.closedLoopPeakOutput = 0.1;
 
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+    talonFXConfiguration.peakOutputForward = 1;
+    talonFXConfiguration.peakOutputReverse = 0;
     talonFXConfiguration.slot0 = upSlotConfiguration;
     talonFXConfiguration.slot1 = downSlotConfiguration;
     talonFXConfiguration.closedloopRamp = 0.5;
@@ -82,12 +98,24 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  public void setPercentOutput(double speed) {
-    talon.set(TalonFXControlMode.PercentOutput, speed);
+  public void setPercentOutput(double speed, boolean override) {
+    var direction = Math.signum(speed);
+
+    if(override) {
+      talon.set(speed);
+    } else if(direction == 1 && talon.getSelectedSensorPosition() < ElevatorPosition.SOFT_LIMIT.positionInTicks) {
+      talon.set(TalonFXControlMode.PercentOutput, speed);
+    } else {
+      talon.set(TalonFXControlMode.PercentOutput, 0);
+    }
   }
 
   public void SetPosition(Double tickcount) {
     talon.set(TalonFXControlMode.Position, tickcount);
+  }
+
+  public void stop() {
+    talon.set(0);
   }
 
   public double getPosition() {
@@ -99,11 +127,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void enableBrake() {
-    airBrake.set(true);
+    airBrake.set(false);
   }
 
   public void disableBrake() {
-    airBrake.set(false);
+    airBrake.set(true);
   }
 
   public boolean isRevLimitSwitchClosed() {

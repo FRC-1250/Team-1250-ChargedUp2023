@@ -8,14 +8,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
 public class SetElevatorPercentOutput extends CommandBase {
-  
+
   private final Elevator cmd_elevator;
   private final double cmd_speed;
+  private final boolean cmd_override;
 
-  public SetElevatorPercentOutput(Elevator elevator, double speed) {
+  public SetElevatorPercentOutput(Elevator elevator, double speed, boolean override) {
     addRequirements(elevator);
     cmd_speed = speed;
     cmd_elevator = elevator;
+    cmd_override = override;
   }
 
   @Override
@@ -25,12 +27,12 @@ public class SetElevatorPercentOutput extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_elevator.setPercentOutput(cmd_speed);
+    cmd_elevator.setPercentOutput(cmd_speed, cmd_override);
   }
 
   @Override
   public void end(boolean interrupted) {
-    cmd_elevator.setPercentOutput(0);
+    cmd_elevator.stop();
     cmd_elevator.enableBrake();
   }
 }

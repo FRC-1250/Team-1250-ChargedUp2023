@@ -7,13 +7,15 @@ package frc.robot.commands.Arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-public class SetArmSpeed extends CommandBase {
+public class SetArmPercentOutput extends CommandBase {
   private final Arm cmd_arm;
-  private final Double cmd_talonSpeed;
+  private final double cmd_speed;
+  private final boolean cmd_override;
 
-  public SetArmSpeed(Arm arm, Double talonSpeed) {
+  public SetArmPercentOutput(Arm arm, double speed, boolean override) {
     cmd_arm = arm;
-    cmd_talonSpeed = talonSpeed;
+    cmd_speed = speed;
+    cmd_override = override;
     addRequirements(arm);
   }
 
@@ -24,12 +26,12 @@ public class SetArmSpeed extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setSpeed(cmd_talonSpeed);
+    cmd_arm.setPercentOutput(cmd_speed, cmd_override);
   }
 
   @Override
   public void end(boolean interrupted) {
-    cmd_arm.setSpeed(0.0);
+    cmd_arm.stop();
     cmd_arm.enableBrake();
   }
 }

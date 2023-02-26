@@ -18,31 +18,42 @@ public final class Constants {
   public static final int TALONFX_SECONDARY_PID_LOOP_ID = 1;
   public static final int TALONFX_INTEGRATED_SENSOR_RESOLUTION = 2048;
 
-  public static final class ArmCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.05, 0.0, 0.0, 0.0);
-    public static final int TALON_CAN_ID = 46;
-    public static final int BRAKE_SOLENOID_PORT = 0;
-    public static final int ANGLE_SOLENOID_FORWARD_PORT = 1;
-    public static final int ANGLE_SOLENOID_REVERSE_PORT = 2;
-    public static final int AMP_RESET_THRESHOLD = 50;
-  }
-
-  public final static class RevPneumaticModuleCalibration {
+  public static final class PneumaticHubCalibrations {
+    public static final int PNEUMATIC_HUB_ID = 20;
     public static final int MIN_COMPRESSOR_PRESSURE = 100;
     public static final int MAX_COMPRESSOR_PRESSURE = 120;
   }
 
+  public static final class ArmCalibrations {
+    public static final PIDGains RETRACT_PID_GAINS = new PIDGains(0.05, 0.0, 0.5, 0.0);
+    public static final PIDGains EXTEND_PID_GAINS = new PIDGains(0.075, 0.0, 0.75, 0.0);
+    public static final int TALON_CAN_ID = 13;
+    public static final int BRAKE_SOLENOID_PORT = 0;
+    public static final int ANGLE_SOLENOID_FORWARD_PORT = 2;
+    public static final int ANGLE_SOLENOID_REVERSE_PORT = 7;
+    public static final int AMP_RESET_THRESHOLD = 100;
+    public static final double MAX_HEIGHT_IN_TICKS_SOFT_LIMIT = 98000;
+    public static final double MAX_HEIGHT_IN_TICKS_HARD_LIMIT = 100000;
+    public static final double INCHES_TO_TICK_CONVERSION = MAX_HEIGHT_IN_TICKS_HARD_LIMIT / 48;
+  }
+
+  public static final class EndEffectorCalibrations {
+    public static final int TALON_CAN_ID = 16;
+  }
+
   public final static class ElevatorCalibration {
-    public static final PIDGains PID_GAINS = new PIDGains(0.05, 0.0, 0.0, 0.0);
-    public static final int TALON_CAN_ID = 10;
-    public static final int BRAKE_SOLENOID_PORT = 3;
+    public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 4, 0.0);
+    public static final int TALON_CAN_ID = 14;
+    public static final int BRAKE_SOLENOID_PORT = 1;
     public static final int LIMIT_SWITCH_PORT = 3;
+    public static final double MAX_HEIGHT_IN_TICKS_HARD_LIMIT = 46000;
+    public static final double INCHES_TO_TICK_CONVERSION = MAX_HEIGHT_IN_TICKS_HARD_LIMIT / 58;
+
   }
 
   public final static class DrivetrainCalibration {
     /**
      * The maxmimum velocity that the swerve modules is capable of in meters per
-     * second (m/s).
      * This value can be derived mathimatically OR will be available from the
      * manufacturer of the
      * swerve module.
@@ -84,13 +95,13 @@ public final class Constants {
      * The disatance between the centers of the right and left wheels on the robot.
      * This value must be in the same unit as {@wheelBase}.
      */
-    private static final double TRACK_WIDTH = Units.inchesToMeters(32);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(32);
 
     /**
      * The distance between the front and back wheels on the robot.
      * This value must be in the same unit as {@trackWidth}.
      */
-    private static final double WHEELBASE = Units.inchesToMeters(28);
+    public static final double WHEELBASE = Units.inchesToMeters(28);
 
     public static final Translation2d FRONT_LEFT_MODULE_LOCATION = new Translation2d(WHEELBASE / 2, TRACK_WIDTH / 2);
     public static final Translation2d FRONT_RIGHT_MODULE_LOCATION = new Translation2d(WHEELBASE / 2, -TRACK_WIDTH / 2);
@@ -110,27 +121,27 @@ public final class Constants {
     new TrapezoidProfile.Constraints(
         MAX_TURNING_SPEED, MAX_TURNING_ACCELERATION);
   
-    public static final int FRONT_LEFT_TURNING_TALON_CAN_ID = 17;
-    public static final int FRONT_LEFT_DRIVE_TALON_CAN_ID = 18;
-    public static final int FRONT_LEFT_CANCODER_CAN_ID = 19;
-    public static final double FRONT_LEFT_CANCODER_OFFSET = -46.14258;
+    public static final int FRONT_LEFT_TURNING_TALON_CAN_ID = 11;
+    public static final int FRONT_LEFT_DRIVE_TALON_CAN_ID = 12;
+    public static final int FRONT_LEFT_CANCODER_CAN_ID = 10;
+    public static final double FRONT_LEFT_CANCODER_OFFSET = -93.955;
 
-    public static final int FRONT_RIGHT_TURNING_TALON_CAN_ID = 14;
-    public static final int FRONT_RIGHT_DRIVE_TALON_CAN_ID = 15;
-    public static final int FRONT_RIGHT_CANCODER_CAN_ID = 16;
-    public static final double FRONT_RIGHT_CANCODER_OFFSET = -83.14453;
+    public static final int FRONT_RIGHT_TURNING_TALON_CAN_ID = 2;
+    public static final int FRONT_RIGHT_DRIVE_TALON_CAN_ID = 3;
+    public static final int FRONT_RIGHT_CANCODER_CAN_ID = 1;
+    public static final double FRONT_RIGHT_CANCODER_OFFSET = 7.119;
 
-    public static final int REAR_LEFT_TURNING_TALON_CAN_ID = 20;
-    public static final int REAR_LEFT_DRIVE_TALON_CAN_ID = 21;
-    public static final int REAR_LEFT_CANCODER_CAN_ID = 22;
-    public static final double REAR_LEFT_CANCODER_OFFSET = -94.57031;
+    public static final int REAR_LEFT_TURNING_TALON_CAN_ID = 8;
+    public static final int REAR_LEFT_DRIVE_TALON_CAN_ID = 9;
+    public static final int REAR_LEFT_CANCODER_CAN_ID = 7;
+    public static final double REAR_LEFT_CANCODER_OFFSET = -5.186;
 
-    public static final int REAR_RIGHT_TURNING_TALON_CAN_ID = 11;
-    public static final int REAR_RIGHT_DRIVE_TALON_CAN_ID = 12;
-    public static final int REAR_RIGHT_CANCODER_CAN_ID = 13;
-    public static final double REAR_RIGHT_CANCODER_OFFSET = 85.78125;
+    public static final int REAR_RIGHT_TURNING_TALON_CAN_ID = 5;
+    public static final int REAR_RIGHT_DRIVE_TALON_CAN_ID = 6;
+    public static final int REAR_RIGHT_CANCODER_CAN_ID = 4;
+    public static final double REAR_RIGHT_CANCODER_OFFSET = -65.654;
 
-    public static final int PIDGEON_CAN_ID = 23;
+    public static final int PIDGEON_CAN_ID = 15;
 
     public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.15, 0.0, 0.2, 0.0);
     public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.7, 0.0, 0.1, 0.0);

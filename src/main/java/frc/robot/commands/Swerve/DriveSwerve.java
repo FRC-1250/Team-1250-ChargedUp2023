@@ -2,26 +2,31 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Swerve;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DrivetrainCalibration;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveSwerve extends CommandBase {
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(4);
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(4);
-  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(5);
   private final Drivetrain drivetrain;
+  private final IntSupplier centerOfRotationSupplier;
   private final BooleanSupplier boostInputSupplier;
-  private final Double throttle;
+  private final DoubleSupplier throttleSupplier;
   private final DoubleSupplier yInputSupplier;
   private final DoubleSupplier xInputSupplier;
   private final DoubleSupplier rotationInputSupplier;
@@ -30,11 +35,18 @@ public class DriveSwerve extends CommandBase {
   private double ySpeed;
   private double rotSpeed;
 
-  public DriveSwerve(BooleanSupplier boostInputSupplier, Double throttle, DoubleSupplier yInputSupplier,
+  public DriveSwerve(
+      IntSupplier centerOfRotationSupplier,
+      BooleanSupplier boostInputSupplier,
+      DoubleSupplier throttleSupplier,
+      DoubleSupplier yInputSupplier,
       DoubleSupplier xInputSupplier,
-      DoubleSupplier rotationInputSupplier, boolean fieldRelative, Drivetrain drivetrain) {
+      DoubleSupplier rotationInputSupplier,
+      boolean fieldRelative,
+      Drivetrain drivetrain) {
+    this.centerOfRotationSupplier = centerOfRotationSupplier;
     this.boostInputSupplier = boostInputSupplier;
-    this.throttle = throttle;
+    this.throttleSupplier = throttleSupplier;
     this.yInputSupplier = yInputSupplier;
     this.xInputSupplier = xInputSupplier;
     this.rotationInputSupplier = rotationInputSupplier;
@@ -50,8 +62,8 @@ public class DriveSwerve extends CommandBase {
     rotSpeed = -rotationInputSupplier.getAsDouble();
 
     if (!boostInputSupplier.getAsBoolean()) {
-      ySpeed = ySpeed * throttle;
-      xSpeed = xSpeed * throttle;
+      ySpeed = ySpeed * throttleSupplier.getAsDouble();
+      xSpeed = xSpeed * throttleSupplier.getAsDouble();
     }
 
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.1);
@@ -66,7 +78,14 @@ public class DriveSwerve extends CommandBase {
     ySpeed = ySpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
     rotSpeed = rotSpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
 
-    drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
+    var centerOfRotation = centerOfRotationSupplier.getAsInt();
+    if(centerOfRotation != -1) {
+      var translation2d = new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0);
+      translation2d.rotateBy(Rotation2d.fromDegrees(centerOfRotation));
+      drivetrain.drive(xSpeed, ySpeed, rotSpeed, new Translation2d(DrivetrainCalibration.WHEELBASE / 2, DrivetrainCalibration.TRACK_WIDTH / 2), fieldRelative);
+    } else {
+      drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
+    }
   }
 
   @Override

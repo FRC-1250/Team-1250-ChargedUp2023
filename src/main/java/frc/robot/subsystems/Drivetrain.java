@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -57,7 +58,7 @@ public class Drivetrain extends SubsystemBase {
       }, new Pose2d(0, 0, new Rotation2d()));
 
   public Drivetrain() {
-    
+zeroHeading();
   }
 
   /**
@@ -71,6 +72,11 @@ public class Drivetrain extends SubsystemBase {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rotation, boolean fieldRelative) {
+    drive(xSpeed, ySpeed, rotation, new Translation2d(), fieldRelative);
+  }
+
+  public void drive(double xSpeed, double ySpeed, double rotation, Translation2d centerOfRotationMeters,
+      boolean fieldRelative) {
     ChassisSpeeds speeds;
 
     if (fieldRelative) {
@@ -79,7 +85,7 @@ public class Drivetrain extends SubsystemBase {
       speeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
     }
 
-    setModuleStates(Constants.DrivetrainCalibration.KINEMATICS.toSwerveModuleStates(speeds));
+    setModuleStates(Constants.DrivetrainCalibration.KINEMATICS.toSwerveModuleStates(speeds, centerOfRotationMeters));
   }
 
   /**
@@ -119,6 +125,14 @@ public class Drivetrain extends SubsystemBase {
    */
   public double getHeading() {
     return pidgey.getRotation2d().getDegrees();
+  }
+
+  public double getPitch() {
+    return pidgey.getPitch();
+  }
+
+  public double getRoll() {
+    return pidgey.getRoll();
   }
 
   /**

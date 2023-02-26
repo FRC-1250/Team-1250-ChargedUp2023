@@ -12,12 +12,13 @@ public class ResetElevatorPosition extends InstantCommand {
   private final Elevator cmd_elevator;
 
   public ResetElevatorPosition(Elevator elevator) {
-    addRequirements(elevator);
     cmd_elevator = elevator;
+    addRequirements(elevator);
   }
 
   @Override
   public void initialize() {
     cmd_elevator.resetPosition();
   }
+
 }

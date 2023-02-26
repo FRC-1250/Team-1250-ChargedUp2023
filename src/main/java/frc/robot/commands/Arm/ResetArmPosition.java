@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Arm;
 
 public class ResetArmPosition extends InstantCommand {
+
   private final Arm cmd_arm;
 
   public ResetArmPosition(Arm arm) {
@@ -15,9 +16,9 @@ public class ResetArmPosition extends InstantCommand {
     addRequirements(arm);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     cmd_arm.resetPosition();
   }
+   
 }

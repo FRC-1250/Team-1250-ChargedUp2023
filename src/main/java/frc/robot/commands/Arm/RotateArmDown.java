@@ -7,16 +7,16 @@ package frc.robot.commands.Arm;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Arm;
 
-public class RetractArm extends InstantCommand {
+public class RotateArmDown extends InstantCommand {
 
   private final Arm cmd_arm;
 
-  public RetractArm(Arm arm) {
+  public RotateArmDown(Arm arm) {
     cmd_arm = arm;
   }
 
   @Override
   public void initialize() {
-    cmd_arm.retractArm();
+    cmd_arm.rotateArmDown();
   }
 }
