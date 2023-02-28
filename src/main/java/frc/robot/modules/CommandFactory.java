@@ -43,18 +43,20 @@ public class CommandFactory {
         this.trajectoryModule = trajectoryModule;
     }
 
-    public Command changeSystemStateCommand(SystemState superstructureState) {
+    public Command changeSystemStateCommand(SystemState systemState) {
         List<Command> commands = new ArrayList<>();
 
-        if (superstructureState.rotateArmDown == false) {
+        if (systemState.rotateArmDown == false) {
             commands.add(rotateArmUpCommand());
-            // Retract arm here?
-            commands.add(new SetElevatorPosition(elevator, superstructureState));
+            commands.add(homeArmCommand());
+            commands.add(new SetElevatorPosition(elevator, systemState));
         }
 
-        if (superstructureState.rotateArmDown == true) {
-            commands.add(new SetElevatorPosition(elevator, superstructureState));
-            commands.add(preextendCommand());
+        if (systemState.rotateArmDown == true) {
+            commands.add(new SetElevatorPosition(elevator, systemState));
+            if(systemState.preExtendArm) {
+                commands.add(preextendCommand());
+            }
             commands.add(rotateArmDownCommand());
         }
         return Commands.sequence(commands.toArray(Command[]::new));

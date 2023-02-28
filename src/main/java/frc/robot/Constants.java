@@ -26,30 +26,28 @@ public final class Constants {
   }
 
   public static final class ArmCalibrations {
-    public static final PIDGains RETRACT_PID_GAINS = new PIDGains(0.05, 0.0, 0.5, 0.0);
-    public static final PIDGains EXTEND_PID_GAINS = new PIDGains(0.075, 0.0, 0.75, 0.0);
+    public static final PIDGains PID_GAINS = new PIDGains(0.05, 0.0, 0.0, 0.0);
     public static final int TALON_CAN_ID = 13;
+    public static final double CLOSED_LOOP_RAMP_RATE = 1;
+    public static final double PEAK_OUTPUT_FORWARD = 0.5;
+    public static final double PEAK_OUTPUT_REVERSE = -0.75;
     public static final int BRAKE_SOLENOID_PORT = 0;
     public static final int ANGLE_SOLENOID_FORWARD_PORT = 2;
     public static final int ANGLE_SOLENOID_REVERSE_PORT = 7;
     public static final int AMP_RESET_THRESHOLD = 100;
-    public static final double MAX_HEIGHT_IN_TICKS_SOFT_LIMIT = 98000;
-    public static final double MAX_HEIGHT_IN_TICKS_HARD_LIMIT = 100000;
-    public static final double INCHES_TO_TICK_CONVERSION = MAX_HEIGHT_IN_TICKS_HARD_LIMIT / 48;
   }
 
   public static final class EndEffectorCalibrations {
     public static final int TALON_CAN_ID = 16;
   }
 
-  public final static class ElevatorCalibration {
+  public final static class ElevatorCalibrations {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 4, 0.0);
     public static final int TALON_CAN_ID = 14;
+    public static final double CLOSED_LOOP_RAMP_RATE = 1;
+    public static final double PEAK_OUTPUT_FORWARD = 0.5;
+    public static final double PEAK_OUTPUT_REVERSE = -0.1;
     public static final int BRAKE_SOLENOID_PORT = 1;
-    public static final int LIMIT_SWITCH_PORT = 3;
-    public static final double MAX_HEIGHT_IN_TICKS_HARD_LIMIT = 46000;
-    public static final double INCHES_TO_TICK_CONVERSION = MAX_HEIGHT_IN_TICKS_HARD_LIMIT / 58;
-
   }
 
   public final static class DrivetrainCalibration {
@@ -96,13 +94,13 @@ public final class Constants {
      * The disatance between the centers of the right and left wheels on the robot.
      * This value must be in the same unit as {@wheelBase}.
      */
-    public static final double TRACK_WIDTH = Units.inchesToMeters(32);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
 
     /**
      * The distance between the front and back wheels on the robot.
      * This value must be in the same unit as {@trackWidth}.
      */
-    public static final double WHEELBASE = Units.inchesToMeters(28);
+    public static final double WHEELBASE = Units.inchesToMeters(25);
 
     public static final Translation2d FRONT_LEFT_MODULE_LOCATION = new Translation2d(WHEELBASE / 2, TRACK_WIDTH / 2);
     public static final Translation2d FRONT_RIGHT_MODULE_LOCATION = new Translation2d(WHEELBASE / 2, -TRACK_WIDTH / 2);
@@ -144,8 +142,8 @@ public final class Constants {
 
     public static final int PIDGEON_CAN_ID = 15;
 
-    public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.15, 0.0, 0.2, 0.0);
-    public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.7, 0.0, 0.1, 0.0);
+    public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.1, 0.0, 1, 0.0);
+    public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.5, 0.0, 5, 0.0);
     public static final double METERS_PER_SECOND_TO_TALON_TICKS_CONVERSION_FACTOR = 5293;
     public static final double DEGRESS_TO_TALON_TICKS_CONVERSION_FACTOR = 4096 / 360;
   }

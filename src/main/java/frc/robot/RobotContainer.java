@@ -200,8 +200,8 @@ public class RobotContainer {
     // Up and out is positive, Down and in is negative
     upDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
     downDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
-    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
+    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, false));
+    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, false));
     shareButton.onTrue(new RotateArmDown(arm));
     optionsButton.onTrue(new RotateArmUp(arm));
     
@@ -211,7 +211,7 @@ public class RobotContainer {
     l2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
     crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
     squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR));
-    circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.SUBSTATION));
+    circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION));
     triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand())
         .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
     triangleButton.onFalse(commandFactory.preextendCommand())

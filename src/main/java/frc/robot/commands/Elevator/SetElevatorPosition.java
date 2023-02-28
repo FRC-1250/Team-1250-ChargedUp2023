@@ -34,7 +34,6 @@ public class SetElevatorPosition extends CommandBase {
   @Override
   public void initialize() {
     cmd_elevator.disableBrake();
-    cmd_elevator.setPIDProfile(cmd_positionInTicks);
   }
 
   @Override
