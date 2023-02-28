@@ -19,26 +19,24 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ArmCalibrations;
 
 public class Arm extends SubsystemBase {
   public enum ArmPosition {
-    HARD_LIMIT(48),
-    SOFT_LIMIT(45),
-    TOP_NODE(39.75),
-    MID_NODE(22.75),
-    HYBRID(6),
-    FLOOR(6),
-    SUBSTATION(6),
-    HOME(15), // TODO: set to real value after correcting arm gear ratio issues
-    PREEXTEND(15);
+    LIMIT(100000),
+    TOP_CONE(78600),
+    SUBSTATION(21700),
+    TOP_CUBE(78600),
+    MID_CONE(38500),
+    MID_CUBE(38500),
+    HYBRID(21700),
+    FLOOR(21700),
+    HOME(21700),
+    PRE_EXTEND(21700);
 
     public final double positionInTicks;
-    public final double positionInInches;
 
-    ArmPosition(double e_positionInInches) {
-      positionInInches = e_positionInInches;
-      positionInTicks = e_positionInInches * ArmCalibrations.INCHES_TO_TICK_CONVERSION;
+    ArmPosition(double e_positionInTicks) {
+      positionInTicks = e_positionInTicks;
     }
   }
 
@@ -72,16 +70,18 @@ public class Arm extends SubsystemBase {
     extendSlotConfiguration.kP = Constants.ArmCalibrations.EXTEND_PID_GAINS.kP;
     extendSlotConfiguration.kI = Constants.ArmCalibrations.EXTEND_PID_GAINS.kI;
     extendSlotConfiguration.kD = Constants.ArmCalibrations.EXTEND_PID_GAINS.kD;
+    extendSlotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
     
     SlotConfiguration retractSlotConfiguration = new SlotConfiguration();
     retractSlotConfiguration.kP = Constants.ArmCalibrations.RETRACT_PID_GAINS.kP;
     retractSlotConfiguration.kI = Constants.ArmCalibrations.RETRACT_PID_GAINS.kI;
     retractSlotConfiguration.kD = Constants.ArmCalibrations.RETRACT_PID_GAINS.kD;
-
+    retractSlotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
+    
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
     talonFXConfiguration.slot0 = extendSlotConfiguration;
     talonFXConfiguration.slot1 = retractSlotConfiguration;
-    talonFXConfiguration.closedloopRamp = 0.5;
+    talonFXConfiguration.closedloopRamp = 1;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
@@ -105,7 +105,7 @@ public class Arm extends SubsystemBase {
 
     if(override) {
       talon.set(speed);
-    } else if(direction == 1 && talon.getSelectedSensorPosition() < ArmPosition.SOFT_LIMIT.positionInTicks) {
+    } else if(direction == 1 && talon.getSelectedSensorPosition() < ArmPosition.LIMIT.positionInTicks) {
       talon.set(TalonFXControlMode.PercentOutput, speed);
     } else if (direction == -1 && talon.getSelectedSensorPosition() > ArmPosition.HOME.positionInTicks) {
       talon.set(speed);
@@ -120,6 +120,10 @@ public class Arm extends SubsystemBase {
 
   public void setPosition(double targetPositon) {
       talon.set(TalonFXControlMode.Position, targetPositon);
+  }
+
+  public boolean isAtSetPoint(double targetPosition) {
+    return Math.abs(targetPosition - talon.getSelectedSensorPosition()) < Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
   }
 
   public double getPosition() {
@@ -170,7 +174,6 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Stator current", talon.getStatorCurrent());
-    SmartDashboard.putNumber("Supply Current", talon.getSupplyCurrent());
+    SmartDashboard.putNumber("Arm position", talon.getSelectedSensorPosition());
   }
 }

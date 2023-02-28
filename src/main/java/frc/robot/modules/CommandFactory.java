@@ -6,6 +6,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Arm.SetArmPosition;
@@ -45,13 +46,13 @@ public class CommandFactory {
     public Command changeSystemStateCommand(SystemState superstructureState) {
         List<Command> commands = new ArrayList<>();
 
-        if (superstructureState.rotateArmForwardInMotion == false) {
+        if (superstructureState.rotateArmDown == false) {
             commands.add(rotateArmUpCommand());
             // Retract arm here?
             commands.add(new SetElevatorPosition(elevator, superstructureState));
         }
 
-        if (superstructureState.rotateArmForwardInMotion == true) {
+        if (superstructureState.rotateArmDown == true) {
             commands.add(new SetElevatorPosition(elevator, superstructureState));
             commands.add(preextendCommand());
             commands.add(rotateArmDownCommand());
@@ -75,8 +76,8 @@ public class CommandFactory {
         return new SetArmPosition(arm, Arm.ArmPosition.HOME);
     }
 
-    public Command preextendCommand(){
-        return new SetArmPosition(arm, Arm.ArmPosition.PREEXTEND);
+    public Command preextendCommand() {
+        return new SetArmPosition(arm, Arm.ArmPosition.PRE_EXTEND);
     }
 
     public Command armExtendByDefaultCommand() {
@@ -113,11 +114,21 @@ public class CommandFactory {
 
     // Auto commands
     public Command autoScore(SystemState systemState) {
-        return Commands.sequence(
-                changeSystemStateCommand(systemState),
-                extendArmBySystemStateCommand(),
-                endEffectorReleaseConeGraspCubeCommand().withTimeout(0.5),
-                homeArmCommand());
+        List<Command> commands = new ArrayList<>();
+        commands.add(changeSystemStateCommand(systemState));
+        commands.add(new WaitCommand(0.5));
+        commands.add(extendArmBySystemStateCommand());
+
+        switch (systemState) {
+            case TOP_CONE:
+            case MID_CONE:
+                commands.add(endEffectorReleaseConeGraspCubeCommand().withTimeout(0.5));
+            default:
+                commands.add(endEffectorReleaseCubeGraspConeCommand().withTimeout(0.5));
+
+        }
+        commands.add(preextendCommand().withTimeout(1));
+        return Commands.sequence(commands.toArray(Command[]::new));
     }
 
     public Command autoFollowPath(PathPlannerTrajectory pathPlannerTrajectory) {

@@ -14,29 +14,26 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ElevatorCalibration;
 
 public class Elevator extends SubsystemBase {
   public enum ElevatorPosition {
-    HARD_LIMIT(58),
-    SOFT_LIMIT(50),
-    TOP_CONE(46),
-    SUBSTATION(37.375),
-    TOP_CUBE(35.5),
-    MID_CONE(34),
-    MID_CUBE(23.5),
-    HYBIRD(15),
-    FLOOR(15),
-    HOME(1);
+    LIMIT(47500),
+    TOP_CONE(44250),
+    SUBSTATION(41500),
+    TOP_CUBE(37200),
+    MID_CONE(34100),
+    MID_CUBE(23500),
+    HYBRID(2300),
+    FLOOR(2300),
+    HOME(2300);
 
     public final double positionInTicks;
-    public final double positionInInches;
 
-    ElevatorPosition(double e_positionInInches) {
-      positionInInches = e_positionInInches;
-      positionInTicks = e_positionInInches * ElevatorCalibration.INCHES_TO_TICK_CONVERSION;
+    ElevatorPosition(double e_positionInTicks) {
+      positionInTicks = e_positionInTicks;
     }
   }
 
@@ -66,19 +63,21 @@ public class Elevator extends SubsystemBase {
     upSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
     upSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
     upSlotConfiguration.closedLoopPeakOutput = 0.5;
+    upSlotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
 
     SlotConfiguration downSlotConfiguration = new SlotConfiguration();
     downSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
     downSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
     downSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
-    downSlotConfiguration.closedLoopPeakOutput = 0.1;
+    downSlotConfiguration.closedLoopPeakOutput = 0.5;
+    downSlotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
 
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
     talonFXConfiguration.peakOutputForward = 1;
     talonFXConfiguration.peakOutputReverse = 0;
     talonFXConfiguration.slot0 = upSlotConfiguration;
     talonFXConfiguration.slot1 = downSlotConfiguration;
-    talonFXConfiguration.closedloopRamp = 0.5;
+    talonFXConfiguration.closedloopRamp = 1;
     talonFXConfiguration.clearPositionOnLimitR = true;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
@@ -103,7 +102,7 @@ public class Elevator extends SubsystemBase {
 
     if(override) {
       talon.set(speed);
-    } else if(direction == 1 && talon.getSelectedSensorPosition() < ElevatorPosition.SOFT_LIMIT.positionInTicks) {
+    } else if(direction == 1 && talon.getSelectedSensorPosition() < ElevatorPosition.LIMIT.positionInTicks) {
       talon.set(TalonFXControlMode.PercentOutput, speed);
     } else {
       talon.set(TalonFXControlMode.PercentOutput, 0);
@@ -112,6 +111,10 @@ public class Elevator extends SubsystemBase {
 
   public void SetPosition(Double tickcount) {
     talon.set(TalonFXControlMode.Position, tickcount);
+  }
+
+  public boolean isAtSetPoint(double targetPosition) {
+    return Math.abs(targetPosition - talon.getSelectedSensorPosition()) < Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
   }
 
   public void stop() {
@@ -140,6 +143,6 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Elevator position", talon.getSelectedSensorPosition());
   }
 }

@@ -1,13 +1,14 @@
 package frc.robot.modules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -28,28 +29,37 @@ public class TrajectoryBuilder {
         BLUE_FLOOR_2(new Translation2d(7.08, 2.16)),
         BLUE_FLOOR_3(new Translation2d(7.08, 3.37)),
         BLUE_FLOOR_4(new Translation2d(7.08, 4.58)),
-        RED_GRID_1(new Translation2d(14.75, 0.5)),
-        RED_GRID_2(new Translation2d(14.75, 1.10)),
-        RED_GRID_3(new Translation2d(14.75, 1.60)),
-        RED_GRID_4(new Translation2d(14.75, 2.10)),
-        RED_GRID_5(new Translation2d(14.75, 2.80)),
-        RED_GRID_6(new Translation2d(14.75, 3.30)),
-        RED_GRID_7(new Translation2d(14.75, 3.80)),
-        RED_GRID_8(new Translation2d(14.75, 4.40)),
-        RED_GRID_9(new Translation2d(14.75, 5)),
-        RED_FLOOR_1(new Translation2d(9.48, 0.95)),
-        RED_FLOOR_2(new Translation2d(9.48, 2.16)),
-        RED_FLOOR_3(new Translation2d(9.48, 3.37)),
-        RED_FLOOR_4(new Translation2d(9.48, 4.58));
+        RED_GRID_1(reflectOverY(new Translation2d(1.75, 0.5))),
+        RED_GRID_2(reflectOverY(new Translation2d(1.75, 1.10))),
+        RED_GRID_3(reflectOverY(new Translation2d(1.75, 1.60))),
+        RED_GRID_4(reflectOverY(new Translation2d(1.75, 2.10))),
+        RED_GRID_5(reflectOverY(new Translation2d(1.75, 2.80))),
+        RED_GRID_6(reflectOverY(new Translation2d(1.75, 3.30))),
+        RED_GRID_7(reflectOverY(new Translation2d(1.75, 3.80))),
+        RED_GRID_8(reflectOverY(new Translation2d(1.75, 4.40))),
+        RED_GRID_9(reflectOverY(new Translation2d(1.75, 5))),
+        RED_FLOOR_1(reflectOverY(new Translation2d(7.08, 0.95))),
+        RED_FLOOR_2(reflectOverY(new Translation2d(7.08, 2.16))),
+        RED_FLOOR_3(reflectOverY(new Translation2d(7.08, 3.37))),
+        RED_FLOOR_4(reflectOverY(new Translation2d(7.08, 4.58)));
 
         public final Translation2d translation2d;
 
         TrajectoryLocation(Translation2d e_translation2d) {
             translation2d = e_translation2d;
         }
+
+        public static Translation2d reflectOverX(Translation2d point) {
+            return new Translation2d(((X_COORDINATE_MIDPOINT - point.getX()) + X_COORDINATE_MIDPOINT), point.getY());
+        }
+    
+        public static Translation2d reflectOverY(Translation2d point) {
+            return new Translation2d(point.getX(), ((Y_COORDINATE_MIDPOINT - point.getY()) + Y_COORDINATE_MIDPOINT));
+        }
     }
 
-    private final double X_COORDINATE_MIDPOINT = Units.feetToMeters(27);
+    private static final double X_COORDINATE_MIDPOINT = Units.feetToMeters(27);
+    private static final double Y_COORDINATE_MIDPOINT = Units.feetToMeters(13.5);
     private PathPoint startPathPoint = null;
     private final List<PathPoint> pathPoints = new ArrayList<>();
     private PathPoint endPathPoint = null;
@@ -68,13 +78,11 @@ public class TrajectoryBuilder {
     private final List<PathPoint> redShortSidePickup = new ArrayList<>();
     private final List<PathPoint> redLongSidePickup = new ArrayList<>();
 
-
     public TrajectoryBuilder() {
         buildShortSideMobility();
         buildLongSideMobility();
         buildShortSidePickup();
         buildLongSidePickup();
-        buildDriveStraightAndRotateCounterClockwise();
     }
 
     public TrajectoryBuilder driveStraightAndRotateCounterClockwise() {
@@ -182,72 +190,36 @@ public class TrajectoryBuilder {
         endPathPoint = null;
     }
 
-    private void buildDriveStraightAndRotateCounterClockwise() {
-        Translation2d p1 = new Translation2d(2, 0);
-        Translation2d p2 = new Translation2d(4, 0);
-
-        driveStraightAndRotateCounterClockwise.addAll(
-                Arrays.asList(
-                        new PathPoint(p1, new Rotation2d(), Rotation2d.fromDegrees(0)),
-                        new PathPoint(p2, new Rotation2d(), Rotation2d.fromDegrees(90))));
-    }
-
-    private void buildShortSideMobility() {
-        Translation2d p1 = new Translation2d(3, 4.6);
-        Translation2d p2 = new Translation2d(6, 4.6);
-
-        blueShortSideMobility.addAll(
-                Arrays.asList(
-                        new PathPoint(p1, new Rotation2d(), Rotation2d.fromDegrees(-135)),
-                        new PathPoint(p2, new Rotation2d(), Rotation2d.fromDegrees(-45))));
-
-        redShortSideMobility.addAll(
-                Arrays.asList(
-                        new PathPoint(mirrorOverX(p1), new Rotation2d(), Rotation2d.fromDegrees(-135)),
-                        new PathPoint(mirrorOverX(p2), new Rotation2d(), Rotation2d.fromDegrees(-45))));
-    }
-
     private void buildLongSideMobility() {
-        Translation2d p1 = new Translation2d(3, 0.95);
-        Translation2d p2 = new Translation2d(5.7, 0.95);
-
-        blueLongSideMobility.addAll(
-                Arrays.asList(
-                        new PathPoint(p1, new Rotation2d(), Rotation2d.fromDegrees(135)),
-                        new PathPoint(p2, new Rotation2d(), Rotation2d.fromDegrees(45))));
-
-        redLongSideMobility.addAll(
-                Arrays.asList(
-                        new PathPoint(mirrorOverX(p1), new Rotation2d(), Rotation2d.fromDegrees(135)),
-                        new PathPoint(mirrorOverX(p2), new Rotation2d(), Rotation2d.fromDegrees(45))));
+        List<Pose2d> poses = new ArrayList<>();
+        poses.add(new Pose2d(3.25, 0.8, Rotation2d.fromDegrees(0)));
+        poses.add(new Pose2d(4.5, 0.8, Rotation2d.fromDegrees(0)));
+        poses.add(new Pose2d(6, 0.95, Rotation2d.fromDegrees(0)));
+        blueLongSideMobility.addAll(getPathPoints(poses));
+        redLongSideMobility.addAll(getPathPointsOverY(poses));
     }
 
     private void buildLongSidePickup() {
-        blueLongSidePickup.addAll(
-            Arrays.asList(
-                new PathPoint(TrajectoryLocation.BLUE_FLOOR_1.translation2d, new Rotation2d(), Rotation2d.fromDegrees(0))
-            )
-        );
+        List<Pose2d> poses = new ArrayList<>();
+        poses.add(new Pose2d(TrajectoryLocation.BLUE_FLOOR_1.translation2d, new Rotation2d()));
+        blueLongSidePickup.addAll(getPathPoints(poses));
+        redLongSidePickup.addAll(getPathPointsOverY(poses));
+    }
 
-        redLongSidePickup.addAll(
-            Arrays.asList(
-                new PathPoint(TrajectoryLocation.RED_FLOOR_1.translation2d, new Rotation2d(), Rotation2d.fromDegrees(0))
-            )
-        );
+    private void buildShortSideMobility() {
+        List<Pose2d> poses = new ArrayList<>();
+        poses.add(new Pose2d(3, 4.7, Rotation2d.fromDegrees(0)));
+        poses.add(new Pose2d(4.5, 4.7, Rotation2d.fromDegrees(0)));
+        poses.add(new Pose2d(6, 4.6, Rotation2d.fromDegrees(0)));
+        blueShortSideMobility.addAll(getPathPoints(poses));
+        redShortSideMobility.addAll(getPathPointsOverY(poses));
     }
 
     private void buildShortSidePickup() {
-        blueShortSidePickup.addAll(
-            Arrays.asList(
-                new PathPoint(TrajectoryLocation.BLUE_FLOOR_4.translation2d, new Rotation2d(), Rotation2d.fromDegrees(0))
-            )
-        );
-
-        redShortSidePickup.addAll(
-            Arrays.asList(
-                new PathPoint(TrajectoryLocation.RED_FLOOR_4.translation2d, new Rotation2d(), Rotation2d.fromDegrees(0))
-            )
-        );
+        List<Pose2d> poses = new ArrayList<>();
+        poses.add(new Pose2d(TrajectoryLocation.BLUE_FLOOR_4.translation2d, new Rotation2d()));
+        blueShortSidePickup.addAll(getPathPoints(poses));
+        redShortSidePickup.addAll(getPathPointsOverY(poses));
     }
 
     private List<PathPoint> reverseList(List<PathPoint> points) {
@@ -258,7 +230,19 @@ public class TrajectoryBuilder {
         return reversedList;
     }
 
-    private Translation2d mirrorOverX(Translation2d point) {
-        return new Translation2d(((X_COORDINATE_MIDPOINT - point.getX()) + X_COORDINATE_MIDPOINT), point.getY());
+    private List<PathPoint> getPathPoints(List<Pose2d> poses) {
+        List<PathPoint> points = new ArrayList<>();
+        for (Pose2d pose : poses) {
+            points.add(new PathPoint(pose.getTranslation(), new Rotation2d(), pose.getRotation()));
+        }
+        return points;
+    }
+
+    private List<PathPoint> getPathPointsOverY(List<Pose2d> poses) {
+        List<PathPoint> points = new ArrayList<>();
+        for (Pose2d pose : poses) {
+            points.add(new PathPoint(TrajectoryLocation.reflectOverY(pose.getTranslation()), new Rotation2d(), pose.getRotation()));
+        }
+        return points;
     }
 }

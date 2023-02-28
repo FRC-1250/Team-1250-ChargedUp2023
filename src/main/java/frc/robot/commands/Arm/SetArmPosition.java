@@ -5,7 +5,6 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmPosition;
 
@@ -42,6 +41,6 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(cmd_arm.getPosition() - cmd_positionInTicks) < Constants.TALONFX_INTEGRATED_SENSOR_RESOLUTION * 0.25;
+    return cmd_arm.isAtSetPoint(cmd_positionInTicks);
   }
 }

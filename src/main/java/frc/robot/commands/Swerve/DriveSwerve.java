@@ -80,9 +80,12 @@ public class DriveSwerve extends CommandBase {
 
     var centerOfRotation = centerOfRotationSupplier.getAsInt();
     if(centerOfRotation != -1) {
-      var translation2d = new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0);
-      translation2d.rotateBy(Rotation2d.fromDegrees(centerOfRotation));
-      drivetrain.drive(xSpeed, ySpeed, rotSpeed, new Translation2d(DrivetrainCalibration.WHEELBASE / 2, DrivetrainCalibration.TRACK_WIDTH / 2), fieldRelative);
+      drivetrain.drive(
+        xSpeed, 
+        ySpeed, 
+        rotSpeed,
+        new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0).rotateBy(Rotation2d.fromDegrees(centerOfRotation)),
+        fieldRelative);
     } else {
       drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
     }

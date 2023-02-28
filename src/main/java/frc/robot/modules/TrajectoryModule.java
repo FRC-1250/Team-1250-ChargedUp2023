@@ -5,7 +5,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.modules.TrajectoryBuilder.TrajectoryLocation;
 
 /**
@@ -13,71 +12,65 @@ import frc.robot.modules.TrajectoryBuilder.TrajectoryLocation;
  */
 public class TrajectoryModule {
     public class TrajectorySet {
-        public final PathPlannerTrajectory straightAndRotateCCW;
-        public final PathPlannerTrajectory shortSideMobility;
-        public final PathPlannerTrajectory longSideMobility;
-        public final PathPlannerTrajectory shortSideMobilityAndPickup;
-        public final PathPlannerTrajectory longSideMobilityAndPickup;
+        public final PathPlannerTrajectory blueShortSideMobility;
+        public final PathPlannerTrajectory blueLongSideMobility;
+        public final PathPlannerTrajectory blueShortSideMobilityAndPickup;
+        public final PathPlannerTrajectory blueLongSideMobilityAndPickup;
+
+        public final PathPlannerTrajectory redShortSideMobility;
+        public final PathPlannerTrajectory redLongSideMobility;
+        public final PathPlannerTrajectory redShortSideMobilityAndPickup;
+        public final PathPlannerTrajectory redLongSideMobilityAndPickup;
+
         private final TrajectoryBuilder trajectoryBuilder = new TrajectoryBuilder();
 
         public TrajectorySet() {
-            switch (DriverStation.getAlliance()) {
-                case Blue:
-                    longSideMobility = trajectoryBuilder
-                            .startWith(TrajectoryLocation.BLUE_GRID_1, Rotation2d.fromDegrees(180))
-                            .blueLongSideMobility()
-                            .build();
-                    longSideMobilityAndPickup = trajectoryBuilder
-                            .startWith(TrajectoryLocation.BLUE_GRID_1, Rotation2d.fromDegrees(180))
-                            .blueShortSideMobility()
-                            .blueShortSidePickup()
-                            .blueShortSideMobilityReverse()
-                            .endWith(TrajectoryLocation.BLUE_GRID_2, Rotation2d.fromDegrees(180))
-                            .build();
-                    shortSideMobility = trajectoryBuilder
-                            .startWith(TrajectoryLocation.BLUE_GRID_9, Rotation2d.fromDegrees(180))
-                            .blueShortSideMobility()
-                            .build();
-                    shortSideMobilityAndPickup = trajectoryBuilder
-                            .startWith(TrajectoryLocation.BLUE_GRID_9, Rotation2d.fromDegrees(180))
-                            .blueShortSideMobility()
-                            .blueShortSidePickup()
-                            .blueShortSideMobilityReverse()
-                            .endWith(TrajectoryLocation.BLUE_GRID_8, Rotation2d.fromDegrees(180))
-                            .build();
-                    break;
-                case Red:
-                    longSideMobility = trajectoryBuilder
-                            .startWith(TrajectoryLocation.RED_GRID_1, Rotation2d.fromDegrees(180))
-                            .redLongSideMobility()
-                            .build();
-                    longSideMobilityAndPickup = trajectoryBuilder
-                            .startWith(TrajectoryLocation.RED_GRID_1, Rotation2d.fromDegrees(180))
-                            .redShortSideMobility()
-                            .redShortSidePickup()
-                            .redShortSideMobilityReverse()
-                            .endWith(TrajectoryLocation.RED_GRID_2, Rotation2d.fromDegrees(180))
-                            .build();
-                    shortSideMobility = trajectoryBuilder
-                            .startWith(TrajectoryLocation.RED_GRID_9, Rotation2d.fromDegrees(180))
-                            .redShortSideMobility()
-                            .build();
-                    shortSideMobilityAndPickup = trajectoryBuilder
-                            .startWith(TrajectoryLocation.RED_GRID_9, Rotation2d.fromDegrees(180))
-                            .redShortSideMobility()
-                            .redShortSidePickup()
-                            .redShortSideMobilityReverse()
-                            .endWith(TrajectoryLocation.RED_GRID_8, Rotation2d.fromDegrees(180))
-                            .build();
-                    break;
-                default:
-                    longSideMobility = new PathPlannerTrajectory();
-                    longSideMobilityAndPickup = new PathPlannerTrajectory();
-                    shortSideMobility = new PathPlannerTrajectory();
-                    shortSideMobilityAndPickup = new PathPlannerTrajectory();
-                    break;
-            }
-            straightAndRotateCCW = trajectoryBuilder.driveStraightAndRotateCounterClockwise().build();
+            blueLongSideMobility = trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_1, Rotation2d.fromDegrees(180))
+                    .blueLongSideMobility()
+                    .build();
+            blueLongSideMobilityAndPickup = trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_1, Rotation2d.fromDegrees(180))
+                    .blueShortSideMobility()
+                    .blueShortSidePickup()
+                    .blueShortSideMobilityReverse()
+                    .endWith(TrajectoryLocation.BLUE_GRID_2, Rotation2d.fromDegrees(180))
+                    .build();
+            blueShortSideMobility = trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_9, Rotation2d.fromDegrees(180))
+                    .blueShortSideMobility()
+                    .build();
+            blueShortSideMobilityAndPickup = trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_9, Rotation2d.fromDegrees(180))
+                    .blueShortSideMobility()
+                    .blueShortSidePickup()
+                    .blueShortSideMobilityReverse()
+                    .endWith(TrajectoryLocation.BLUE_GRID_8, Rotation2d.fromDegrees(180))
+                    .build();
+
+            redLongSideMobility = trajectoryBuilder
+                    .startWith(TrajectoryLocation.RED_GRID_1, Rotation2d.fromDegrees(180))
+                    .redLongSideMobility()
+                    .build();
+            redLongSideMobilityAndPickup = trajectoryBuilder
+                    .startWith(TrajectoryLocation.RED_GRID_1, Rotation2d.fromDegrees(180))
+                    .redShortSideMobility()
+                    .redShortSidePickup()
+                    .redShortSideMobilityReverse()
+                    .endWith(TrajectoryLocation.RED_GRID_2, Rotation2d.fromDegrees(180))
+                    .build();
+            redShortSideMobility = trajectoryBuilder
+                    .startWith(TrajectoryLocation.RED_GRID_9, Rotation2d.fromDegrees(180))
+                    .redShortSideMobility()
+                    .build();
+            redShortSideMobilityAndPickup = trajectoryBuilder
+                    .startWith(TrajectoryLocation.RED_GRID_9, Rotation2d.fromDegrees(180))
+                    .redShortSideMobility()
+                    .redShortSidePickup()
+                    .redShortSideMobilityReverse()
+                    .endWith(TrajectoryLocation.RED_GRID_8, Rotation2d.fromDegrees(180))
+                    .build();
+
         }
     }
 

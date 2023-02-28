@@ -8,7 +8,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.function.BooleanSupplier;
@@ -223,29 +222,28 @@ public class RobotContainer {
     autoChooser.setDefaultOption("DoNothing", new WaitCommand(15));
 
     autoChooser.addOption(
-        "ScoreTopCone",
+        "TopConeAndWait",
         commandFactory.autoScore(SystemState.TOP_CONE));
 
     autoChooser.addOption(
-        "LongSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().longSideMobility));
+        "TopCubeAndWait",
+        commandFactory.autoScore(SystemState.TOP_CUBE));    
 
     autoChooser.addOption(
-        "ShortSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().shortSideMobility));
+        "BlueLongSideMobility",
+        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().blueLongSideMobility));
 
     autoChooser.addOption(
-        "ScoreTopConeAndLongSideMobility",
-        Commands.sequence(
-            commandFactory.autoScore(SystemState.TOP_CONE),
-            commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().longSideMobility)));
+        "BlueShortSideMobility",
+        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().blueShortSideMobility));
 
     autoChooser.addOption(
-        "ScoreTopConeAndShortSideMobility",
-        Commands.sequence(
-            commandFactory.autoScore(SystemState.TOP_CONE),
-            commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().shortSideMobility)));
-    SmartDashboard.putData(autoChooser);
+        "RedLongSideMobility",
+        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redLongSideMobility));
+
+    autoChooser.addOption(
+        "RedShortSideMobility",
+        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redShortSideMobility));
   }
 
   /**

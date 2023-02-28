@@ -5,7 +5,6 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.modules.SystemStateHandler;
 import frc.robot.modules.SystemStateHandler.SystemState;
 import frc.robot.subsystems.Elevator;
@@ -55,6 +54,6 @@ public class SetElevatorPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(cmd_elevator.getPosition() - cmd_positionInTicks) < Constants.TALONFX_INTEGRATED_SENSOR_RESOLUTION * 0.25;
+    return cmd_elevator.isAtSetPoint(cmd_positionInTicks);
   }
 }

@@ -58,7 +58,7 @@ public class Drivetrain extends SubsystemBase {
       }, new Pose2d(0, 0, new Rotation2d()));
 
   public Drivetrain() {
-zeroHeading();
+    pidgey.setYaw(180);
   }
 
   /**
