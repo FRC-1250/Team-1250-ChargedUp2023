@@ -37,64 +37,31 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  public enum PIDProfile {
-    UP(0),
-    DOWN(1);
-
-    public final int id;
-
-    PIDProfile(int e_id) {
-      id = e_id;
-    }
-  }
-
-  private final WPI_TalonFX talon = new WPI_TalonFX(Constants.ElevatorCalibration.TALON_CAN_ID);
+  private final WPI_TalonFX talon = new WPI_TalonFX(Constants.ElevatorCalibrations.TALON_CAN_ID);
   private final Solenoid airBrake;
   private final PneumaticHub pneumaticHub;
 
   public Elevator(PneumaticHub subPneumaticHub) {
     pneumaticHub = subPneumaticHub;
-    airBrake = pneumaticHub.makeSolenoid(Constants.ElevatorCalibration.BRAKE_SOLENOID_PORT);
+    airBrake = pneumaticHub.makeSolenoid(Constants.ElevatorCalibrations.BRAKE_SOLENOID_PORT);
     talon.setNeutralMode(NeutralMode.Brake);
     talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-    SlotConfiguration upSlotConfiguration = new SlotConfiguration();
-    upSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
-    upSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
-    upSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
-    upSlotConfiguration.closedLoopPeakOutput = 0.5;
-    upSlotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
-
-    SlotConfiguration downSlotConfiguration = new SlotConfiguration();
-    downSlotConfiguration.kP = Constants.ElevatorCalibration.PID_GAINS.kP;
-    downSlotConfiguration.kI = Constants.ElevatorCalibration.PID_GAINS.kI;
-    downSlotConfiguration.kD = Constants.ElevatorCalibration.PID_GAINS.kD;
-    downSlotConfiguration.closedLoopPeakOutput = 0.5;
-    downSlotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
+    SlotConfiguration slotConfiguration = new SlotConfiguration();
+    slotConfiguration.kP = Constants.ElevatorCalibrations.PID_GAINS.kP;
+    slotConfiguration.kI = Constants.ElevatorCalibrations.PID_GAINS.kI;
+    slotConfiguration.kD = Constants.ElevatorCalibrations.PID_GAINS.kD;
+    slotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
 
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-    talonFXConfiguration.peakOutputForward = 1;
-    talonFXConfiguration.peakOutputReverse = 0;
-    talonFXConfiguration.slot0 = upSlotConfiguration;
-    talonFXConfiguration.slot1 = downSlotConfiguration;
-    talonFXConfiguration.closedloopRamp = 1;
+    talonFXConfiguration.slot0 = slotConfiguration;
+    talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
+    talonFXConfiguration.peakOutputReverse = Constants.ElevatorCalibrations.PEAK_OUTPUT_REVERSE;
+    talonFXConfiguration.closedloopRamp = Constants.ElevatorCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.clearPositionOnLimitR = true;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
-  }
-
-  private void setPIDProfile(PIDProfile pidProfile) {
-    talon.selectProfileSlot(pidProfile.id, 0);
-  }
-
-  public void setPIDProfile(double targetPosition) {
-    var direction = Math.signum(targetPosition - getPosition());
-    if (direction == 1) {
-      setPIDProfile(Elevator.PIDProfile.UP);
-    } else if (direction == -1) {
-      setPIDProfile(Elevator.PIDProfile.DOWN);
-    }
   }
 
   public void setPercentOutput(double speed, boolean override) {
@@ -143,6 +110,9 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Elevator position", talon.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Elevator sensor position", talon.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
+    SmartDashboard.putNumber("Elevator percent output", talon.get());
+    SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
   }
 }

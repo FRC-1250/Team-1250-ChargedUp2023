@@ -41,14 +41,13 @@ public final class Constants {
     public static final int TALON_CAN_ID = 16;
   }
 
-  public final static class ElevatorCalibration {
+  public final static class ElevatorCalibrations {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 4, 0.0);
     public static final int TALON_CAN_ID = 14;
+    public static final double CLOSED_LOOP_RAMP_RATE = 1;
+    public static final double PEAK_OUTPUT_FORWARD = 0.5;
+    public static final double PEAK_OUTPUT_REVERSE = -0.1;
     public static final int BRAKE_SOLENOID_PORT = 1;
-    public static final int LIMIT_SWITCH_PORT = 3;
-    public static final double MAX_HEIGHT_IN_TICKS_HARD_LIMIT = 46000;
-    public static final double INCHES_TO_TICK_CONVERSION = MAX_HEIGHT_IN_TICKS_HARD_LIMIT / 58;
-
   }
 
   public final static class DrivetrainCalibration {
