@@ -22,13 +22,14 @@ public class Elevator extends SubsystemBase {
   public enum ElevatorPosition {
     LIMIT(47500),
     TOP_CONE(44250),
-    SUBSTATION(41500),
+    SINGLE_SUBSTATION(23500),
+    DOUBLE_SUBSTATION(41500),
     TOP_CUBE(37200),
     MID_CONE(34100),
     MID_CUBE(23500),
     HYBRID(2300),
     FLOOR(2300),
-    HOME(2300);
+    HOME(500);
 
     public final double positionInTicks;
 

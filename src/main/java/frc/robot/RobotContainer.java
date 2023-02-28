@@ -211,7 +211,7 @@ public class RobotContainer {
     l2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
     crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
     squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR));
-    circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.SUBSTATION));
+    circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION));
     triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand())
         .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
     triangleButton.onFalse(commandFactory.preextendCommand())
