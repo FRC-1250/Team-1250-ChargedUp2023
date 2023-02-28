@@ -200,8 +200,8 @@ public class RobotContainer {
     // Up and out is positive, Down and in is negative
     upDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
     downDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
-    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
+    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, false));
+    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, false));
     shareButton.onTrue(new RotateArmDown(arm));
     optionsButton.onTrue(new RotateArmUp(arm));
     

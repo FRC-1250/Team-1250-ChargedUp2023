@@ -20,7 +20,6 @@ public class SetArmPositionBySystemState extends CommandBase {
   @Override
   public void initialize() {
     cmd_arm.disableBrake();
-    cmd_arm.setPIDProfile(SystemStateHandler.getInstance().getSystemState().armExtendActionPosition.positionInTicks);
   }
 
   @Override

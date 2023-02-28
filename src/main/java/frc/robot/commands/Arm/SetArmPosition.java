@@ -25,7 +25,6 @@ public class SetArmPosition extends CommandBase {
   @Override
   public void initialize() {
     cmd_arm.disableBrake();
-    cmd_arm.setPIDProfile(cmd_positionInTicks);
   }
 
   @Override

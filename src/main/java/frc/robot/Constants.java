@@ -26,16 +26,15 @@ public final class Constants {
   }
 
   public static final class ArmCalibrations {
-    public static final PIDGains RETRACT_PID_GAINS = new PIDGains(0.05, 0.0, 0.5, 0.0);
-    public static final PIDGains EXTEND_PID_GAINS = new PIDGains(0.075, 0.0, 0.75, 0.0);
+    public static final PIDGains PID_GAINS = new PIDGains(0.05, 0.0, 0.0, 0.0);
     public static final int TALON_CAN_ID = 13;
+    public static final double CLOSED_LOOP_RAMP_RATE = 1;
+    public static final double PEAK_OUTPUT_FORWARD = 0.5;
+    public static final double PEAK_OUTPUT_REVERSE = -0.75;
     public static final int BRAKE_SOLENOID_PORT = 0;
     public static final int ANGLE_SOLENOID_FORWARD_PORT = 2;
     public static final int ANGLE_SOLENOID_REVERSE_PORT = 7;
     public static final int AMP_RESET_THRESHOLD = 100;
-    public static final double MAX_HEIGHT_IN_TICKS_SOFT_LIMIT = 98000;
-    public static final double MAX_HEIGHT_IN_TICKS_HARD_LIMIT = 100000;
-    public static final double INCHES_TO_TICK_CONVERSION = MAX_HEIGHT_IN_TICKS_HARD_LIMIT / 48;
   }
 
   public static final class EndEffectorCalibrations {
