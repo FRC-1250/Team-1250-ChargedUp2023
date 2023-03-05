@@ -5,6 +5,7 @@ import java.util.List;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
@@ -44,22 +45,31 @@ public class CommandFactory {
     }
 
     public Command changeSystemStateCommand(SystemState systemState) {
-        List<Command> commands = new ArrayList<>();
-
-        if (systemState.rotateArmDown == false) {
-            commands.add(rotateArmUpCommand());
-            commands.add(homeArmCommand());
-            commands.add(new SetElevatorPosition(elevator, systemState));
-        }
-
-        if (systemState.rotateArmDown == true) {
-            commands.add(new SetElevatorPosition(elevator, systemState));
-            if(systemState.preExtendArm) {
-                commands.add(preextendCommand());
+        if (systemState.rotateArmDown) {
+            if (systemState.preExtendArm) {
+                return Commands.parallel(
+                        new SetElevatorPosition(elevator, systemState),
+                        Commands.sequence(
+                                new WaitCommand(0.1),
+                                preextendCommand(),
+                                rotateArmDownCommand()));
+            } else {
+                return Commands.parallel(
+                        new SetElevatorPosition(elevator, systemState),
+                        Commands.sequence(
+                                new WaitCommand(0.1),
+                                homeArmCommand(),
+                                rotateArmDownCommand()));
             }
-            commands.add(rotateArmDownCommand());
+        } else {
+            return Commands.parallel(
+                    Commands.sequence(
+                            rotateArmUpCommand(),
+                            homeArmCommand()),
+                    Commands.sequence(
+                            new WaitCommand(0.1),
+                            new SetElevatorPosition(elevator, systemState)));
         }
-        return Commands.sequence(commands.toArray(Command[]::new));
     }
 
     public Command rotateArmDownCommand() {
@@ -129,7 +139,8 @@ public class CommandFactory {
                 commands.add(endEffectorReleaseCubeGraspConeCommand().withTimeout(0.5));
 
         }
-        commands.add(preextendCommand().withTimeout(1));
+        commands.add(homeArmCommand());
+        commands.add(changeSystemStateCommand(SystemState.HOME));
         return Commands.sequence(commands.toArray(Command[]::new));
     }
 
