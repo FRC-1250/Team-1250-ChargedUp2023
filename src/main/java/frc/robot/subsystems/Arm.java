@@ -24,15 +24,11 @@ public class Arm extends SubsystemBase {
   public enum ArmPosition {
     LIMIT(100000),
     TOP_CONE(78600),
-    SINGLE_SUBSTATION(21700),
-    DOUBLE_SUBSTATION(21700),
     TOP_CUBE(78600),
     MID_CONE(38500),
     MID_CUBE(38500),
-    HYBRID(21700),
-    FLOOR(21700),
     HOME(500),
-    PRE_EXTEND(21700);
+    BUMPER(21700);
 
     public final double positionInTicks;
 

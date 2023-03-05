@@ -186,6 +186,7 @@ public class RobotContainer {
             driverXboxController::getPOV,
             rightBumper::getAsBoolean, // Boost
             SystemStateHandler.getInstance()::getDriveThrottle,
+            SystemStateHandler.getInstance()::getRotationThrottle,
             driverXboxController::getLeftY,
             driverXboxController::getLeftX,
             driverXboxController::getRightX,
@@ -214,7 +215,7 @@ public class RobotContainer {
     circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION));
     triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand())
         .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
-    triangleButton.onFalse(commandFactory.preextendCommand())
+    triangleButton.onFalse(commandFactory.bumperArmCommand())
         .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
   }
 

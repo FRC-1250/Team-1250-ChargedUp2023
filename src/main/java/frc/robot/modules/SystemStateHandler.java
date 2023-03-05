@@ -9,26 +9,26 @@ public class SystemStateHandler {
         TOP_CUBE(ArmPosition.TOP_CUBE, ElevatorPosition.TOP_CUBE, true, false),
         MID_CONE(ArmPosition.MID_CONE, ElevatorPosition.MID_CONE, true, false),
         MID_CUBE(ArmPosition.MID_CUBE, ElevatorPosition.MID_CUBE, true, false),
-        HYBRID(ArmPosition.HYBRID, ElevatorPosition.HYBRID, true, true),
-        FLOOR(ArmPosition.FLOOR, ElevatorPosition.FLOOR, true, true),
+        CARRY(ArmPosition.HOME, ElevatorPosition.CARRY, true, true),
+        FLOOR(ArmPosition.BUMPER, ElevatorPosition.FLOOR, true, true),
         HOME(ArmPosition.HOME, ElevatorPosition.HOME, false, false),
-        DOUBLE_SUBSTATION(ArmPosition.DOUBLE_SUBSTATION, ElevatorPosition.DOUBLE_SUBSTATION, true, false),
+        DOUBLE_SUBSTATION(ArmPosition.BUMPER, ElevatorPosition.DOUBLE_SUBSTATION, true, false),
         SINGLE_SUBSTATION(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION, false, false);
 
         public final ArmPosition armExtendActionPosition;
         public final ElevatorPosition elevatorPosition;
         public final boolean rotateArmDown;
-        public final boolean preExtendArm;
+        public final boolean preExtendArmBeyondBumper;
 
         SystemState(
             ArmPosition e_armExtendActionPosition, 
             ElevatorPosition e_elevatorPosition, 
             boolean e_rotateArmDown,
-            boolean e_preExtendArm) {
+            boolean e_preExtendArmBeyondBumper) {
             armExtendActionPosition = e_armExtendActionPosition;
             elevatorPosition = e_elevatorPosition;
             rotateArmDown = e_rotateArmDown;
-            preExtendArm = e_preExtendArm;
+            preExtendArmBeyondBumper = e_preExtendArmBeyondBumper;
         }
     }
 
@@ -59,13 +59,32 @@ public class SystemStateHandler {
             case MID_CONE:
             case MID_CUBE:
                 return 0.4;
-            case HYBRID:
+            case CARRY:
             case FLOOR:
             case SINGLE_SUBSTATION:
                 return 0.5;
             case HOME:
             default:
                 return 0.75;
+        }
+    }
+
+    public double getRotationThrottle() {
+        switch (superstructureState) {
+            case TOP_CONE:
+            case DOUBLE_SUBSTATION:
+            case TOP_CUBE:
+                return 0.4;
+            case MID_CONE:
+            case MID_CUBE:
+                return 0.6;
+            case CARRY:
+            case FLOOR:
+            case SINGLE_SUBSTATION:
+                return 0.75;
+            case HOME:
+            default:
+                return 1;
         }
     }
 

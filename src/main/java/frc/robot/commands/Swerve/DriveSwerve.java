@@ -27,6 +27,7 @@ public class DriveSwerve extends CommandBase {
   private final IntSupplier centerOfRotationSupplier;
   private final BooleanSupplier boostInputSupplier;
   private final DoubleSupplier throttleSupplier;
+  private final DoubleSupplier rotationThrottleSupplier;
   private final DoubleSupplier yInputSupplier;
   private final DoubleSupplier xInputSupplier;
   private final DoubleSupplier rotationInputSupplier;
@@ -39,6 +40,7 @@ public class DriveSwerve extends CommandBase {
       IntSupplier centerOfRotationSupplier,
       BooleanSupplier boostInputSupplier,
       DoubleSupplier throttleSupplier,
+      DoubleSupplier rotationThrottleSupplier,
       DoubleSupplier yInputSupplier,
       DoubleSupplier xInputSupplier,
       DoubleSupplier rotationInputSupplier,
@@ -47,6 +49,7 @@ public class DriveSwerve extends CommandBase {
     this.centerOfRotationSupplier = centerOfRotationSupplier;
     this.boostInputSupplier = boostInputSupplier;
     this.throttleSupplier = throttleSupplier;
+    this.rotationThrottleSupplier = rotationThrottleSupplier;
     this.yInputSupplier = yInputSupplier;
     this.xInputSupplier = xInputSupplier;
     this.rotationInputSupplier = rotationInputSupplier;
@@ -64,6 +67,7 @@ public class DriveSwerve extends CommandBase {
     if (!boostInputSupplier.getAsBoolean()) {
       ySpeed = ySpeed * throttleSupplier.getAsDouble();
       xSpeed = xSpeed * throttleSupplier.getAsDouble();
+      rotSpeed = rotSpeed * rotationThrottleSupplier.getAsDouble();
     }
 
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.1);
@@ -79,13 +83,14 @@ public class DriveSwerve extends CommandBase {
     rotSpeed = rotSpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
 
     var centerOfRotation = centerOfRotationSupplier.getAsInt();
-    if(centerOfRotation != -1) {
+    if (centerOfRotation != -1) {
       drivetrain.drive(
-        xSpeed, 
-        ySpeed, 
-        rotSpeed,
-        new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0).rotateBy(Rotation2d.fromDegrees(centerOfRotation)),
-        fieldRelative);
+          xSpeed,
+          ySpeed,
+          rotSpeed,
+          new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0)
+              .rotateBy(Rotation2d.fromDegrees(centerOfRotation)),
+          fieldRelative);
     } else {
       drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
     }

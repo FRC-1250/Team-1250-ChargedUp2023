@@ -5,7 +5,6 @@ import java.util.List;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
@@ -46,12 +45,12 @@ public class CommandFactory {
 
     public Command changeSystemStateCommand(SystemState systemState) {
         if (systemState.rotateArmDown) {
-            if (systemState.preExtendArm) {
+            if (systemState.preExtendArmBeyondBumper) {
                 return Commands.parallel(
                         new SetElevatorPosition(elevator, systemState),
                         Commands.sequence(
                                 new WaitCommand(0.1),
-                                preextendCommand(),
+                                bumperArmCommand(),
                                 rotateArmDownCommand()));
             } else {
                 return Commands.parallel(
@@ -88,12 +87,8 @@ public class CommandFactory {
         return new SetArmPosition(arm, Arm.ArmPosition.HOME);
     }
 
-    public Command preextendCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.PRE_EXTEND);
-    }
-
-    public Command armExtendByDefaultCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.HYBRID);
+    public Command bumperArmCommand() {
+        return new SetArmPosition(arm, Arm.ArmPosition.BUMPER);
     }
 
     public Command endEffectorReleaseConeGraspCubeCommand() {
