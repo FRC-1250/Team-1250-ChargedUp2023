@@ -20,8 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.PneumaticHubCalibrations;
 import frc.robot.commands.Arm.ResetArmPosition;
-import frc.robot.commands.Arm.RotateArmDown;
-import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Elevator.ResetElevatorPosition;
 import frc.robot.commands.Swerve.DriveSwerve;
 import frc.robot.commands.Swerve.ResetPoseAndHeading;
@@ -201,10 +199,10 @@ public class RobotContainer {
     // Up and out is positive, Down and in is negative
     upDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
     downDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, false));
-    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, false));
-    shareButton.onTrue(new RotateArmDown(arm));
-    optionsButton.onTrue(new RotateArmUp(arm));
+    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
+    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
+    shareButton.onTrue(commandFactory.rotateArmDownCommand());
+    optionsButton.onTrue(commandFactory.rotateArmUpCommand());
     
     r1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
     r2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
@@ -213,10 +211,8 @@ public class RobotContainer {
     crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
     squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR));
     circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION));
-    triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand())
-        .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
-    triangleButton.onFalse(commandFactory.bumperArmCommand())
-        .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
+    triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
+    triangleButton.onFalse(commandFactory.homeArmCommand());
   }
 
   private void configureAutoCommands() {
