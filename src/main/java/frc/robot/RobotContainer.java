@@ -22,6 +22,8 @@ import frc.robot.Constants.PneumaticHubCalibrations;
 import frc.robot.commands.Arm.ResetArmPosition;
 import frc.robot.commands.Elevator.ResetElevatorPosition;
 import frc.robot.commands.Swerve.DriveSwerve;
+import frc.robot.commands.Swerve.DriveSwerveOffsetCenter;
+import frc.robot.commands.Swerve.DriveSwerveThrottled;
 import frc.robot.commands.Swerve.ResetPoseAndHeading;
 import frc.robot.modules.CommandFactory;
 import frc.robot.modules.SystemStateHandler;
@@ -40,7 +42,8 @@ public class RobotContainer {
 
   private final TrajectoryModule trajectoryModule = new TrajectoryModule();
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private final CommandFactory commandFactory = new CommandFactory(arm, elevator, drivetrain, endEffector, limelight, trajectoryModule);
+  private final CommandFactory commandFactory = new CommandFactory(arm, elevator, drivetrain, endEffector, limelight,
+      trajectoryModule);
 
   private final XboxController driverXboxController = new XboxController(0);
   Trigger startButton = new Trigger(driverXboxController::getStartButton);
@@ -65,6 +68,13 @@ public class RobotContainer {
     @Override
     public boolean getAsBoolean() {
       return driverXboxController.getRightTriggerAxis() > 0.5;
+    }
+  });
+
+  Trigger pov = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return driverXboxController.getPOV() != -1;
     }
   });
 
@@ -177,12 +187,29 @@ public class RobotContainer {
     SmartDashboard.putData(new ResetArmPosition(arm));
     SmartDashboard.putData(new ResetElevatorPosition(elevator));
     SmartDashboard.putData(new ResetPoseAndHeading(drivetrain));
- 
+
     // Driver
     drivetrain.setDefaultCommand(
+        new DriveSwerveThrottled(
+            SystemStateHandler.getInstance()::getDriveThrottle,
+            SystemStateHandler.getInstance()::getRotationThrottle,
+            driverXboxController::getLeftY,
+            driverXboxController::getLeftX,
+            driverXboxController::getRightX,
+            true,
+            drivetrain));
+
+    rightBumper.whileTrue(
         new DriveSwerve(
+            driverXboxController::getLeftY,
+            driverXboxController::getLeftX,
+            driverXboxController::getRightX,
+            true,
+            drivetrain));
+
+    pov.whileTrue(
+        new DriveSwerveOffsetCenter(
             driverXboxController::getPOV,
-            rightBumper::getAsBoolean, // Boost
             SystemStateHandler.getInstance()::getDriveThrottle,
             SystemStateHandler.getInstance()::getRotationThrottle,
             driverXboxController::getLeftY,
@@ -194,7 +221,7 @@ public class RobotContainer {
     xButton.whileTrue(commandFactory.trackAprilTagCommand());
     leftTrigger.whileTrue(commandFactory.endEffectorReleaseConeGraspCubeCommand());
     leftBumper.whileTrue(commandFactory.endEffectorReleaseCubeGraspConeCommand());
-    
+
     // Operator
     // Up and out is positive, Down and in is negative
     upDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
@@ -203,7 +230,7 @@ public class RobotContainer {
     leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
     shareButton.onTrue(commandFactory.rotateArmDownCommand());
     optionsButton.onTrue(commandFactory.rotateArmUpCommand());
-    
+
     r1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
     r2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
     l1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
@@ -224,7 +251,7 @@ public class RobotContainer {
 
     autoChooser.addOption(
         "TopCubeAndWait",
-        commandFactory.autoScore(SystemState.TOP_CUBE));    
+        commandFactory.autoScore(SystemState.TOP_CUBE));
 
     autoChooser.addOption(
         "BlueLongSideMobility",

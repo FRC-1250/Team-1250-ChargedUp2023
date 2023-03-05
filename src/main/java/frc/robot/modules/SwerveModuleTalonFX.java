@@ -34,7 +34,7 @@ public class SwerveModuleTalonFX {
     private void configureDriveTalon() {
         driveTalon.configFactoryDefault();
         driveTalon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
-        driveTalon.configClosedloopRamp(0.5, Constants.CONFIG_TIMEOUT_MS);
+        driveTalon.configClosedloopRamp(1, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.config_kF(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.DRIVE_TALON_VELOCITY_GAINS.kF, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.DRIVE_TALON_VELOCITY_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.DRIVE_TALON_VELOCITY_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
@@ -57,7 +57,7 @@ public class SwerveModuleTalonFX {
         turningTalon.setSensorPhase(true);
         turningTalon.configRemoteFeedbackFilter(canCoder, 0, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
-        turningTalon.configClosedloopRamp(0.5, Constants.CONFIG_TIMEOUT_MS);
+        turningTalon.configClosedloopRamp(1, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.setInverted(TalonFXInvertType.CounterClockwise);
         turningTalon.config_kF(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kF, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);

@@ -5,14 +5,17 @@
 package frc.robot.commands.Swerve;
 
 import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveSwerve extends CommandBase {
+public class DriveSwerveThrottled extends CommandBase {
 
   private final Drivetrain drivetrain;
+  private final DoubleSupplier throttleSupplier;
+  private final DoubleSupplier rotationThrottleSupplier;
   private final DoubleSupplier yInputSupplier;
   private final DoubleSupplier xInputSupplier;
   private final DoubleSupplier rotationInputSupplier;
@@ -21,12 +24,16 @@ public class DriveSwerve extends CommandBase {
   private double ySpeed;
   private double rotSpeed;
 
-  public DriveSwerve(
+  public DriveSwerveThrottled(
+      DoubleSupplier throttleSupplier,
+      DoubleSupplier rotationThrottleSupplier,
       DoubleSupplier yInputSupplier,
       DoubleSupplier xInputSupplier,
       DoubleSupplier rotationInputSupplier,
       boolean fieldRelative,
       Drivetrain drivetrain) {
+    this.throttleSupplier = throttleSupplier;
+    this.rotationThrottleSupplier = rotationThrottleSupplier;
     this.yInputSupplier = yInputSupplier;
     this.xInputSupplier = xInputSupplier;
     this.rotationInputSupplier = rotationInputSupplier;
@@ -40,6 +47,10 @@ public class DriveSwerve extends CommandBase {
     xSpeed = -yInputSupplier.getAsDouble();
     ySpeed = -xInputSupplier.getAsDouble();
     rotSpeed = -rotationInputSupplier.getAsDouble();
+
+    ySpeed = ySpeed * throttleSupplier.getAsDouble();
+    xSpeed = xSpeed * throttleSupplier.getAsDouble();
+    rotSpeed = rotSpeed * rotationThrottleSupplier.getAsDouble();
 
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.1);
     ySpeed = MathUtil.applyDeadband(ySpeed, 0.1);

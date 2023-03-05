@@ -5,14 +5,22 @@
 package frc.robot.commands.Swerve;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DrivetrainCalibration;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveSwerve extends CommandBase {
+public class DriveSwerveOffsetCenter extends CommandBase {
 
   private final Drivetrain drivetrain;
+  private final IntSupplier centerOfRotationSupplier;
+  private final DoubleSupplier throttleSupplier;
+  private final DoubleSupplier rotationThrottleSupplier;
   private final DoubleSupplier yInputSupplier;
   private final DoubleSupplier xInputSupplier;
   private final DoubleSupplier rotationInputSupplier;
@@ -21,12 +29,18 @@ public class DriveSwerve extends CommandBase {
   private double ySpeed;
   private double rotSpeed;
 
-  public DriveSwerve(
+  public DriveSwerveOffsetCenter(
+      IntSupplier centerOfRotationSupplier,
+      DoubleSupplier throttleSupplier,
+      DoubleSupplier rotationThrottleSupplier,
       DoubleSupplier yInputSupplier,
       DoubleSupplier xInputSupplier,
       DoubleSupplier rotationInputSupplier,
       boolean fieldRelative,
       Drivetrain drivetrain) {
+    this.centerOfRotationSupplier = centerOfRotationSupplier;
+    this.throttleSupplier = throttleSupplier;
+    this.rotationThrottleSupplier = rotationThrottleSupplier;
     this.yInputSupplier = yInputSupplier;
     this.xInputSupplier = xInputSupplier;
     this.rotationInputSupplier = rotationInputSupplier;
@@ -41,6 +55,10 @@ public class DriveSwerve extends CommandBase {
     ySpeed = -xInputSupplier.getAsDouble();
     rotSpeed = -rotationInputSupplier.getAsDouble();
 
+    ySpeed = ySpeed * throttleSupplier.getAsDouble();
+    xSpeed = xSpeed * throttleSupplier.getAsDouble();
+    rotSpeed = rotSpeed * rotationThrottleSupplier.getAsDouble();
+
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.1);
     ySpeed = MathUtil.applyDeadband(ySpeed, 0.1);
     rotSpeed = MathUtil.applyDeadband(rotSpeed, 0.1);
@@ -49,7 +67,13 @@ public class DriveSwerve extends CommandBase {
     ySpeed = ySpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
     rotSpeed = rotSpeed * Constants.DrivetrainCalibration.MAX_TURNING_SPEED;
 
-    drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
+    drivetrain.drive(
+        xSpeed,
+        ySpeed,
+        rotSpeed,
+        new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0)
+            .rotateBy(Rotation2d.fromDegrees(centerOfRotationSupplier.getAsInt())),
+        fieldRelative);
   }
 
   @Override
