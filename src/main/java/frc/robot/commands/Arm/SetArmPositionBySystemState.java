@@ -35,6 +35,6 @@ public class SetArmPositionBySystemState extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(cmd_arm.getPosition() - SystemStateHandler.getInstance().getSystemState().armExtendActionPosition.positionInTicks) < Constants.TALONFX_INTEGRATED_SENSOR_RESOLUTION * 0.5;
+    return cmd_arm.isAtSetPoint(SystemStateHandler.getInstance().getSystemState().armExtendActionPosition.positionInTicks);
   }
 }
