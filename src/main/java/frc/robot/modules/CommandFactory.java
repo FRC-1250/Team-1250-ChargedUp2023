@@ -135,7 +135,6 @@ public class CommandFactory {
 
         }
         commands.add(homeArmCommand());
-        commands.add(changeSystemStateCommand(SystemState.HOME));
         return Commands.sequence(commands.toArray(Command[]::new));
     }
 
