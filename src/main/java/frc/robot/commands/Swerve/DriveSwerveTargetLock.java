@@ -5,53 +5,74 @@
 package frc.robot.commands.Swerve;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DrivetrainCalibration;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 
-public class DriveSwerveOffsetCenter extends CommandBase {
+public class DriveSwerveTargetLock extends CommandBase {
 
   private final Drivetrain drivetrain;
-  private final IntSupplier centerOfRotationSupplier;
+  private final Limelight limelight;
   private final DoubleSupplier throttleSupplier;
-  private final DoubleSupplier rotationThrottleSupplier;
   private final DoubleSupplier yInputSupplier;
   private final DoubleSupplier xInputSupplier;
-  private final DoubleSupplier rotationInputSupplier;
   private final boolean fieldRelative;
+  private double rotSpeed;
+  private long fid;
+  private Alliance alliance;
+  private final PIDController rotController = new PIDController(4, 0, 0);
 
-  public DriveSwerveOffsetCenter(
-      IntSupplier centerOfRotationSupplier,
+  public DriveSwerveTargetLock(
       DoubleSupplier throttleSupplier,
       DoubleSupplier rotationThrottleSupplier,
       DoubleSupplier yInputSupplier,
       DoubleSupplier xInputSupplier,
       DoubleSupplier rotationInputSupplier,
       boolean fieldRelative,
-      Drivetrain drivetrain) {
-    this.centerOfRotationSupplier = centerOfRotationSupplier;
+      Drivetrain drivetrain,
+      Limelight limelight) {
     this.throttleSupplier = throttleSupplier;
-    this.rotationThrottleSupplier = rotationThrottleSupplier;
     this.yInputSupplier = yInputSupplier;
     this.xInputSupplier = xInputSupplier;
-    this.rotationInputSupplier = rotationInputSupplier;
     this.drivetrain = drivetrain;
     this.fieldRelative = fieldRelative;
-    addRequirements(drivetrain);
+    this.limelight = limelight;
+    rotController.enableContinuousInput(-Math.PI, Math.PI);
+    addRequirements(drivetrain, limelight);
+  }
+
+  @Override
+  public void initialize() {
+    alliance = DriverStation.getAlliance();
   }
 
   @Override
   public void execute() {
+    fid = limelight.getfid();
+    if (alliance == Alliance.Blue) {
+      if (fid == 6 || fid == 7 || fid == 8) {
+        rotSpeed = rotController.calculate(drivetrain.getHeading(), 180);
+      } else if (fid == 4) {
+        rotSpeed = rotController.calculate(drivetrain.getHeading(), 0);
+      }
+    } else if (alliance == Alliance.Red) {
+      if (fid == 1 || fid == 2 || fid == 3) {
+        rotSpeed = rotController.calculate(drivetrain.getHeading(), 180);
+      } else if (fid == 5) {
+        rotSpeed = rotController.calculate(drivetrain.getHeading(), 0);
+      }
+    } else {
+      rotSpeed = -drivetrain.getTurnRate();
+    }
+
     drivetrain.drive(
         drivetrain.calculateSpeed(-yInputSupplier.getAsDouble(), throttleSupplier.getAsDouble()),
         drivetrain.calculateSpeed(-xInputSupplier.getAsDouble(), throttleSupplier.getAsDouble()),
-        drivetrain.calculateSpeed(-rotationInputSupplier.getAsDouble(), rotationThrottleSupplier.getAsDouble()),
-        new Translation2d(DrivetrainCalibration.WHEELBASE / 2, 0)
-            .rotateBy(Rotation2d.fromDegrees(centerOfRotationSupplier.getAsInt())),
+        rotSpeed,
         fieldRelative);
   }
 

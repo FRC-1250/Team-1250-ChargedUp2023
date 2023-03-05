@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -86,6 +88,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     setModuleStates(Constants.DrivetrainCalibration.KINEMATICS.toSwerveModuleStates(speeds, centerOfRotationMeters));
+  }
+
+  public double calculateSpeed(double speed, double throttle) {
+    return MathUtil.applyDeadband(speed * throttle, Constants.CONTROLLER_DEADBAND)
+        * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
   }
 
   /**

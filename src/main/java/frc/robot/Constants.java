@@ -18,6 +18,7 @@ public final class Constants {
   public static final int TALONFX_SECONDARY_PID_LOOP_ID = 1;
   public static final int TALONFX_INTEGRATED_SENSOR_RESOLUTION = 2048;
   public static final double TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR = TALONFX_INTEGRATED_SENSOR_RESOLUTION * 0.25;
+  public static final double CONTROLLER_DEADBAND = 0.1;
 
   public static final class PneumaticHubCalibrations {
     public static final int PNEUMATIC_HUB_ID = 20;

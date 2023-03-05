@@ -5,9 +5,7 @@
 package frc.robot.commands.Swerve;
 
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveSwerve extends CommandBase {
@@ -17,9 +15,7 @@ public class DriveSwerve extends CommandBase {
   private final DoubleSupplier xInputSupplier;
   private final DoubleSupplier rotationInputSupplier;
   private final boolean fieldRelative;
-  private double xSpeed;
-  private double ySpeed;
-  private double rotSpeed;
+  private final int fullThrottle = 1;
 
   public DriveSwerve(
       DoubleSupplier yInputSupplier,
@@ -37,19 +33,11 @@ public class DriveSwerve extends CommandBase {
 
   @Override
   public void execute() {
-    xSpeed = -yInputSupplier.getAsDouble();
-    ySpeed = -xInputSupplier.getAsDouble();
-    rotSpeed = -rotationInputSupplier.getAsDouble();
-
-    xSpeed = MathUtil.applyDeadband(xSpeed, 0.1);
-    ySpeed = MathUtil.applyDeadband(ySpeed, 0.1);
-    rotSpeed = MathUtil.applyDeadband(rotSpeed, 0.1);
-
-    xSpeed = xSpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
-    ySpeed = ySpeed * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
-    rotSpeed = rotSpeed * Constants.DrivetrainCalibration.MAX_TURNING_SPEED;
-
-    drivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
+    drivetrain.drive(
+      drivetrain.calculateSpeed(-yInputSupplier.getAsDouble(), fullThrottle), 
+      drivetrain.calculateSpeed(-xInputSupplier.getAsDouble(), fullThrottle), 
+      drivetrain.calculateSpeed(-rotationInputSupplier.getAsDouble(), fullThrottle), 
+      fieldRelative);
   }
 
   @Override
