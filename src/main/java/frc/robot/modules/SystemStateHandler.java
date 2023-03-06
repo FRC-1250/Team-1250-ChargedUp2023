@@ -9,11 +9,14 @@ public class SystemStateHandler {
         TOP_CUBE(ArmPosition.TOP_CUBE, ElevatorPosition.TOP_CUBE, true, false),
         MID_CONE(ArmPosition.MID_CONE, ElevatorPosition.MID_CONE, true, false),
         MID_CUBE(ArmPosition.MID_CUBE, ElevatorPosition.MID_CUBE, true, false),
-        CARRY(ArmPosition.HOME, ElevatorPosition.CARRY, true, true),
-        FLOOR(ArmPosition.BUMPER, ElevatorPosition.FLOOR, true, true),
+        FLOOR_CONE(ArmPosition.BUMPER, ElevatorPosition.FLOOR, true, true),
+        FLOOR_CUBE(ArmPosition.BUMPER, ElevatorPosition.FLOOR, true, true),
+        DOUBLE_SUBSTATION_CONE(ArmPosition.BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true, false),
+        DOUBLE_SUBSTATION_CUBE(ArmPosition.BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true, false),
+        SINGLE_SUBSTATION_CONE(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION_CONE, false, false),
+        SINGLE_SUBSTATION_CUBE(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false, false),
         HOME(ArmPosition.HOME, ElevatorPosition.HOME, false, false),
-        DOUBLE_SUBSTATION(ArmPosition.BUMPER, ElevatorPosition.DOUBLE_SUBSTATION, true, false),
-        SINGLE_SUBSTATION(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION, false, false);
+        CARRY(ArmPosition.HOME, ElevatorPosition.CARRY, true, true);
 
         public final ArmPosition armExtendActionPosition;
         public final ElevatorPosition elevatorPosition;
@@ -53,15 +56,18 @@ public class SystemStateHandler {
     public double getDriveThrottle() {
         switch (superstructureState) {
             case TOP_CONE:
-            case DOUBLE_SUBSTATION:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
                 return 0.30;
             case MID_CONE:
             case MID_CUBE:
                 return 0.4;
             case CARRY:
-            case FLOOR:
-            case SINGLE_SUBSTATION:
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
                 return 0.5;
             case HOME:
             default:
@@ -72,15 +78,18 @@ public class SystemStateHandler {
     public double getRotationThrottle() {
         switch (superstructureState) {
             case TOP_CONE:
-            case DOUBLE_SUBSTATION:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
                 return 0.4;
             case MID_CONE:
             case MID_CUBE:
                 return 0.6;
             case CARRY:
-            case FLOOR:
-            case SINGLE_SUBSTATION:
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
                 return 0.75;
             case HOME:
             default:
