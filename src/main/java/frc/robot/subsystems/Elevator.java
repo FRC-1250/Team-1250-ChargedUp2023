@@ -63,11 +63,12 @@ public class Elevator extends SubsystemBase {
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
+    SmartDashboard.putBoolean("elevatorMotion", false);
   }
 
   public void setPercentOutput(double speed, boolean override) {
     var direction = Math.signum(speed);
-
+    SmartDashboard.putBoolean("elevatorMotion", true);
     if(override) {
       talon.set(speed);
     } else if(direction == 1 && talon.getSelectedSensorPosition() < ElevatorPosition.LIMIT.positionInTicks) {
@@ -79,6 +80,7 @@ public class Elevator extends SubsystemBase {
 
   public void SetPosition(Double tickcount) {
     talon.set(TalonFXControlMode.Position, tickcount);
+    SmartDashboard.putBoolean("elevatorMotion", true);
   }
 
   public boolean isAtSetPoint(double targetPosition) {
@@ -87,6 +89,7 @@ public class Elevator extends SubsystemBase {
 
   public void stop() {
     talon.set(0);
+    SmartDashboard.putBoolean("elevatorMotion", false);
   }
 
   public double getPosition() {
