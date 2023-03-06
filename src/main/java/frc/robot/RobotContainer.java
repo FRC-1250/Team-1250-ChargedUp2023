@@ -122,61 +122,62 @@ public class RobotContainer {
     }
   });
 
-  Trigger upLeftJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getLeftY() < -0.5;
-    }
-  });
+  //Joysticks defined here (Defined Joystick)
+Trigger leftJoystickUp = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getLeftY() < -0.5;
+  }
+});
 
-  Trigger downLeftJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getLeftY() > 0.5;
-    }
-  });
+Trigger leftJoystickDown = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getLeftY() > 0.5;
+  }
+});
 
-  Trigger rightLeftJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getLeftX() > 0.5;
-    }
-  });
+Trigger leftJoystickRight = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getLeftX() > 0.5;
+  }
+});
 
-  Trigger leftLeftJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getLeftX() < -0.5;
-    }
-  });
+Trigger leftJoystickLeft = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getLeftX() < -0.5;
+  }
+});
 
-  Trigger upRightJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getRightY() < -0.5;
-    }
-  });
+Trigger rightJoystickUp = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getRightY() < -0.5;
+  }
+});
 
-  Trigger downRightJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getRightY() > 0.5;
-    }
-  });
+Trigger rightJoystickDown = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getRightY() > 0.5;
+  }
+});
 
-  Trigger rightRightJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getRightX() > 0.5;
-    }
-  });
+Trigger rightJoystickRight = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getRightX() > 0.5;
+  }
+});
 
-  Trigger leftRightJoystick = new Trigger(new BooleanSupplier() {
-    @Override
-    public boolean getAsBoolean() {
-      return operatorPS4Controller.getRightX() < -0.5;
-    }
-  });
+Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
+  @Override
+  public boolean getAsBoolean() {
+    return operatorPS4Controller.getRightX() < -0.5;
+  }
+});
 
   public RobotContainer() {
     configureAutoCommands();
@@ -224,22 +225,29 @@ public class RobotContainer {
 
     // Operator
     // Up and out is positive, Down and in is negative
-    upDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
-    downDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
-    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
-    shareButton.onTrue(commandFactory.rotateArmDownCommand());
-    optionsButton.onTrue(commandFactory.rotateArmUpCommand());
+    leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
+    leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
+    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
+    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
+    rightJoystickDown.whileTrue(commandFactory.rotateArmDownCommand());
+    rightJoystickUp.whileTrue(commandFactory.rotateArmUpCommand());
 
-    r1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
-    r2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
-    l1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
-    l2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
+    //r1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
+    //r2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
+  triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));  
+    triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE)); 
+    squareButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CUBE));
+    squareButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CUBE));
+    triangleButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
+    triangleButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
+    triangleButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
+    squareButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
+    squareButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
+    squareButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CUBE));
     crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
     squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
-    circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CUBE));
-    triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
-    triangleButton.onFalse(commandFactory.homeArmCommand());
+    circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
+    circleButton.onFalse(commandFactory.homeArmCommand());
   }
 
   private void configureAutoCommands() {
