@@ -36,7 +36,7 @@ public class DriveSwerve extends CommandBase {
     drivetrain.drive(
       drivetrain.calculateSpeed(-yInputSupplier.getAsDouble(), fullThrottle), 
       drivetrain.calculateSpeed(-xInputSupplier.getAsDouble(), fullThrottle), 
-      drivetrain.calculateSpeed(-rotationInputSupplier.getAsDouble(), fullThrottle), 
+      drivetrain.calculateRotationSpeed(-rotationInputSupplier.getAsDouble(), fullThrottle), 
       fieldRelative);
   }
 

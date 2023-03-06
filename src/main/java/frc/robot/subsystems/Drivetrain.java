@@ -95,6 +95,11 @@ public class Drivetrain extends SubsystemBase {
         * Constants.DrivetrainCalibration.MAX_DRIVE_SPEED;
   }
 
+  public double calculateRotationSpeed(double speed, double throttle) {
+    return MathUtil.applyDeadband(speed * throttle, Constants.CONTROLLER_DEADBAND)
+        * Constants.DrivetrainCalibration.MAX_TURNING_SPEED;
+  }
+
   /**
    * Sets the swerve ModuleStates.
    *

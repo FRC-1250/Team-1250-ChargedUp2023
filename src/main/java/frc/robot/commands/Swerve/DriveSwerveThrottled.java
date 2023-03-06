@@ -42,7 +42,7 @@ public class DriveSwerveThrottled extends CommandBase {
     drivetrain.drive(
         drivetrain.calculateSpeed(-yInputSupplier.getAsDouble(), throttleSupplier.getAsDouble()),
         drivetrain.calculateSpeed(-xInputSupplier.getAsDouble(), throttleSupplier.getAsDouble()),
-        drivetrain.calculateSpeed(-rotationInputSupplier.getAsDouble(), rotationThrottleSupplier.getAsDouble()),
+        drivetrain.calculateRotationSpeed(-rotationInputSupplier.getAsDouble(), rotationThrottleSupplier.getAsDouble()),
         fieldRelative);
   }
 
