@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Arm.SetArmPosition;
-import frc.robot.commands.Arm.SetArmPositionBySystemState;
+import frc.robot.commands.Arm.ExtendArmBySystemState;
 import frc.robot.commands.Arm.SetArmPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -45,26 +45,17 @@ public class CommandFactory {
 
     public Command changeSystemStateCommand(SystemState systemState) {
         if (systemState.rotateArmDown) {
-            if (systemState.preExtendArmBeyondBumper) {
-                return Commands.parallel(
-                        new SetElevatorPosition(elevator, systemState),
-                        Commands.sequence(
-                                new WaitCommand(0.1),
-                                bumperArmCommand(),
-                                rotateArmDownCommand()));
-            } else {
-                return Commands.parallel(
-                        new SetElevatorPosition(elevator, systemState),
-                        Commands.sequence(
-                                new WaitCommand(0.1),
-                                homeArmCommand(),
-                                rotateArmDownCommand()));
-            }
+            return Commands.parallel(
+                    new SetElevatorPosition(elevator, systemState),
+                    Commands.sequence(
+                            new WaitCommand(0.1),
+                            new SetArmPosition(arm, systemState.armBaseExtension),
+                            rotateArmDownCommand()));
         } else {
             return Commands.parallel(
                     Commands.sequence(
                             rotateArmUpCommand(),
-                            homeArmCommand()),
+                            new SetArmPosition(arm, systemState.armBaseExtension)),
                     Commands.sequence(
                             new WaitCommand(0.1),
                             new SetElevatorPosition(elevator, systemState)));
@@ -80,15 +71,11 @@ public class CommandFactory {
     }
 
     public Command extendArmBySystemStateCommand() {
-        return new SetArmPositionBySystemState(arm);
+        return new ExtendArmBySystemState(arm);
     }
 
-    public Command homeArmCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.HOME);
-    }
-
-    public Command bumperArmCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.BUMPER);
+    public Command retractArmBySystemStateCommand() {
+        return new ExtendArmBySystemState(arm);
     }
 
     public Command endEffectorReleaseConeGraspCubeCommand() {
@@ -134,7 +121,7 @@ public class CommandFactory {
                 commands.add(endEffectorReleaseCubeGraspConeCommand().withTimeout(0.5));
 
         }
-        commands.add(homeArmCommand());
+        commands.add(retractArmBySystemStateCommand());
         return Commands.sequence(commands.toArray(Command[]::new));
     }
 

@@ -247,7 +247,7 @@ Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
     crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
     squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
     circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
-    circleButton.onFalse(commandFactory.homeArmCommand());
+    circleButton.onFalse(commandFactory.retractArmBySystemStateCommand());
   }
 
   private void configureAutoCommands() {

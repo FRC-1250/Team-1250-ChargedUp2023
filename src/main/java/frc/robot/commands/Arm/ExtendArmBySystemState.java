@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.modules.SystemStateHandler;
 import frc.robot.subsystems.Arm;
 
-public class SetArmPositionBySystemState extends CommandBase {
+public class ExtendArmBySystemState extends CommandBase {
   private final Arm cmd_arm;
 
-  public SetArmPositionBySystemState(Arm arm) {
+  public ExtendArmBySystemState(Arm arm) {
     cmd_arm = arm;
     addRequirements(arm);
   }
@@ -23,7 +23,7 @@ public class SetArmPositionBySystemState extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setPosition(SystemStateHandler.getInstance().getSystemState().armExtendActionPosition.positionInTicks);
+    cmd_arm.setPosition(SystemStateHandler.getInstance().getSystemState().armActionExtension.positionInTicks);
   }
 
   @Override
@@ -34,6 +34,6 @@ public class SetArmPositionBySystemState extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return cmd_arm.isAtSetPoint(SystemStateHandler.getInstance().getSystemState().armExtendActionPosition.positionInTicks);
+    return cmd_arm.isAtSetPoint(SystemStateHandler.getInstance().getSystemState().armActionExtension.positionInTicks);
   }
 }

@@ -30,7 +30,8 @@ public class Elevator extends SubsystemBase {
     DOUBLE_SUBSTATION_CONE(41500),
     DOUBLE_SUBSTATION_CUBE(41500),
     CARRY(3000),
-    FLOOR(2300),
+    FLOOR_CONE(2300),
+    FLOOR_CUBE(2300),
     HOME(0);
 
     public final double positionInTicks;

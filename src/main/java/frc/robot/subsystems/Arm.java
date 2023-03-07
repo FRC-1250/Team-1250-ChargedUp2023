@@ -22,13 +22,14 @@ import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
   public enum ArmPosition {
-    LIMIT(100000),
-    TOP_CONE(78600),
-    TOP_CUBE(78600),
-    MID_CONE(38500),
-    MID_CUBE(38500),
-    HOME(500),
-    BUMPER(21700);
+    LIMIT(192000),
+    TOP_CONE(150000),
+    TOP_CUBE(150000),
+    MID_CONE(73920),
+    MID_CUBE(73920),
+    HOME(0),
+    PAST_BUMPER(41600),
+    AT_BUMPER(10000);
 
     public final double positionInTicks;
 

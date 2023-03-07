@@ -5,33 +5,33 @@ import frc.robot.subsystems.Elevator.ElevatorPosition;
 
 public class SystemStateHandler {
     public enum SystemState {
-        TOP_CONE(ArmPosition.TOP_CONE, ElevatorPosition.TOP_CONE, true, false),
-        TOP_CUBE(ArmPosition.TOP_CUBE, ElevatorPosition.TOP_CUBE, true, false),
-        MID_CONE(ArmPosition.MID_CONE, ElevatorPosition.MID_CONE, true, false),
-        MID_CUBE(ArmPosition.MID_CUBE, ElevatorPosition.MID_CUBE, true, false),
-        FLOOR_CONE(ArmPosition.BUMPER, ElevatorPosition.FLOOR, true, true),
-        FLOOR_CUBE(ArmPosition.BUMPER, ElevatorPosition.FLOOR, true, true),
-        DOUBLE_SUBSTATION_CONE(ArmPosition.BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true, false),
-        DOUBLE_SUBSTATION_CUBE(ArmPosition.BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true, false),
-        SINGLE_SUBSTATION_CONE(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION_CONE, false, false),
-        SINGLE_SUBSTATION_CUBE(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false, false),
-        HOME(ArmPosition.HOME, ElevatorPosition.HOME, false, false),
-        CARRY(ArmPosition.HOME, ElevatorPosition.CARRY, true, true);
+        TOP_CONE(ArmPosition.TOP_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.TOP_CONE, true),
+        TOP_CUBE(ArmPosition.TOP_CUBE, ArmPosition.AT_BUMPER, ElevatorPosition.TOP_CUBE, true),
+        MID_CONE(ArmPosition.MID_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.MID_CONE, true),
+        MID_CUBE(ArmPosition.MID_CUBE, ArmPosition.AT_BUMPER, ElevatorPosition.MID_CUBE, true),
+        FLOOR_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CONE, true),
+        FLOOR_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CUBE, true),
+        DOUBLE_SUBSTATION_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true),
+        DOUBLE_SUBSTATION_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true),
+        SINGLE_SUBSTATION_CONE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
+        SINGLE_SUBSTATION_CUBE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
+        HOME(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.HOME, false),
+        CARRY(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.CARRY, false);
 
-        public final ArmPosition armExtendActionPosition;
+        public final ArmPosition armActionExtension;
+        public final ArmPosition armBaseExtension;
         public final ElevatorPosition elevatorPosition;
         public final boolean rotateArmDown;
-        public final boolean preExtendArmBeyondBumper;
 
         SystemState(
-            ArmPosition e_armExtendActionPosition, 
+            ArmPosition e_armActionExtension,
+            ArmPosition e_armBaseExtension,
             ElevatorPosition e_elevatorPosition, 
-            boolean e_rotateArmDown,
-            boolean e_preExtendArmBeyondBumper) {
-            armExtendActionPosition = e_armExtendActionPosition;
+            boolean e_rotateArmDown) {
+            armActionExtension = e_armActionExtension;
+            armBaseExtension = e_armBaseExtension;
             elevatorPosition = e_elevatorPosition;
             rotateArmDown = e_rotateArmDown;
-            preExtendArmBeyondBumper = e_preExtendArmBeyondBumper;
         }
     }
 
