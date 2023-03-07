@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.PneumaticHubCalibrations;
 import frc.robot.commands.Arm.ResetArmPosition;
 import frc.robot.commands.Elevator.ResetElevatorPosition;
+import frc.robot.commands.Swerve.DriveSwereAutoBalance;
 import frc.robot.commands.Swerve.DriveSwerve;
 import frc.robot.commands.Swerve.DriveSwerveOffsetCenter;
+import frc.robot.commands.Swerve.DriveSwerveTargetLock;
 import frc.robot.commands.Swerve.DriveSwerveThrottled;
 import frc.robot.commands.Swerve.ResetPoseAndHeading;
 import frc.robot.modules.CommandFactory;
@@ -122,62 +124,62 @@ public class RobotContainer {
     }
   });
 
-  //Joysticks defined here (Defined Joystick)
-Trigger leftJoystickUp = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getLeftY() < -0.5;
-  }
-});
+  // Joysticks defined here (Defined Joystick)
+  Trigger leftJoystickUp = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getLeftY() < -0.5;
+    }
+  });
 
-Trigger leftJoystickDown = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getLeftY() > 0.5;
-  }
-});
+  Trigger leftJoystickDown = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getLeftY() > 0.5;
+    }
+  });
 
-Trigger leftJoystickRight = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getLeftX() > 0.5;
-  }
-});
+  Trigger leftJoystickRight = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getLeftX() > 0.5;
+    }
+  });
 
-Trigger leftJoystickLeft = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getLeftX() < -0.5;
-  }
-});
+  Trigger leftJoystickLeft = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getLeftX() < -0.5;
+    }
+  });
 
-Trigger rightJoystickUp = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getRightY() < -0.5;
-  }
-});
+  Trigger rightJoystickUp = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getRightY() < -0.5;
+    }
+  });
 
-Trigger rightJoystickDown = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getRightY() > 0.5;
-  }
-});
+  Trigger rightJoystickDown = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getRightY() > 0.5;
+    }
+  });
 
-Trigger rightJoystickRight = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getRightX() > 0.5;
-  }
-});
+  Trigger rightJoystickRight = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getRightX() > 0.5;
+    }
+  });
 
-Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
-  @Override
-  public boolean getAsBoolean() {
-    return operatorPS4Controller.getRightX() < -0.5;
-  }
-});
+  Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return operatorPS4Controller.getRightX() < -0.5;
+    }
+  });
 
   public RobotContainer() {
     configureAutoCommands();
@@ -185,11 +187,17 @@ Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
   }
 
   private void configureButtonBindings() {
+
+    /*
+     * SmartDashboard controls
+     */
     SmartDashboard.putData(new ResetArmPosition(arm));
     SmartDashboard.putData(new ResetElevatorPosition(elevator));
     SmartDashboard.putData(new ResetPoseAndHeading(drivetrain));
 
-    // Driver
+    /*
+     * Driver controls
+     */
     drivetrain.setDefaultCommand(
         new DriveSwerveThrottled(
             SystemStateHandler.getInstance()::getDriveThrottle,
@@ -219,33 +227,44 @@ Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
             true,
             drivetrain));
 
-    xButton.whileTrue(commandFactory.trackAprilTagCommand());
+    xButton.whileTrue(
+        new DriveSwerveTargetLock(
+            SystemStateHandler.getInstance()::getDriveThrottle,
+            SystemStateHandler.getInstance()::getRotationThrottle,
+            driverXboxController::getLeftY,
+            driverXboxController::getLeftX,
+            driverXboxController::getRightX,
+            true,
+            drivetrain,
+            limelight));
+
+    yButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
     leftTrigger.whileTrue(commandFactory.endEffectorReleaseConeGraspCubeCommand());
     leftBumper.whileTrue(commandFactory.endEffectorReleaseCubeGraspConeCommand());
 
-    // Operator
-    // Up and out is positive, Down and in is negative
+    /*
+     * Operator controls
+     * Up and out is positive, Down and in is negative
+     * Priotize automation over manual control
+     */
     leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
     leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
     rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
     rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
-    rightJoystickDown.whileTrue(commandFactory.rotateArmDownCommand());
-    rightJoystickUp.whileTrue(commandFactory.rotateArmUpCommand());
+    shareButton.onTrue(commandFactory.rotateArmUpCommand());
+    optionsButton.onTrue(commandFactory.rotateArmDownCommand());
 
-    //r1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
-    //r2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
-  triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));  
-    triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE)); 
-    squareButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CUBE));
-    squareButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CUBE));
+    triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));
+    triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE));
     triangleButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
     triangleButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
     triangleButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
+    squareButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CUBE));
+    squareButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CUBE));
     squareButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
     squareButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
     squareButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CUBE));
-    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
-    squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
+    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.CARRY));
     circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
     circleButton.onFalse(commandFactory.retractArmBySystemStateCommand());
   }
