@@ -27,7 +27,7 @@ public class Arm extends SubsystemBase {
     TOP_CUBE(150000),
     MID_CONE(73920),
     MID_CUBE(73920),
-    HOME(0),
+    HOME(500),
     PAST_BUMPER(41600),
     AT_BUMPER(10000);
 
