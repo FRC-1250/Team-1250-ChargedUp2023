@@ -32,7 +32,7 @@ public class Elevator extends SubsystemBase {
     CARRY(3000),
     FLOOR_CONE(2300),
     FLOOR_CUBE(2300),
-    HOME(0);
+    HOME(500);
 
     public final double positionInTicks;
 
