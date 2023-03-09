@@ -45,9 +45,10 @@ public final class Constants {
   public final static class ElevatorCalibrations {
     public static final PIDGains PID_GAINS = new PIDGains(0.25, 0.0, 4, 0.0);
     public static final int TALON_CAN_ID = 14;
-    public static final double CLOSED_LOOP_RAMP_RATE = 1;
+    public static final double CLOSED_LOOP_RAMP_RATE = 2;
+    public static final double OPEN_LOOP_RAMP_RATE = 2;
     public static final double PEAK_OUTPUT_FORWARD = 0.5;
-    public static final double PEAK_OUTPUT_REVERSE = -0.1;
+    public static final double PEAK_OUTPUT_REVERSE = -0.05;
     public static final int BRAKE_SOLENOID_PORT = 1;
   }
 
