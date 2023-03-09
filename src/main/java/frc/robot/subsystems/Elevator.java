@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -76,14 +76,14 @@ public class Elevator extends SubsystemBase {
     if(override) {
       talon.set(speed);
     } else if(direction == 1 && talon.getSelectedSensorPosition() < ElevatorPosition.LIMIT.positionInTicks) {
-      talon.set(TalonFXControlMode.PercentOutput, speed);
+      talon.set(speed);
     } else {
-      talon.set(TalonFXControlMode.PercentOutput, 0);
+      talon.set(0);
     }
   }
 
   public void SetPosition(Double tickcount) {
-    talon.set(TalonFXControlMode.Position, tickcount);
+    talon.set(ControlMode.Position, tickcount);
     SmartDashboard.putBoolean("elevatorMotion", true);
   }
 

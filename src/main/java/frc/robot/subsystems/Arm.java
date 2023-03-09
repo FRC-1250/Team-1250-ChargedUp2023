@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -75,7 +75,7 @@ public class Arm extends SubsystemBase {
     if(override) {
       talon.set(speed);
     } else if(direction == 1 && talon.getSelectedSensorPosition() < ArmPosition.LIMIT.positionInTicks) {
-      talon.set(TalonFXControlMode.PercentOutput, speed);
+      talon.set(speed);
     } else if (direction == -1 && talon.getSelectedSensorPosition() > ArmPosition.HOME.positionInTicks) {
       talon.set(speed);
     } else {
@@ -88,7 +88,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setPosition(double targetPositon) {
-      talon.set(TalonFXControlMode.Position, targetPositon);
+      talon.set(ControlMode.Position, targetPositon);
   }
 
   public boolean isAtSetPoint(double targetPosition) {
