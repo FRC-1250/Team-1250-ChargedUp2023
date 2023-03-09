@@ -145,7 +145,7 @@ public final class Constants {
     public static final int PIDGEON_CAN_ID = 15;
 
     public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.1, 0.0, 1, 0.0);
-    public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.5, 0.0, 5, 0.0);
+    public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.1, 0.0, 1, 0.0);
     public static final double METERS_PER_SECOND_TO_TALON_TICKS_CONVERSION_FACTOR = 5293;
     public static final double DEGRESS_TO_TALON_TICKS_CONVERSION_FACTOR = 4096 / 360;
   }
