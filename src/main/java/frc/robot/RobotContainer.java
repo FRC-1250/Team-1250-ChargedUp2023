@@ -249,8 +249,8 @@ public class RobotContainer {
      */
     leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
     leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
-    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
+    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.5, true));
+    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, true));
     shareButton.onTrue(commandFactory.rotateArmUpCommand());
     optionsButton.onTrue(commandFactory.rotateArmDownCommand());
 
