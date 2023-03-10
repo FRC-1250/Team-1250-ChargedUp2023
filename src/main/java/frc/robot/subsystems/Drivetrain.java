@@ -107,22 +107,31 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DrivetrainCalibration.MAX_DRIVE_SPEED);
+    String format = "Speed: %.2f m/s, Angle: %s";
 
     frontLeftModule.setDesiredState(desiredStates[0]);
-    SmartDashboard.putString("2.0 Front left module current state", frontLeftModule.getState().toString());
-    SmartDashboard.putString("2.0 Front left module desired state", desiredStates[0].toString());
+    SmartDashboard.putString("Drive FL current", String.format(format, frontLeftModule.getState().speedMetersPerSecond,
+        frontLeftModule.getState().angle.getDegrees()));
+    SmartDashboard.putString("Drive FL desired", String.format(format, desiredStates[0].speedMetersPerSecond,
+        desiredStates[0].angle.getDegrees()));
 
     frontRightModule.setDesiredState(desiredStates[1]);
-    SmartDashboard.putString("2.1 Front right module current state", frontRightModule.getState().toString());
-    SmartDashboard.putString("2.1 Front right module desired state", desiredStates[1].toString());
+    SmartDashboard.putString("Drive FR current", String.format(format, frontRightModule.getState().speedMetersPerSecond,
+        frontRightModule.getState().angle.getDegrees()));
+    SmartDashboard.putString("Drive FR desired", String.format(format, desiredStates[1].speedMetersPerSecond,
+        desiredStates[1].angle.getDegrees()));
 
     rearLeftModule.setDesiredState(desiredStates[2]);
-    SmartDashboard.putString("2.2 Rear left module current state", rearLeftModule.getState().toString());
-    SmartDashboard.putString("2.2 Rear left module desired state", desiredStates[2].toString());
+    SmartDashboard.putString("Drive RL current", String.format(format, rearLeftModule.getState().speedMetersPerSecond,
+        rearLeftModule.getState().angle.getDegrees()));
+    SmartDashboard.putString("Drive RL desired", String.format(format, desiredStates[2].speedMetersPerSecond,
+        desiredStates[2].angle.getDegrees()));
 
     rearRightModule.setDesiredState(desiredStates[3]);
-    SmartDashboard.putString("2.3 Rear right module current state", rearRightModule.getState().toString());
-    SmartDashboard.putString("2.3 Rear right module desired state", desiredStates[3].toString());
+    SmartDashboard.putString("Drive RR current", String.format(format, rearRightModule.getState().speedMetersPerSecond,
+        rearRightModule.getState().angle.getDegrees()));
+    SmartDashboard.putString("Drive RR desired", String.format(format, desiredStates[3].speedMetersPerSecond,
+        desiredStates[3].angle.getDegrees()));
   }
 
   /** Zeroes the heading of the robot. */
@@ -188,10 +197,10 @@ public class Drivetrain extends SubsystemBase {
             rearLeftModule.getPosition(), rearRightModule.getPosition()
         });
 
-    SmartDashboard.putData("Pigeon heading", pidgey);
-    SmartDashboard.putString("Pose",
+    SmartDashboard.putData("Drive Heading", pidgey);
+    SmartDashboard.putString("Drive Pose",
         String.format("X: %.2f, Y: %.2f, Deg: %.2f ", m_pose.getX(), m_pose.getY(), m_pose.getRotation().getDegrees()));
-    SmartDashboard.putString("Pose in inches",
+    SmartDashboard.putString("Drive Pose in inches",
         String.format("X: %.2f, Y: %.2f, Deg: %.2f ", Units.metersToInches(m_pose.getX()),
             Units.metersToInches(m_pose.getY()), m_pose.getRotation().getDegrees()));
   }
