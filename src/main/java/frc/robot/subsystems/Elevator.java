@@ -119,8 +119,10 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Elevator sensor position", talon.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
     SmartDashboard.putNumber("Elevator percent output", talon.get());
-    SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
+    if(talon.getControlMode() == ControlMode.Position) {
+      SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
+      SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
+    }
   }
 }
