@@ -184,6 +184,10 @@ public class RobotContainer {
   public RobotContainer() {
     configureAutoCommands();
     configureButtonBindings();
+    SmartDashboard.putData(drivetrain);
+    SmartDashboard.putData(arm);
+    SmartDashboard.putData(elevator);
+    SmartDashboard.putData(endEffector);
   }
 
   private void configureButtonBindings() {
@@ -249,8 +253,8 @@ public class RobotContainer {
      */
     leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
     leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, true));
-    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, true));
+    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.5, true));
+    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, true));
     shareButton.onTrue(commandFactory.rotateArmUpCommand());
     optionsButton.onTrue(commandFactory.rotateArmDownCommand());
 
@@ -295,6 +299,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "RedShortSideMobility",
         commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redShortSideMobility));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**

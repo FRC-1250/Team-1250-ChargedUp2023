@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -27,7 +27,7 @@ public class Arm extends SubsystemBase {
     TOP_CUBE(150000),
     MID_CONE(73920),
     MID_CUBE(73920),
-    HOME(0),
+    HOME(500),
     PAST_BUMPER(41600),
     AT_BUMPER(10000);
 
@@ -47,7 +47,8 @@ public class Arm extends SubsystemBase {
 
   public Arm(PneumaticHub subPneumaticHub) {
     pneumaticHub = subPneumaticHub;
-    angleToggle = pneumaticHub.makeDoubleSolenoid(Constants.ArmCalibrations.ANGLE_SOLENOID_FORWARD_PORT, Constants.ArmCalibrations.ANGLE_SOLENOID_REVERSE_PORT);
+    angleToggle = pneumaticHub.makeDoubleSolenoid(Constants.ArmCalibrations.ANGLE_SOLENOID_FORWARD_PORT,
+        Constants.ArmCalibrations.ANGLE_SOLENOID_REVERSE_PORT);
     airBrake = pneumaticHub.makeSolenoid(Constants.ArmCalibrations.BRAKE_SOLENOID_PORT);
     talon.setNeutralMode(NeutralMode.Brake);
     talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -58,7 +59,7 @@ public class Arm extends SubsystemBase {
     slotConfiguration.kI = Constants.ArmCalibrations.PID_GAINS.kI;
     slotConfiguration.kD = Constants.ArmCalibrations.PID_GAINS.kD;
     slotConfiguration.allowableClosedloopError = Constants.TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR;
-    
+
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
     talonFXConfiguration.slot0 = slotConfiguration;
     talonFXConfiguration.peakOutputForward = Constants.ArmCalibrations.PEAK_OUTPUT_FORWARD;
@@ -72,10 +73,10 @@ public class Arm extends SubsystemBase {
   public void setPercentOutput(double speed, boolean override) {
     var direction = Math.signum(speed);
 
-    if(override) {
+    if (override) {
       talon.set(speed);
-    } else if(direction == 1 && talon.getSelectedSensorPosition() < ArmPosition.LIMIT.positionInTicks) {
-      talon.set(TalonFXControlMode.PercentOutput, speed);
+    } else if (direction == 1 && talon.getSelectedSensorPosition() < ArmPosition.LIMIT.positionInTicks) {
+      talon.set(speed);
     } else if (direction == -1 && talon.getSelectedSensorPosition() > ArmPosition.HOME.positionInTicks) {
       talon.set(speed);
     } else {
@@ -88,7 +89,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setPosition(double targetPositon) {
-      talon.set(TalonFXControlMode.Position, targetPositon);
+    talon.set(ControlMode.Position, targetPositon);
   }
 
   public boolean isAtSetPoint(double targetPosition) {
@@ -131,7 +132,7 @@ public class Arm extends SubsystemBase {
       reverseLockTimer.reset();
     }
 
-    if(reverseLockTimer.hasElapsed(0.1)) {
+    if (reverseLockTimer.hasElapsed(0.1)) {
       reverseLocked = true;
       resetPosition();
     }
@@ -144,8 +145,13 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Arm sensor position", talon.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Arm closed loop error", talon.getClosedLoopError());
     SmartDashboard.putNumber("Arm percent output", talon.get());
-    SmartDashboard.putNumber("Arm closed loop target", talon.getClosedLoopTarget());
+    if (talon.getControlMode() == ControlMode.Position) {
+      SmartDashboard.putNumber("Arm closed loop error", talon.getClosedLoopError());
+      SmartDashboard.putNumber("Arm closed loop target", talon.getClosedLoopTarget());
+    } else {
+      SmartDashboard.putNumber("Arm closed loop error", 0);
+      SmartDashboard.putNumber("Arm closed loop target", 0);
+    }
   }
 }
