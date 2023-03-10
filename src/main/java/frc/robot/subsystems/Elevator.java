@@ -123,6 +123,9 @@ public class Elevator extends SubsystemBase {
     if(talon.getControlMode() == ControlMode.Position) {
       SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
+    } else {
+      SmartDashboard.putNumber("Elevator closed loop error", 0);
+      SmartDashboard.putNumber("Elevator closed loop target", 0);
     }
   }
 }
