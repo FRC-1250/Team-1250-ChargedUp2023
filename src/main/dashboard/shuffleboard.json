@@ -11,49 +11,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/SendableChooser[0]",
-              "_title": "SmartDashboard/SendableChooser[0]",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,2": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///SmartDashboard/Scheduler",
-              "_title": "SmartDashboard/Scheduler",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Pigeon heading",
-              "_title": "SmartDashboard/Pigeon heading",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
-            }
-          },
           "2,1": {
             "size": [
               2,
@@ -63,18 +20,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/System State",
               "_title": "SmartDashboard/System State",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,3": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Basic FMS Info",
-              "_title": "Basic FMS Info",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -98,6 +43,84 @@
               "imageWidth": -1,
               "imageHeight": -1
             }
+          },
+          "0,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Chooser",
+              "_title": "SmartDashboard/Auto Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,0": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Basic FMS Info",
+              "_source0": "network_table:///FMSInfo",
+              "_title": "FMSInfo",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Basic Subsystem",
+              "_source0": "network_table:///SmartDashboard/Drivetrain",
+              "_title": "SmartDashboard/Drivetrain",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Basic Subsystem",
+              "_source0": "network_table:///SmartDashboard/EndEffector",
+              "_title": "/SmartDashboard/EndEffector",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Basic Subsystem",
+              "_source0": "network_table:///SmartDashboard/Arm",
+              "_title": "/SmartDashboard/Arm",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Basic Subsystem",
+              "_source0": "network_table:///SmartDashboard/Elevator",
+              "_title": "/SmartDashboard/Elevator",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -115,140 +138,6 @@
         "tiles": {
           "2,0": {
             "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.0 Front left module current state",
-              "_title": "SmartDashboard/2.0 Front left module current state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,0": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.0 Front left module desired state",
-              "_title": "SmartDashboard/2.0 Front left module desired state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "2,1": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.1 Front right module current state",
-              "_title": "SmartDashboard/2.1 Front right module current state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,1": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.1 Front right module desired state",
-              "_title": "SmartDashboard/2.1 Front right module desired state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "2,2": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.2 Rear left module current state",
-              "_title": "SmartDashboard/2.2 Rear left module current state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,2": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.2 Rear left module desired state",
-              "_title": "SmartDashboard/2.2 Rear left module desired state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "2,3": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.3 Rear right module current state",
-              "_title": "SmartDashboard/2.3 Rear right module current state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,3": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/2.3 Rear right module desired state",
-              "_title": "SmartDashboard/2.3 Rear right module desired state",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Pose",
-              "_title": "SmartDashboard/Pose",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Pigeon heading",
-              "_title": "SmartDashboard/Pigeon heading",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
-            }
-          },
-          "0,3": {
-            "size": [
               2,
               1
             ],
@@ -259,41 +148,223 @@
               "_glyph": 148,
               "_showGlyph": false
             }
-          }
-        }
-      }
-    },
-    {
-      "title": "Elevator",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 100.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {
-          "4,0": {
+          },
+          "2,1": {
             "size": [
-              3,
-              2
+              2,
+              1
             ],
             "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///SmartDashboard/Elevator sensor position",
-              "_title": "SmartDashboard/Elevator sensor position",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive Pose",
+              "_title": "SmartDashboard/Drive Pose",
               "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": 0.0,
-              "Range/Max": 100.0,
-              "Visuals/Show value": true
+              "_showGlyph": false
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive FL current",
+              "_title": "SmartDashboard/Drive FL current",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive FR current",
+              "_title": "SmartDashboard/Drive FR current",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           },
           "4,2": {
             "size": [
               2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive RL current",
+              "_title": "SmartDashboard/Drive RL current",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive RR current",
+              "_title": "SmartDashboard/Drive RR current",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
               2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Drive Heading",
+              "_title": "SmartDashboard/Drive Heading",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "0,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Basic Subsystem",
+              "_source0": "network_table:///SmartDashboard/Drivetrain",
+              "_title": "SmartDashboard/Drivetrain",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive FR desired",
+              "_title": "SmartDashboard/Drive FR desired",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive RL desired",
+              "_title": "SmartDashboard/Drive RL desired",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive RR desired",
+              "_title": "SmartDashboard/Drive RR desired",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive FL desired",
+              "_title": "SmartDashboard/Drive FL desired",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Drive rotation throttle",
+              "_title": "SmartDashboard/Drive rotation throttle",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "0,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Drive speed throttle",
+              "_title": "SmartDashboard/Drive speed throttle",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "0,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/System State",
+              "_title": "SmartDashboard/System State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Superstructure",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              1
             ],
             "content": {
               "_type": "Text View",
@@ -303,10 +374,82 @@
               "_showGlyph": false
             }
           },
-          "8,0": {
+          "0,2": {
             "size": [
-              3,
-              3
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/ResetArmPosition",
+              "_title": "SmartDashboard/ResetArmPosition",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Elevator",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Basic Subsystem",
+                  "_source0": "network_table:///SmartDashboard/Elevator",
+                  "_title": "SmartDashboard/Elevator",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Elevator percent output",
+                  "_title": "SmartDashboard/Elevator percent output",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Elevator sensor position",
+                  "_title": "SmartDashboard/Elevator sensor position",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Elevator closed loop target",
+                  "_title": "SmartDashboard/Elevator closed loop target",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Elevator closed loop error",
+                  "_title": "SmartDashboard/Elevator closed loop error",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/elevatorMotion",
+                  "_title": "SmartDashboard/elevatorMotion",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                }
+              ]
+            }
+          },
+          "0,1": {
+            "size": [
+              2,
+              1
             ],
             "content": {
               "_type": "Command",
@@ -316,65 +459,76 @@
               "_showGlyph": false
             }
           },
-          "7,3": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/ResetElevatorPosition/running",
-              "_title": "/SmartDashboard/ResetElevatorPosition/running",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "2,0": {
+          "4,0": {
             "size": [
               2,
-              2
+              4
             ],
             "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Elevator closed loop error",
-              "_title": "SmartDashboard/Elevator closed loop error",
-              "_glyph": 148,
+              "_type": "List Layout",
+              "_title": "Arm",
+              "_glyph": 149,
               "_showGlyph": false,
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Basic Subsystem",
+                  "_source0": "network_table:///SmartDashboard/Arm",
+                  "_title": "SmartDashboard/Arm",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm percent output",
+                  "_title": "SmartDashboard/Arm percent output",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm sensor position",
+                  "_title": "SmartDashboard/Arm sensor position",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm closed loop target",
+                  "_title": "SmartDashboard/Arm closed loop target",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm closed loop error",
+                  "_title": "SmartDashboard/Arm closed loop error",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
             }
           },
-          "2,2": {
+          "6,0": {
             "size": [
               2,
-              2
+              4
             ],
             "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///SmartDashboard/Elevator closed loop target",
-              "_title": "SmartDashboard/Elevator closed loop target",
-              "_glyph": 148,
+              "_type": "List Layout",
+              "_title": "End Effector",
+              "_glyph": 149,
               "_showGlyph": false,
-              "Range/Min": 0.0,
-              "Range/Max": 100.0,
-              "Visuals/Show value": true
-            }
-          },
-          "2,4": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Elevator percent output",
-              "_title": "SmartDashboard/Elevator percent output",
-              "_glyph": 148,
-              "_showGlyph": false
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Basic Subsystem",
+                  "_source0": "network_table:///SmartDashboard/EndEffector",
+                  "_title": "SmartDashboard/EndEffector",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
             }
           }
         }
@@ -382,9 +536,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.333333492279053,
-    "y": -7.333333492279053,
-    "width": 1294.6666259765625,
-    "height": 694.6666870117188
+    "x": -6.400000095367432,
+    "y": -6.400000095367432,
+    "width": 1476.800048828125,
+    "height": 876.7999877929688
   }
 }
