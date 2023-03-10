@@ -51,7 +51,8 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putString("System State", SystemStateHandler.getInstance().getSystemState().toString());
-    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putNumber("Drive speed throttle", SystemStateHandler.getInstance().getDriveThrottle());
+    SmartDashboard.putNumber("Drive rotation throttle", SystemStateHandler.getInstance().getRotationThrottle());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
