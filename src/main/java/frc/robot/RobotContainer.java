@@ -184,6 +184,10 @@ public class RobotContainer {
   public RobotContainer() {
     configureAutoCommands();
     configureButtonBindings();
+    SmartDashboard.putData(drivetrain);
+    SmartDashboard.putData(arm);
+    SmartDashboard.putData(elevator);
+    SmartDashboard.putData(endEffector);
   }
 
   private void configureButtonBindings() {
@@ -295,6 +299,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "RedShortSideMobility",
         commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redShortSideMobility));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
