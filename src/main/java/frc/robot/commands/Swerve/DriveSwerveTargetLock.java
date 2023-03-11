@@ -24,7 +24,7 @@ public class DriveSwerveTargetLock extends CommandBase {
   private double rotSpeed;
   private long fid;
   private Alliance alliance;
-  private final PIDController rotController = new PIDController(4, 0, 0);
+  private final PIDController rotController = new PIDController(0.075, 0, 0);
 
   public DriveSwerveTargetLock(
       DoubleSupplier throttleSupplier,
@@ -41,7 +41,7 @@ public class DriveSwerveTargetLock extends CommandBase {
     this.drivetrain = drivetrain;
     this.fieldRelative = fieldRelative;
     this.limelight = limelight;
-    rotController.enableContinuousInput(-Math.PI, Math.PI);
+    rotController.enableContinuousInput(-180, 180);
     addRequirements(drivetrain, limelight);
   }
 
@@ -66,7 +66,7 @@ public class DriveSwerveTargetLock extends CommandBase {
         rotSpeed = rotController.calculate(drivetrain.getHeading(), 0);
       }
     } else {
-      rotSpeed = -drivetrain.getTurnRate();
+      rotSpeed = 0;
     }
 
     drivetrain.drive(
