@@ -27,7 +27,7 @@ public final class Constants {
   }
 
   public static final class ArmCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.05, 0.0, 1, 0.0);
+    public static final PIDGains PID_GAINS = new PIDGains(0.1, 0.0, 0, 1023 / 3000);
     public static final int TALON_CAN_ID = 13;
     public static final double CLOSED_LOOP_RAMP_RATE = 1;
     public static final double PEAK_OUTPUT_FORWARD = 1;
@@ -43,12 +43,12 @@ public final class Constants {
   }
 
   public final static class ElevatorCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.3, 0.0, 4, 0.0);
+    public static final PIDGains PID_GAINS = new PIDGains(0.1, 0.0, 0, 1023 / 3000);
     public static final int TALON_CAN_ID = 14;
     public static final double CLOSED_LOOP_RAMP_RATE = 1.5;
     public static final double OPEN_LOOP_RAMP_RATE = 0.75;
     public static final double PEAK_OUTPUT_FORWARD = 0.5;
-    public static final double PEAK_OUTPUT_REVERSE = -0.01;
+    public static final double PEAK_OUTPUT_REVERSE = -0.05;
     public static final int BRAKE_SOLENOID_PORT = 1;
   }
 

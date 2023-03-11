@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
@@ -64,8 +65,15 @@ public class Arm extends SubsystemBase {
     talonFXConfiguration.slot0 = slotConfiguration;
     talonFXConfiguration.peakOutputForward = Constants.ArmCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ArmCalibrations.PEAK_OUTPUT_REVERSE;
-    talonFXConfiguration.closedloopRamp = Constants.ArmCalibrations.CLOSED_LOOP_RAMP_RATE;
+    //talonFXConfiguration.closedloopRamp = Constants.ArmCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+    /*
+     * Motion magic
+     */
+    talonFXConfiguration.motionAcceleration = 3000;
+    talonFXConfiguration.motionCruiseVelocity = 3000;
+    talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
   }
@@ -90,6 +98,10 @@ public class Arm extends SubsystemBase {
 
   public void setPosition(double targetPositon) {
     talon.set(ControlMode.Position, targetPositon);
+  }
+
+  public void setPositionMotionMagic(double targetPosition) {
+    talon.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.0);
   }
 
   public boolean isAtSetPoint(double targetPosition) {
@@ -146,7 +158,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm sensor position", talon.getSelectedSensorPosition());
     SmartDashboard.putNumber("Arm percent output", talon.get());
-    if (talon.getControlMode() == ControlMode.Position) {
+    if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
       SmartDashboard.putNumber("Arm closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Arm closed loop target", talon.getClosedLoopTarget());
     } else {

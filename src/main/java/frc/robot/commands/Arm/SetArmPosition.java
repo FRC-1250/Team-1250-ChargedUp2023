@@ -29,7 +29,7 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setPosition(cmd_positionInTicks);
+    cmd_arm.setPositionMotionMagic(cmd_positionInTicks);
   }
 
   @Override
