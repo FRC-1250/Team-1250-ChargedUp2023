@@ -29,8 +29,10 @@ import frc.robot.commands.Swerve.DriveSwerveThrottled;
 import frc.robot.commands.Swerve.ResetPoseAndHeading;
 import frc.robot.modules.CommandFactory;
 import frc.robot.modules.SystemStateHandler;
+import frc.robot.modules.TrajectoryBuilder;
 import frc.robot.modules.TrajectoryModule;
 import frc.robot.modules.SystemStateHandler.SystemState;
+import frc.robot.modules.TrajectoryBuilder.TrajectoryLocation;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 
@@ -41,7 +43,7 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator(pneumaticHub);
   private final EndEffector endEffector = new EndEffector();
   private final Arm arm = new Arm(pneumaticHub);
-
+  private final TrajectoryBuilder trajectoryBuilder = new TrajectoryBuilder();
   private final TrajectoryModule trajectoryModule = new TrajectoryModule();
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final CommandFactory commandFactory = new CommandFactory(arm, elevator, drivetrain, endEffector, limelight,
@@ -286,19 +288,35 @@ public class RobotContainer {
 
     autoChooser.addOption(
         "BlueLongSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().blueLongSideMobility));
+        commandFactory.autoFollowPath(
+            trajectoryBuilder
+                .startWith(TrajectoryLocation.BLUE_GRID_1)
+                .blueLongSideMobility()
+                .build()));
 
     autoChooser.addOption(
         "BlueShortSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().blueShortSideMobility));
+        commandFactory.autoFollowPath(
+            trajectoryBuilder
+                .startWith(TrajectoryLocation.BLUE_GRID_9)
+                .blueShortSideMobility()
+                .build()));
 
     autoChooser.addOption(
         "RedLongSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redLongSideMobility));
+        commandFactory.autoFollowPath(
+            trajectoryBuilder
+                .startWith(TrajectoryLocation.RED_GRID_1)
+                .redLongSideMobility()
+                .build()));
 
     autoChooser.addOption(
         "RedShortSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redShortSideMobility));
+        commandFactory.autoFollowPath(
+            trajectoryBuilder
+                .startWith(TrajectoryLocation.RED_GRID_9)
+                .redShortSideMobility()
+                .build()));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
