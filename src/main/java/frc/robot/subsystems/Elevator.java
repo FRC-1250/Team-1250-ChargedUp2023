@@ -70,8 +70,8 @@ public class Elevator extends SubsystemBase {
     /*
      * Motion magic
      */
-    talonFXConfiguration.motionAcceleration = 3000;
-    talonFXConfiguration.motionCruiseVelocity = 3000;
+    talonFXConfiguration.motionAcceleration = 10000;
+    talonFXConfiguration.motionCruiseVelocity = 10000;
     talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
@@ -137,6 +137,7 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Elevator sensor position", talon.getSelectedSensorPosition());
     SmartDashboard.putNumber("Elevator percent output", talon.get());
+    SmartDashboard.putNumber("Elevator sensor velocity", talon.getSelectedSensorVelocity());
     if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
       SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());

@@ -71,8 +71,8 @@ public class Arm extends SubsystemBase {
     /*
      * Motion magic
      */
-    talonFXConfiguration.motionAcceleration = 3000;
-    talonFXConfiguration.motionCruiseVelocity = 3000;
+    talonFXConfiguration.motionAcceleration = 15000;
+    talonFXConfiguration.motionCruiseVelocity = 15000;
     talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
@@ -158,6 +158,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm sensor position", talon.getSelectedSensorPosition());
     SmartDashboard.putNumber("Arm percent output", talon.get());
+    SmartDashboard.putNumber("Arm sensor velocity", talon.getSelectedSensorVelocity());
     if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
       SmartDashboard.putNumber("Arm closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Arm closed loop target", talon.getClosedLoopTarget());
