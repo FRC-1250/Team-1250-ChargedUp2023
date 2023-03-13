@@ -60,8 +60,9 @@ public class Elevator extends SubsystemBase {
 
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
     talonFXConfiguration.slot0 = slotConfiguration;
-    talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
+    //talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ElevatorCalibrations.PEAK_OUTPUT_REVERSE;
+    //TODO is peak outverse reverse required?
     //talonFXConfiguration.closedloopRamp = Constants.ElevatorCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.openloopRamp = Constants.ElevatorCalibrations.OPEN_LOOP_RAMP_RATE;
     talonFXConfiguration.clearPositionOnLimitR = true;
@@ -70,8 +71,8 @@ public class Elevator extends SubsystemBase {
     /*
      * Motion magic
      */
-    talonFXConfiguration.motionAcceleration = 10000;
-    talonFXConfiguration.motionCruiseVelocity = 10000;
+    talonFXConfiguration.motionAcceleration = 5000;
+    talonFXConfiguration.motionCruiseVelocity = 12500;
     talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
@@ -99,8 +100,9 @@ public class Elevator extends SubsystemBase {
     var direction = Math.signum(targetPosition - getPosition());
     if (direction == 1) {
       talon.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.1);
+      //TODO double check if magic works for down
     } else {
-      talon.set(ControlMode.MotionMagic, targetPosition);
+      talon.set(ControlMode.Position, targetPosition);
     }
   }
 
@@ -141,9 +143,6 @@ public class Elevator extends SubsystemBase {
     if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
       SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
-    } else {
-      SmartDashboard.putNumber("Elevator closed loop error", 0);
-      SmartDashboard.putNumber("Elevator closed loop target", 0);
     }
   }
 }

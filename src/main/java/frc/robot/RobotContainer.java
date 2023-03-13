@@ -251,7 +251,7 @@ public class RobotContainer {
      * Up and out is positive, Down and in is negative
      * Priotize automation over manual control
      */
-    leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(1, true));
+    leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(.5, true));
     leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(-0.05, true));
     rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(1, true));
     rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-1, true));

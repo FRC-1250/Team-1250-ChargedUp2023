@@ -162,9 +162,6 @@ public class Arm extends SubsystemBase {
     if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
       SmartDashboard.putNumber("Arm closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Arm closed loop target", talon.getClosedLoopTarget());
-    } else {
-      SmartDashboard.putNumber("Arm closed loop error", 0);
-      SmartDashboard.putNumber("Arm closed loop target", 0);
     }
   }
 }
