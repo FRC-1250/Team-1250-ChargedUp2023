@@ -24,7 +24,7 @@ public class DriveSwerveTargetLock extends CommandBase {
   private double rotSpeed;
   private long fid;
   private Alliance alliance;
-  private final PIDController rotController = new PIDController(0.075, 0, 0);
+  private final PIDController rotController = new PIDController(0.1, 0, 1);
 
   public DriveSwerveTargetLock(
       DoubleSupplier throttleSupplier,
