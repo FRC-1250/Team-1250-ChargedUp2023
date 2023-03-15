@@ -118,8 +118,10 @@ public class CommandFactory {
             case TOP_CONE:
             case MID_CONE:
                 commands.add(endEffectorReleaseConeGraspCubeCommand().withTimeout(0.5));
+                break;
             default:
                 commands.add(endEffectorReleaseCubeGraspConeCommand().withTimeout(0.5));
+                break;
 
         }
         commands.add(retractArmBySystemStateCommand());
