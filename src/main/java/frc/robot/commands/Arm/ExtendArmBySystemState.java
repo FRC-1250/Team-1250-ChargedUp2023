@@ -23,7 +23,7 @@ public class ExtendArmBySystemState extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setPosition(SystemStateHandler.getInstance().getSystemState().armActionExtension.positionInTicks);
+    cmd_arm.setPositionMotionMagic(SystemStateHandler.getInstance().getSystemState().armActionExtension.positionInTicks);
   }
 
   @Override

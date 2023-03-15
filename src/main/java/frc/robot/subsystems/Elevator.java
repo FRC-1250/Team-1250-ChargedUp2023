@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
@@ -61,10 +62,16 @@ public class Elevator extends SubsystemBase {
     talonFXConfiguration.slot0 = slotConfiguration;
     talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ElevatorCalibrations.PEAK_OUTPUT_REVERSE;
-    talonFXConfiguration.closedloopRamp = Constants.ElevatorCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.openloopRamp = Constants.ElevatorCalibrations.OPEN_LOOP_RAMP_RATE;
     talonFXConfiguration.clearPositionOnLimitR = true;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+    /*
+     * Motion magic
+     */
+    talonFXConfiguration.motionAcceleration = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.25;
+    talonFXConfiguration.motionCruiseVelocity = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.5;
+    talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
     SmartDashboard.putBoolean("elevatorMotion", false);
@@ -85,6 +92,10 @@ public class Elevator extends SubsystemBase {
   public void SetPosition(Double tickcount) {
     talon.set(ControlMode.Position, tickcount);
     SmartDashboard.putBoolean("elevatorMotion", true);
+  }
+
+  public void setPositionMotionMagic(double targetPosition) {
+      talon.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.1);
   }
 
   public boolean isAtSetPoint(double targetPosition) {
@@ -120,12 +131,10 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Elevator sensor position", talon.getSelectedSensorPosition());
     SmartDashboard.putNumber("Elevator percent output", talon.get());
-    if(talon.getControlMode() == ControlMode.Position) {
+    SmartDashboard.putNumber("Elevator sensor velocity", talon.getSelectedSensorVelocity());
+    if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
       SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
       SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
-    } else {
-      SmartDashboard.putNumber("Elevator closed loop error", 0);
-      SmartDashboard.putNumber("Elevator closed loop target", 0);
     }
   }
 }

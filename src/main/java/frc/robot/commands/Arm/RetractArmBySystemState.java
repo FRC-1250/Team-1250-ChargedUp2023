@@ -23,7 +23,7 @@ public class RetractArmBySystemState extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setPosition(SystemStateHandler.getInstance().getSystemState().armBaseExtension.positionInTicks);
+    cmd_arm.setPositionMotionMagic(SystemStateHandler.getInstance().getSystemState().armBaseExtension.positionInTicks);
   }
 
   @Override
