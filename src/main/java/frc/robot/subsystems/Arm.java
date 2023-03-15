@@ -65,14 +65,13 @@ public class Arm extends SubsystemBase {
     talonFXConfiguration.slot0 = slotConfiguration;
     talonFXConfiguration.peakOutputForward = Constants.ArmCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ArmCalibrations.PEAK_OUTPUT_REVERSE;
-    //talonFXConfiguration.closedloopRamp = Constants.ArmCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
     /*
      * Motion magic
      */
-    talonFXConfiguration.motionAcceleration = 15000;
-    talonFXConfiguration.motionCruiseVelocity = 15000;
+    talonFXConfiguration.motionAcceleration = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.75;
+    talonFXConfiguration.motionCruiseVelocity = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.75;
     talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);

@@ -60,10 +60,8 @@ public class Elevator extends SubsystemBase {
 
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
     talonFXConfiguration.slot0 = slotConfiguration;
-    //talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
+    talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ElevatorCalibrations.PEAK_OUTPUT_REVERSE;
-    //TODO is peak outverse reverse required?
-    //talonFXConfiguration.closedloopRamp = Constants.ElevatorCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.openloopRamp = Constants.ElevatorCalibrations.OPEN_LOOP_RAMP_RATE;
     talonFXConfiguration.clearPositionOnLimitR = true;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
@@ -71,8 +69,8 @@ public class Elevator extends SubsystemBase {
     /*
      * Motion magic
      */
-    talonFXConfiguration.motionAcceleration = 5000;
-    talonFXConfiguration.motionCruiseVelocity = 12500;
+    talonFXConfiguration.motionAcceleration = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.25;
+    talonFXConfiguration.motionCruiseVelocity = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.5;
     talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
@@ -97,13 +95,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setPositionMotionMagic(double targetPosition) {
-    var direction = Math.signum(targetPosition - getPosition());
-    if (direction == 1) {
       talon.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.1);
-      //TODO double check if magic works for down
-    } else {
-      talon.set(ControlMode.Position, targetPosition);
-    }
   }
 
   public boolean isAtSetPoint(double targetPosition) {
