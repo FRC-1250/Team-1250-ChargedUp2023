@@ -208,5 +208,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() { // Update the pose
     updatePose();
+    SmartDashboard.putNumber("Drive Pitch", getPitch());
+    SmartDashboard.putNumber("Drive Roll", getRoll());
   }
 }

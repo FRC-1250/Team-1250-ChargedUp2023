@@ -259,6 +259,7 @@ public class RobotContainer {
     rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, true));
     shareButton.onTrue(commandFactory.rotateArmUpCommand());
     optionsButton.onTrue(commandFactory.rotateArmDownCommand());
+    aButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
 
     triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));
     triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE));

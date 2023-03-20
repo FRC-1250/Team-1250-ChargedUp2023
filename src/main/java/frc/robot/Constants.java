@@ -28,7 +28,7 @@ public final class Constants {
   }
 
   public static final class ArmCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
+    public static final PIDGains PID_GAINS = new PIDGains(0.65, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
     public static final int TALON_CAN_ID = 13;
     public static final double CLOSED_LOOP_RAMP_RATE = 1;
     public static final double PEAK_OUTPUT_FORWARD = 1;
@@ -47,7 +47,7 @@ public final class Constants {
     public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
     public static final int TALON_CAN_ID = 14;
     public static final double CLOSED_LOOP_RAMP_RATE = 1.5;
-    public static final double OPEN_LOOP_RAMP_RATE = 1;
+    public static final double OPEN_LOOP_RAMP_RATE = 0.5;
     public static final double PEAK_OUTPUT_FORWARD = 0.5;
     public static final double PEAK_OUTPUT_REVERSE = 0;
     public static final int BRAKE_SOLENOID_PORT = 1;

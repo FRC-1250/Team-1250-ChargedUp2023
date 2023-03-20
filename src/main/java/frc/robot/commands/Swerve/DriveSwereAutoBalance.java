@@ -10,13 +10,13 @@ import frc.robot.subsystems.Drivetrain;
 
 public class DriveSwereAutoBalance extends CommandBase {
 
-  private final PIDController xController = new PIDController(0.05, 0, 0);
-  private final PIDController yController = new PIDController(0.05, 0, 0);
+  private final PIDController xController = new PIDController(0.035, 0, 0.01);
+  private final PIDController yController = new PIDController(0.035, 0, 0);
   private final Drivetrain drivetrain;
 
   public DriveSwereAutoBalance(Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
-    xController.setTolerance(2.5);
+    xController.setTolerance(5);
     yController.setTolerance(2.5);
     addRequirements(drivetrain);
   }
@@ -25,8 +25,9 @@ public class DriveSwereAutoBalance extends CommandBase {
   public void execute() {
     drivetrain.drive(
         xController.calculate(drivetrain.getPitch(), 0),
-        yController.calculate(drivetrain.getRoll(), 0),
-        0, true);
+        0,
+        0, 
+        true);
   }
 
   @Override
@@ -35,6 +36,6 @@ public class DriveSwereAutoBalance extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return xController.atSetpoint() && yController.atSetpoint();
+    return xController.atSetpoint();
   }
 }
