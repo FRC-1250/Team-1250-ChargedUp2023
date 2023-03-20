@@ -38,7 +38,7 @@ public class SetElevatorPosition extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_elevator.SetPosition(cmd_positionInTicks);
+    cmd_elevator.setPositionMotionMagic(cmd_positionInTicks);
   }
 
   @Override

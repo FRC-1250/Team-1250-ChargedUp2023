@@ -17,8 +17,9 @@ public final class Constants {
   public static final int TALONFX_PRIMARY_PID_LOOP_ID = 0;
   public static final int TALONFX_SECONDARY_PID_LOOP_ID = 1;
   public static final int TALONFX_INTEGRATED_SENSOR_RESOLUTION = 2048;
-  public static final double TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR = TALONFX_INTEGRATED_SENSOR_RESOLUTION * 0.25;
+  public static final double TALONFX_ALLOWABLE_CLOSED_LOOP_ERROR = TALONFX_INTEGRATED_SENSOR_RESOLUTION * 0.05;
   public static final double CONTROLLER_DEADBAND = 0.1;
+  public static final double TALONFX_MAX_ROTATION_PER_100MS = 21777;
 
   public static final class PneumaticHubCalibrations {
     public static final int PNEUMATIC_HUB_ID = 20;
@@ -27,7 +28,7 @@ public final class Constants {
   }
 
   public static final class ArmCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 0, 1023 / 20000);
+    public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
     public static final int TALON_CAN_ID = 13;
     public static final double CLOSED_LOOP_RAMP_RATE = 1;
     public static final double PEAK_OUTPUT_FORWARD = 1;
@@ -43,12 +44,12 @@ public final class Constants {
   }
 
   public final static class ElevatorCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.3, 0.0, 4, 0.0);
+    public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
     public static final int TALON_CAN_ID = 14;
     public static final double CLOSED_LOOP_RAMP_RATE = 1.5;
     public static final double OPEN_LOOP_RAMP_RATE = 1;
     public static final double PEAK_OUTPUT_FORWARD = 0.5;
-    public static final double PEAK_OUTPUT_REVERSE = -0.01;
+    public static final double PEAK_OUTPUT_REVERSE = 0;
     public static final int BRAKE_SOLENOID_PORT = 1;
   }
 
