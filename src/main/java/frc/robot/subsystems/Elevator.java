@@ -61,10 +61,16 @@ public class Elevator extends SubsystemBase {
     talonFXConfiguration.slot0 = slotConfiguration;
     talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ElevatorCalibrations.PEAK_OUTPUT_REVERSE;
-    talonFXConfiguration.closedloopRamp = Constants.ElevatorCalibrations.CLOSED_LOOP_RAMP_RATE;
     talonFXConfiguration.openloopRamp = Constants.ElevatorCalibrations.OPEN_LOOP_RAMP_RATE;
     talonFXConfiguration.clearPositionOnLimitR = true;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+    /*
+     * Motion magic
+     */
+    talonFXConfiguration.motionAcceleration = 5000;
+    talonFXConfiguration.motionCruiseVelocity = 12000;
+    talonFXConfiguration.motionCurveStrength = 0;
 
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
     SmartDashboard.putBoolean("elevatorMotion", false);
