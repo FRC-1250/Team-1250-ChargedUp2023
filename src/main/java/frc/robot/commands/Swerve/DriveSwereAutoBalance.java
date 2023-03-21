@@ -27,11 +27,12 @@ public class DriveSwereAutoBalance extends CommandBase {
         xController.calculate(drivetrain.getPitch(), 0),
         0,
         0, 
-        true);
+        false);
   }
 
   @Override
   public void end(boolean interrupted) {
+    drivetrain.drive(0, 0, 0, true);
   }
 
   @Override
