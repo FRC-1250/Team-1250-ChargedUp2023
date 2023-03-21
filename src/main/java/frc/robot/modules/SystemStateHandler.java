@@ -63,13 +63,13 @@ public class SystemStateHandler {
             case MID_CONE:
             case MID_CUBE:
                 return 0.4;
-            case CARRY:
             case FLOOR_CONE:
             case FLOOR_CUBE:
             case SINGLE_SUBSTATION_CONE:
             case SINGLE_SUBSTATION_CUBE:
                 return 0.5;
             case HOME:
+            case CARRY:
             default:
                 return 0.75;
         }
@@ -85,13 +85,13 @@ public class SystemStateHandler {
             case MID_CONE:
             case MID_CUBE:
                 return 0.6;
-            case CARRY:
             case FLOOR_CONE:
             case FLOOR_CUBE:
             case SINGLE_SUBSTATION_CONE:
             case SINGLE_SUBSTATION_CUBE:
                 return 0.75;
             case HOME:
+            case CARRY:
             default:
                 return 1;
         }
