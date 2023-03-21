@@ -13,8 +13,8 @@ public class SystemStateHandler {
         FLOOR_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CUBE, true),
         DOUBLE_SUBSTATION_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true),
         DOUBLE_SUBSTATION_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true),
-        SINGLE_SUBSTATION_CONE(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
-        SINGLE_SUBSTATION_CUBE(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
+        SINGLE_SUBSTATION_CONE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
+        SINGLE_SUBSTATION_CUBE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
         HOME(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.HOME, false),
         CARRY(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.CARRY, false);
 
