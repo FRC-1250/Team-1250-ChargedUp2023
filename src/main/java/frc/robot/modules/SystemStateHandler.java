@@ -16,7 +16,7 @@ public class SystemStateHandler {
         SINGLE_SUBSTATION_CONE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
         SINGLE_SUBSTATION_CUBE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
         HOME(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.HOME, false),
-        CARRY(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.CARRY, false);
+        CARRY(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.HOME, false);
 
         public final ArmPosition armActionExtension;
         public final ArmPosition armBaseExtension;
