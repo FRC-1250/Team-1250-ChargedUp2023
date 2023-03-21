@@ -29,6 +29,7 @@ public class TrajectoryBuilder {
         BLUE_FLOOR_2(new Translation2d(7.08, 2.16)),
         BLUE_FLOOR_3(new Translation2d(7.08, 3.37)),
         BLUE_FLOOR_4(new Translation2d(7.08, 4.58)),
+        BLUE_CHARGE_1(new Translation2d(3, 2.80)),
         RED_GRID_1(reflectOverY(new Translation2d(1.75, 0.5))),
         RED_GRID_2(reflectOverY(new Translation2d(1.75, 1.10))),
         RED_GRID_3(reflectOverY(new Translation2d(1.75, 1.60))),
@@ -41,7 +42,8 @@ public class TrajectoryBuilder {
         RED_FLOOR_1(reflectOverY(new Translation2d(7.08, 0.95))),
         RED_FLOOR_2(reflectOverY(new Translation2d(7.08, 2.16))),
         RED_FLOOR_3(reflectOverY(new Translation2d(7.08, 3.37))),
-        RED_FLOOR_4(reflectOverY(new Translation2d(7.08, 4.58)));
+        RED_FLOOR_4(reflectOverY(new Translation2d(7.08, 4.58))),
+        RED_CHARGE_1(reflectOverY(new Translation2d(3, 2.80)));
 
         public final Translation2d translation2d;
 
