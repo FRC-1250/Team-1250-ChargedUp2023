@@ -24,7 +24,7 @@ public class DriveSwerveTargetLock extends CommandBase {
   private double rotSpeed;
   private long fid;
   private Alliance alliance;
-  private final PIDController rotController = new PIDController(0.1, 0, 1);
+  private final PIDController rotController = new PIDController(0.05, 0, 0);
 
   public DriveSwerveTargetLock(
       DoubleSupplier throttleSupplier,
@@ -53,7 +53,9 @@ public class DriveSwerveTargetLock extends CommandBase {
   @Override
   public void execute() {
     fid = limelight.getfid();
-    if (alliance == Alliance.Blue) {
+    if (fid == -1) {
+      rotSpeed = 0;
+    } else if (alliance == Alliance.Blue) {
       if (fid == 6 || fid == 7 || fid == 8) {
         rotSpeed = rotController.calculate(drivetrain.getHeading(), 180);
       } else if (fid == 4) {
@@ -65,8 +67,6 @@ public class DriveSwerveTargetLock extends CommandBase {
       } else if (fid == 5) {
         rotSpeed = rotController.calculate(drivetrain.getHeading(), 0);
       }
-    } else {
-      rotSpeed = 0;
     }
 
     drivetrain.drive(
