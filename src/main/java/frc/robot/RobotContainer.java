@@ -278,7 +278,7 @@ public class RobotContainer {
     squareButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
     squareButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
     squareButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CUBE));
-    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
+    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.CARRY));
     circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
     circleButton.onFalse(commandFactory.retractArmBySystemStateCommand());
   }
@@ -298,7 +298,7 @@ public class RobotContainer {
         "Top Cone Mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CONE),
-            commandFactory.changeSystemStateCommand(SystemState.HOME),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY),
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_1)
@@ -312,7 +312,7 @@ public class RobotContainer {
         "Top Cube Mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CUBE),
-            commandFactory.changeSystemStateCommand(SystemState.HOME),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY),
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_2)
@@ -325,12 +325,14 @@ public class RobotContainer {
     autoChooser.addOption(
         "Balance",
         Commands.sequence(
+          commandFactory.autoScore(SystemState.TOP_CONE),
+          commandFactory.changeSystemStateCommand(SystemState.CARRY),
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_4)
                     .endWith(
                         new PathPoint(
-                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.3, 0)),
+                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.5, 0)),
                             Rotation2d.fromDegrees(0),
                             Rotation2d.fromDegrees(180)))
                     .build()),
