@@ -24,7 +24,7 @@ public class DriveSwereAutoBalance extends CommandBase {
   @Override
   public void execute() {
     drivetrain.drive(
-        xController.calculate(drivetrain.getPitch(), 0),
+        -xController.calculate(drivetrain.getPitch(), 0),
         0,
         0, 
         false);
