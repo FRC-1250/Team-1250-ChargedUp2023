@@ -13,7 +13,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.function.BooleanSupplier;
 
+import com.pathplanner.lib.PathPoint;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
@@ -279,60 +282,58 @@ public class RobotContainer {
   }
 
   private void configureAutoCommands() {
-    autoChooser.setDefaultOption("DoNothing", new WaitCommand(15));
+    /*
+     * Do nothing as default is a human safety condition, this should always be the default
+     */
+    autoChooser.setDefaultOption("Do nothing", new WaitCommand(15));
 
+    /*
+     * It is safe to modify the X component of each added translation under the endwith method (Positive = Forward, negative = Backward)
+     * It is NOT SAFE to modify the Y component of each added translation under the endwith method 
+     * The field is not truly mirroed so the Y translation must be mirrored as well in order for a safe motion to occur
+     */
     autoChooser.addOption(
-        "TopConeAndShortMobility",
-        Commands.sequence(
-            commandFactory.autoScore(SystemState.TOP_CONE),
-            commandFactory.changeSystemStateCommand(SystemState.HOME),
-            commandFactory.autoFollowPath(
-                trajectoryBuilder
-                    .startWith(TrajectoryLocation.BLUE_GRID_9)
-                    .blueShortSideMobility()
-                    .build())));
-
-    autoChooser.addOption(
-        "TopCubeAndShortMobility",
-        Commands.sequence(
-            commandFactory.autoScore(SystemState.TOP_CUBE),
-            commandFactory.changeSystemStateCommand(SystemState.HOME),
-            commandFactory.autoFollowPath(
-                trajectoryBuilder
-                    .startWith(TrajectoryLocation.BLUE_GRID_8)
-                    .blueShortSideMobility()
-                    .build())));
-
-    autoChooser.addOption(
-        "TopConeAndLongMobility",
+        "Top Cone Mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CONE),
             commandFactory.changeSystemStateCommand(SystemState.HOME),
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_1)
-                    .blueLongSideMobility()
+                    .endWith(new PathPoint(
+                        TrajectoryLocation.BLUE_GRID_1.translation2d.plus(new Translation2d(4.5, 0)),
+                        Rotation2d.fromDegrees(0),
+                        Rotation2d.fromDegrees(180)))
                     .build())));
 
     autoChooser.addOption(
-        "TopCubeAndLongMobility",
+        "Top Cube Mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CUBE),
             commandFactory.changeSystemStateCommand(SystemState.HOME),
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_2)
-                    .blueLongSideMobility()
+                    .endWith(new PathPoint(
+                        TrajectoryLocation.BLUE_GRID_2.translation2d.plus(new Translation2d(4.5, 0)),
+                        Rotation2d.fromDegrees(0),
+                        Rotation2d.fromDegrees(180)))
                     .build())));
 
     autoChooser.addOption(
-        "DriveAndBalance",
+        "Balance",
         Commands.sequence(
             commandFactory.autoFollowPath(
                 trajectoryBuilder
-                    .startWith(TrajectoryLocation.BLUE_GRID_5, new Rotation2d(180))
-                    .endWith(TrajectoryLocation.BLUE_CHARGE_1, new Rotation2d(180)).build()),
+                    .startWith(TrajectoryLocation.BLUE_GRID_4)
+                    .endWith(
+                        new PathPoint(
+                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.3, 0)),
+                            Rotation2d.fromDegrees(0),
+                            Rotation2d.fromDegrees(180)))
+                    .build()),
             new DriveSwereAutoBalance(drivetrain)));
+
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
