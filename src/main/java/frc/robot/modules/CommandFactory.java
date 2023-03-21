@@ -49,7 +49,7 @@ public class CommandFactory {
             return Commands.parallel(
                     new SetElevatorPosition(elevator, systemState),
                     Commands.sequence(
-                            new WaitCommand(0.2),
+                            new WaitCommand(0.04),
                             new SetArmPosition(arm, systemState.armBaseExtension),
                             rotateArmDownCommand()));
         } else {
@@ -58,7 +58,7 @@ public class CommandFactory {
                             rotateArmUpCommand(),
                             new SetArmPosition(arm, systemState.armBaseExtension)),
                     Commands.sequence(
-                            new WaitCommand(0.2),
+                            new WaitCommand(0.04),
                             new SetElevatorPosition(elevator, systemState)));
         }
     }
