@@ -8,10 +8,12 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
@@ -271,7 +273,7 @@ public class RobotContainer {
     squareButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
     squareButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
     squareButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CUBE));
-    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.CARRY));
+    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
     circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
     circleButton.onFalse(commandFactory.retractArmBySystemStateCommand());
   }
@@ -280,44 +282,57 @@ public class RobotContainer {
     autoChooser.setDefaultOption("DoNothing", new WaitCommand(15));
 
     autoChooser.addOption(
-        "TopConeAndWait",
-        commandFactory.autoScore(SystemState.TOP_CONE));
+        "TopConeAndShortMobility",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.HOME),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_9)
+                    .blueShortSideMobility()
+                    .build())));
 
     autoChooser.addOption(
-        "TopCubeAndWait",
-        commandFactory.autoScore(SystemState.TOP_CUBE));
+        "TopCubeAndShortMobility",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CUBE),
+            commandFactory.changeSystemStateCommand(SystemState.HOME),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_8)
+                    .blueShortSideMobility()
+                    .build())));
 
     autoChooser.addOption(
-        "BlueLongSideMobility",
-        commandFactory.autoFollowPath(
-            trajectoryBuilder
-                .startWith(TrajectoryLocation.BLUE_GRID_1)
-                .blueLongSideMobility()
-                .build()));
+        "TopConeAndLongMobility",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.HOME),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_1)
+                    .blueLongSideMobility()
+                    .build())));
 
     autoChooser.addOption(
-        "BlueShortSideMobility",
-        commandFactory.autoFollowPath(
-            trajectoryBuilder
-                .startWith(TrajectoryLocation.BLUE_GRID_9)
-                .blueShortSideMobility()
-                .build()));
+        "TopCubeAndLongMobility",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CUBE),
+            commandFactory.changeSystemStateCommand(SystemState.HOME),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_2)
+                    .blueLongSideMobility()
+                    .build())));
 
     autoChooser.addOption(
-        "RedLongSideMobility",
-        commandFactory.autoFollowPath(
-            trajectoryBuilder
-                .startWith(TrajectoryLocation.RED_GRID_1)
-                .redLongSideMobility()
-                .build()));
-
-    autoChooser.addOption(
-        "RedShortSideMobility",
-        commandFactory.autoFollowPath(
-            trajectoryBuilder
-                .startWith(TrajectoryLocation.RED_GRID_9)
-                .redShortSideMobility()
-                .build()));
+        "DriveAndBalance",
+        Commands.sequence(
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_5, new Rotation2d(180))
+                    .endWith(TrajectoryLocation.BLUE_CHARGE_1, new Rotation2d(180)).build()),
+            new DriveSwereAutoBalance(drivetrain)));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
