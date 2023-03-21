@@ -32,6 +32,7 @@ import frc.robot.commands.Swerve.DriveSwerveOffsetCenter;
 import frc.robot.commands.Swerve.DriveSwerveTargetLock;
 import frc.robot.commands.Swerve.DriveSwerveThrottled;
 import frc.robot.commands.Swerve.ResetPoseAndHeading;
+import frc.robot.commands.Swerve.SwerveBrake;
 import frc.robot.modules.CommandFactory;
 import frc.robot.modules.SystemStateHandler;
 import frc.robot.modules.TrajectoryBuilder;
@@ -252,6 +253,8 @@ public class RobotContainer {
     yButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
     leftTrigger.whileTrue(commandFactory.endEffectorReleaseConeGraspCubeCommand());
     leftBumper.whileTrue(commandFactory.endEffectorReleaseCubeGraspConeCommand());
+    aButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
+    bButton.whileTrue(new SwerveBrake(drivetrain));
 
     /*
      * Operator controls
@@ -264,7 +267,6 @@ public class RobotContainer {
     rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, true));
     shareButton.onTrue(commandFactory.rotateArmUpCommand());
     optionsButton.onTrue(commandFactory.rotateArmDownCommand());
-    aButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
 
     triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));
     triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE));
@@ -332,7 +334,8 @@ public class RobotContainer {
                             Rotation2d.fromDegrees(0),
                             Rotation2d.fromDegrees(180)))
                     .build()),
-            new DriveSwereAutoBalance(drivetrain)));
+            new DriveSwereAutoBalance(drivetrain),
+            new SwerveBrake(drivetrain)));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
