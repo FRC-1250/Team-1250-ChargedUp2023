@@ -147,8 +147,9 @@ public class CommandFactory {
     public Command elevatorMotionArmMotionArmUp(SystemState requestedSystemState) {
         return Commands.parallel(
                 new SetElevatorPosition(elevator, requestedSystemState),
+                new SetArmPosition(arm, requestedSystemState.armBaseExtension),
                 Commands.sequence(
-                        new SetArmPosition(arm, requestedSystemState.armBaseExtension),
+                        new WaitCommand(0.25),
                         new RotateArmUp(arm)))
                 .withName("elevatorMotionArmMotionArmUp");
     }
@@ -157,8 +158,9 @@ public class CommandFactory {
         return Commands.parallel(
                 new SetElevatorPosition(elevator, requestedSystemState),
                 Commands.sequence(
+                        new WaitCommand(0.1),
                         new RotateArmDown(arm),
-                        new WaitCommand(0.04),
+                        new WaitCommand(0.1),
                         new SetArmPosition(arm, requestedSystemState.armBaseExtension)))
                 .withName("elevatorMotionArmDownArmMotion");
     }
