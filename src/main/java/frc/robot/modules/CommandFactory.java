@@ -80,11 +80,11 @@ public class CommandFactory {
     }
 
     public Command endEffectorReleaseConeGraspCubeCommand() {
-        return new SetEndEffectorSpeed(endEffector, -0.75);
+        return new SetEndEffectorSpeed(endEffector, 0.75);
     }
 
     public Command endEffectorReleaseCubeGraspConeCommand() {
-        return new SetEndEffectorSpeed(endEffector, 0.75);
+        return new SetEndEffectorSpeed(endEffector, -0.75);
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory pathPlannerTrajectory) {
