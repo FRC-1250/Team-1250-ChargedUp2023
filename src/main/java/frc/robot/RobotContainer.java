@@ -285,17 +285,21 @@ public class RobotContainer {
 
   private void configureAutoCommands() {
     /*
-     * Do nothing as default is a human safety condition, this should always be the default
+     * Do nothing as default is a human safety condition, this should always be the
+     * default
      */
     autoChooser.setDefaultOption("Do nothing", new WaitCommand(15));
 
     /*
-     * It is safe to modify the X component of each added translation under the endwith method (Positive = Forward, negative = Backward)
-     * It is NOT SAFE to modify the Y component of each added translation under the endwith method 
-     * The field is not truly mirroed so the Y translation must be mirrored as well in order for a safe motion to occur
+     * It is safe to modify the X component of each added translation under the
+     * endwith method (Positive = Forward, negative = Backward)
+     * It is NOT SAFE to modify the Y component of each added translation under the
+     * endwith method
+     * The field is not truly mirroed so the Y translation must be mirrored as well
+     * in order for a safe motion to occur
      */
     autoChooser.addOption(
-        "Top Cone Mobility",
+        "Top Cone and mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CONE),
             commandFactory.changeSystemStateCommand(SystemState.CARRY),
@@ -309,7 +313,7 @@ public class RobotContainer {
                     .build())));
 
     autoChooser.addOption(
-        "Top Cube Mobility",
+        "Top Cube and mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CUBE),
             commandFactory.changeSystemStateCommand(SystemState.CARRY),
@@ -323,10 +327,37 @@ public class RobotContainer {
                     .build())));
 
     autoChooser.addOption(
+        "Top Cone and balance",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_4)
+                    .endWith(
+                        new PathPoint(
+                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.5, 0)),
+                            Rotation2d.fromDegrees(0),
+                            Rotation2d.fromDegrees(180)))
+                    .build()),
+            new DriveSwereAutoBalance(drivetrain),
+            new SwerveBrake(drivetrain)));
+
+    autoChooser.addOption(
+        "Top Cone and wait",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY)));
+
+    autoChooser.addOption(
+        "Top Cube and wait",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CUBE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY)));
+
+    autoChooser.addOption(
         "Balance",
         Commands.sequence(
-          commandFactory.autoScore(SystemState.TOP_CONE),
-          commandFactory.changeSystemStateCommand(SystemState.CARRY),
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_4)
