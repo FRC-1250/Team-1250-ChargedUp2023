@@ -59,19 +59,17 @@ public class SystemStateHandler {
             case DOUBLE_SUBSTATION_CONE:
             case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
-                return 0.30;
             case MID_CONE:
             case MID_CUBE:
-                return 0.4;
             case FLOOR_CONE:
             case FLOOR_CUBE:
             case SINGLE_SUBSTATION_CONE:
             case SINGLE_SUBSTATION_CUBE:
-                return 0.5;
+                return 0.6;
             case HOME:
             case CARRY:
             default:
-                return 0.75;
+                return 0.85;
         }
     }
 
@@ -81,7 +79,6 @@ public class SystemStateHandler {
             case DOUBLE_SUBSTATION_CONE:
             case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
-                return 0.4;
             case MID_CONE:
             case MID_CUBE:
                 return 0.6;
@@ -89,7 +86,7 @@ public class SystemStateHandler {
             case FLOOR_CUBE:
             case SINGLE_SUBSTATION_CONE:
             case SINGLE_SUBSTATION_CUBE:
-                return 0.75;
+                return 0.8;
             case HOME:
             case CARRY:
             default:
