@@ -28,7 +28,7 @@ public final class Constants {
   }
 
   public static final class ArmCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.65, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
+    public static final PIDGains PID_GAINS = new PIDGains(0.65, 0.0, 6.5, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
     public static final int TALON_CAN_ID = 13;
     public static final double CLOSED_LOOP_RAMP_RATE = 1;
     public static final double PEAK_OUTPUT_FORWARD = 1;
@@ -44,11 +44,11 @@ public final class Constants {
   }
 
   public final static class ElevatorCalibrations {
-    public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 0, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
+    public static final PIDGains PID_GAINS = new PIDGains(0.75, 0.0, 7.5, 1023 / TALONFX_MAX_ROTATION_PER_100MS);
     public static final int TALON_CAN_ID = 14;
     public static final double CLOSED_LOOP_RAMP_RATE = 1.5;
     public static final double OPEN_LOOP_RAMP_RATE = 0.5;
-    public static final double PEAK_OUTPUT_FORWARD = 0.5;
+    public static final double PEAK_OUTPUT_FORWARD = 0.75;
     public static final double PEAK_OUTPUT_REVERSE = 0;
     public static final int BRAKE_SOLENOID_PORT = 1;
   }
@@ -145,8 +145,8 @@ public final class Constants {
 
     public static final int PIDGEON_CAN_ID = 15;
 
-    public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.1, 0.0, 0, 0.0);
-    public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.5, 0.0, 0, 0.0);
+    public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.1, 0.0, 1, 0.0);
+    public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.5, 0.0, 5, 0.0);
     public static final double METERS_PER_SECOND_TO_TALON_TICKS_CONVERSION_FACTOR = 5293;
     public static final double DEGRESS_TO_TALON_TICKS_CONVERSION_FACTOR = 4096 / 360;
   }

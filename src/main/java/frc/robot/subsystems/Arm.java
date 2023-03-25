@@ -30,7 +30,10 @@ public class Arm extends SubsystemBase {
     MID_CUBE(73920),
     HOME(500),
     PAST_BUMPER(41600),
-    AT_BUMPER(8000);
+    AT_BUMPER(8000),
+    SINGLE_SUBSTATION_CONE(40419),
+    SINGLE_SUBSTATION_CUBE(34994),
+    DOUBLE_SUBSTATION_CONE(52094);
 
     public final double positionInTicks;
 
