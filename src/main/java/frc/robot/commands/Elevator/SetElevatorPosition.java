@@ -14,6 +14,7 @@ public class SetElevatorPosition extends CommandBase {
   
   private final Elevator cmd_elevator;
   private final double cmd_positionInTicks;
+  private double cmd_startingPositionInTicks;
   private SystemState cmd_superstructureState;
 
   public SetElevatorPosition(Elevator elevator, ElevatorPosition elevatorPosition) {
@@ -33,22 +34,25 @@ public class SetElevatorPosition extends CommandBase {
 
   @Override
   public void initialize() {
+    cmd_startingPositionInTicks = cmd_elevator.getPosition();
     cmd_elevator.disableBrake();
   }
 
   @Override
   public void execute() {
     cmd_elevator.setPositionMotionMagic(cmd_positionInTicks);
+    if(cmd_superstructureState != null) {
+      if(Math.abs(cmd_positionInTicks - cmd_elevator.getPosition()) 
+       / Math.abs(cmd_positionInTicks - cmd_startingPositionInTicks) > 0.8) {
+         SystemStateHandler.getInstance().setSystemState(cmd_superstructureState);
+       }
+    }
   }
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted == false && cmd_superstructureState != null) {
-      SystemStateHandler.getInstance().setSuperstructureState(cmd_superstructureState);
-    }
-
-    cmd_elevator.stop();
     cmd_elevator.enableBrake();
+    cmd_elevator.stop();
   }
 
   @Override
