@@ -294,10 +294,10 @@ public class RobotContainer {
      * Up and out is positive, Down and in is negative
      * Priotize automation over manual control
      */
-    leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(.5, true));
-    leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0, true));
-    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.75, true));
-    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, true));
+    leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(.5, false));
+    leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0, false));
+    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.75, false));
+    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, false));
     shareButton.onTrue(commandFactory.rotateArmUpCommand());
     optionsButton.onTrue(commandFactory.rotateArmDownCommand());
 
@@ -385,8 +385,7 @@ public class RobotContainer {
 
   private void configureAutoCommands() {
     /*
-     * Do nothing as default is a human safety condition, this should always be the
-     * default
+     * Do nothing as default is a human safety condition, this should always be the default
      */
     autoChooser.setDefaultOption("Do nothing", new WaitCommand(15));
 
@@ -399,7 +398,7 @@ public class RobotContainer {
      * in order for a safe motion to occur
      */
     autoChooser.addOption(
-        "Top Cone Mobility",
+        "Top Cone and mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CONE),
             commandFactory.changeSystemStateCommand(SystemState.CARRY),
@@ -413,7 +412,7 @@ public class RobotContainer {
                     .build())));
 
     autoChooser.addOption(
-        "Top Cube Mobility",
+        "Top Cube and mobility",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CUBE),
             commandFactory.changeSystemStateCommand(SystemState.CARRY),
@@ -427,10 +426,37 @@ public class RobotContainer {
                     .build())));
 
     autoChooser.addOption(
-        "Balance",
+        "Top Cone and balance",
         Commands.sequence(
             commandFactory.autoScore(SystemState.TOP_CONE),
             commandFactory.changeSystemStateCommand(SystemState.CARRY),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_4)
+                    .endWith(
+                        new PathPoint(
+                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.5, 0)),
+                            Rotation2d.fromDegrees(0),
+                            Rotation2d.fromDegrees(180)))
+                    .build()),
+            new DriveSwereAutoBalance(drivetrain),
+            new SwerveBrake(drivetrain)));
+
+    autoChooser.addOption(
+        "Top Cone and wait",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY)));
+
+    autoChooser.addOption(
+        "Top Cube and wait",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CUBE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY)));
+
+    autoChooser.addOption(
+        "Balance",
+        Commands.sequence(
             commandFactory.autoFollowPath(
                 trajectoryBuilder
                     .startWith(TrajectoryLocation.BLUE_GRID_4)

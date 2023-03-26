@@ -95,7 +95,7 @@ public class SwerveModuleTalonFX {
         var actualDegreeChange = optimizedAngle.minus(currentAngle).getDegrees();
     
         // Rotation 2d minus can result in some very small numbers, throw those out.
-        if (actualDegreeChange > 0.01 || actualDegreeChange < -0.01) {
+        if (actualDegreeChange > 0.05 || actualDegreeChange < -0.05) {
             return actualDegreeChange;
           } else {
             return 0;

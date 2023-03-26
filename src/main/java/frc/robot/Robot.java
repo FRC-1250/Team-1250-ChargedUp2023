@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    DataLogManager.start();
     SmartDashboard.putString("System State", SystemStateHandler.getInstance().getSystemState().toString());
     SmartDashboard.putNumber("Drive speed throttle", SystemStateHandler.getInstance().getDriveThrottle());
     SmartDashboard.putNumber("Drive rotation throttle", SystemStateHandler.getInstance().getRotationThrottle());

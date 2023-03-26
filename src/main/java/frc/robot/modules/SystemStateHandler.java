@@ -10,11 +10,11 @@ public class SystemStateHandler {
         MID_CONE(ArmPosition.MID_CONE, ArmPosition.MID_CONE, ElevatorPosition.MID_CONE, true),
         MID_CUBE(ArmPosition.MID_CUBE, ArmPosition.MID_CUBE, ElevatorPosition.MID_CUBE, true),
         FLOOR_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CONE, true),
-        FLOOR_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CUBE, true),
-        DOUBLE_SUBSTATION_CONE(ArmPosition.DOUBLE_SUBSTATION, ArmPosition.PAST_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true),
-        DOUBLE_SUBSTATION_CUBE(ArmPosition.DOUBLE_SUBSTATION, ArmPosition.PAST_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true),
-        SINGLE_SUBSTATION_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
-        SINGLE_SUBSTATION_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
+        FLOOR_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.HOME, true),
+        DOUBLE_SUBSTATION_CONE(ArmPosition.DOUBLE_SUBSTATION_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true),
+        DOUBLE_SUBSTATION_CUBE(ArmPosition.DOUBLE_SUBSTATION_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true),
+        SINGLE_SUBSTATION_CONE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
+        SINGLE_SUBSTATION_CUBE(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
         HOME(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.HOME, false),
         CARRY(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.HOME, false);
 
@@ -59,19 +59,17 @@ public class SystemStateHandler {
             case DOUBLE_SUBSTATION_CONE:
             case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
-                return 0.30;
             case MID_CONE:
             case MID_CUBE:
-                return 0.4;
             case FLOOR_CONE:
             case FLOOR_CUBE:
             case SINGLE_SUBSTATION_CONE:
             case SINGLE_SUBSTATION_CUBE:
-                return 0.5;
+                return 0.6;
             case HOME:
             case CARRY:
             default:
-                return 0.75;
+                return 0.85;
         }
     }
 
@@ -81,7 +79,6 @@ public class SystemStateHandler {
             case DOUBLE_SUBSTATION_CONE:
             case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
-                return 0.4;
             case MID_CONE:
             case MID_CUBE:
                 return 0.6;
@@ -89,7 +86,7 @@ public class SystemStateHandler {
             case FLOOR_CUBE:
             case SINGLE_SUBSTATION_CONE:
             case SINGLE_SUBSTATION_CUBE:
-                return 0.75;
+                return 0.8;
             case HOME:
             case CARRY:
             default:

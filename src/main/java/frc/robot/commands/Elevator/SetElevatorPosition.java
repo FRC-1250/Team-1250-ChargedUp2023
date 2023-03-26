@@ -11,7 +11,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorPosition;
 
 public class SetElevatorPosition extends CommandBase {
-  
+
   private final Elevator cmd_elevator;
   private final double cmd_positionInTicks;
   private double cmd_startingPositionInTicks;
