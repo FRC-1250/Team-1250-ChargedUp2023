@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Arm.SetArmPosition;
+import frc.robot.commands.Arm.WaitForArm;
 import frc.robot.commands.Arm.ExtendArmBySystemState;
 import frc.robot.commands.Arm.RetractArmBySystemState;
 import frc.robot.commands.Arm.SetArmPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPosition;
+import frc.robot.commands.Elevator.WaitForElevator;
 import frc.robot.commands.EndEffector.SetEndEffectorSpeed;
 import frc.robot.commands.Swerve.FollowTrajectory;
 import frc.robot.commands.Swerve.TrackTarget;
@@ -146,10 +148,12 @@ public class CommandFactory {
 
     public Command elevatorMotionArmMotionArmUp(SystemState requestedSystemState) {
         return Commands.parallel(
-                new SetElevatorPosition(elevator, requestedSystemState),
-                new SetArmPosition(arm, requestedSystemState.armBaseExtension),
                 Commands.sequence(
-                        new WaitCommand(0.25),
+                        new WaitForArm(arm, requestedSystemState.armBaseExtension, 0.4),
+                        new SetElevatorPosition(elevator, requestedSystemState)),
+                Commands.sequence(
+                        new SetArmPosition(arm, requestedSystemState.armBaseExtension),
+                        //new WaitCommand(0.2),
                         new RotateArmUp(arm)))
                 .withName("elevatorMotionArmMotionArmUp");
     }
@@ -158,7 +162,7 @@ public class CommandFactory {
         return Commands.parallel(
                 new SetElevatorPosition(elevator, requestedSystemState),
                 Commands.sequence(
-                        new WaitCommand(0.1),
+                        new WaitForElevator(elevator, requestedSystemState.elevatorPosition, 0.25),
                         new RotateArmDown(arm),
                         new WaitCommand(0.1),
                         new SetArmPosition(arm, requestedSystemState.armBaseExtension)))

@@ -13,8 +13,8 @@ import frc.robot.subsystems.Elevator.ElevatorPosition;
 public class SetElevatorPosition extends CommandBase {
 
   private final Elevator cmd_elevator;
-  private final double cmd_positionInTicks;
-  private double cmd_startingPositionInTicks;
+  private final double cmd_targetPosition;
+  private double cmd_startingPosition;
   private SystemState cmd_superstructureState;
 
   public SetElevatorPosition(Elevator elevator, ElevatorPosition elevatorPosition) {
@@ -28,24 +28,24 @@ public class SetElevatorPosition extends CommandBase {
 
   public SetElevatorPosition(Elevator elevator, double positionInTicks) {
     addRequirements(elevator);
-    cmd_positionInTicks = positionInTicks;
+    cmd_targetPosition = positionInTicks;
     cmd_elevator = elevator;
   }
 
   @Override
   public void initialize() {
-    cmd_startingPositionInTicks = cmd_elevator.getPosition();
+    cmd_startingPosition = cmd_elevator.getPosition();
     cmd_elevator.disableBrake();
   }
 
   @Override
   public void execute() {
-    cmd_elevator.setPositionMotionMagic(cmd_positionInTicks);
-    if(cmd_superstructureState != null) {
-      if(Math.abs(cmd_positionInTicks - cmd_elevator.getPosition()) 
-       / Math.abs(cmd_positionInTicks - cmd_startingPositionInTicks) > 0.8) {
-         SystemStateHandler.getInstance().setSystemState(cmd_superstructureState);
-       }
+    cmd_elevator.setPositionMotionMagic(cmd_targetPosition);
+    if (cmd_superstructureState != null) {
+      if (Math.abs(cmd_startingPosition - cmd_elevator.getPosition())
+          / Math.abs(cmd_startingPosition - cmd_targetPosition) < 0.8) {
+        SystemStateHandler.getInstance().setSystemState(cmd_superstructureState);
+      }
     }
   }
 
@@ -57,6 +57,6 @@ public class SetElevatorPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return cmd_elevator.isAtSetPoint(cmd_positionInTicks);
+    return cmd_elevator.isAtSetPoint(cmd_targetPosition);
   }
 }
