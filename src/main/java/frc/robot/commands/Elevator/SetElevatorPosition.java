@@ -11,7 +11,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorPosition;
 
 public class SetElevatorPosition extends CommandBase {
-  
+
   private final Elevator cmd_elevator;
   private final double cmd_positionInTicks;
   private SystemState cmd_superstructureState;
@@ -38,15 +38,17 @@ public class SetElevatorPosition extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_elevator.SetPosition(cmd_positionInTicks);
+    cmd_elevator.setPositionMotionMagic(cmd_positionInTicks);
+    if (cmd_superstructureState != null) {
+      if (Math.abs(cmd_positionInTicks - cmd_elevator.getPosition()) /
+          Math.abs(cmd_positionInTicks) > 0.8) {
+        SystemStateHandler.getInstance().setSuperstructureState(cmd_superstructureState);
+      }
+    }
   }
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted == false && cmd_superstructureState != null) {
-      SystemStateHandler.getInstance().setSuperstructureState(cmd_superstructureState);
-    }
-
     cmd_elevator.stop();
     cmd_elevator.enableBrake();
   }

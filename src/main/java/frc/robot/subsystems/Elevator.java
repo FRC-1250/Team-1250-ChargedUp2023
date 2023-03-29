@@ -4,9 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -22,13 +23,16 @@ public class Elevator extends SubsystemBase {
   public enum ElevatorPosition {
     LIMIT(47500),
     TOP_CONE(44250),
-    SINGLE_SUBSTATION(23500),
-    DOUBLE_SUBSTATION(41500),
     TOP_CUBE(37200),
     MID_CONE(34100),
     MID_CUBE(23500),
-    HYBRID(2300),
-    FLOOR(2300),
+    SINGLE_SUBSTATION_CONE(3567),
+    SINGLE_SUBSTATION_CUBE(12450),
+    DOUBLE_SUBSTATION_CONE(34430),
+    DOUBLE_SUBSTATION_CUBE(42500),//Was 41500
+    CARRY(3000),
+    FLOOR_CONE(2700),
+    FLOOR_CUBE(2300),
     HOME(500);
 
     public final double positionInTicks;
@@ -58,27 +62,40 @@ public class Elevator extends SubsystemBase {
     talonFXConfiguration.slot0 = slotConfiguration;
     talonFXConfiguration.peakOutputForward = Constants.ElevatorCalibrations.PEAK_OUTPUT_FORWARD;
     talonFXConfiguration.peakOutputReverse = Constants.ElevatorCalibrations.PEAK_OUTPUT_REVERSE;
-    talonFXConfiguration.closedloopRamp = Constants.ElevatorCalibrations.CLOSED_LOOP_RAMP_RATE;
+    talonFXConfiguration.openloopRamp = Constants.ElevatorCalibrations.OPEN_LOOP_RAMP_RATE;
     talonFXConfiguration.clearPositionOnLimitR = true;
     talonFXConfiguration.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
+    /*
+     * Motion magic
+     */
+    talonFXConfiguration.motionAcceleration = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.75;
+    talonFXConfiguration.motionCruiseVelocity = Constants.TALONFX_MAX_ROTATION_PER_100MS * 0.75;
+    talonFXConfiguration.motionCurveStrength = 0;
+
     talon.configAllSettings(talonFXConfiguration, Constants.CONFIG_TIMEOUT_MS);
+    SmartDashboard.putBoolean("elevatorMotion", false);
   }
 
   public void setPercentOutput(double speed, boolean override) {
     var direction = Math.signum(speed);
-
+    SmartDashboard.putBoolean("elevatorMotion", true);
     if(override) {
       talon.set(speed);
     } else if(direction == 1 && talon.getSelectedSensorPosition() < ElevatorPosition.LIMIT.positionInTicks) {
-      talon.set(TalonFXControlMode.PercentOutput, speed);
+      talon.set(speed);
     } else {
-      talon.set(TalonFXControlMode.PercentOutput, 0);
+      talon.set(0);
     }
   }
 
   public void SetPosition(Double tickcount) {
-    talon.set(TalonFXControlMode.Position, tickcount);
+    talon.set(ControlMode.Position, tickcount);
+    SmartDashboard.putBoolean("elevatorMotion", true);
+  }
+
+  public void setPositionMotionMagic(double targetPosition) {
+      talon.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.1);
   }
 
   public boolean isAtSetPoint(double targetPosition) {
@@ -87,6 +104,7 @@ public class Elevator extends SubsystemBase {
 
   public void stop() {
     talon.set(0);
+    SmartDashboard.putBoolean("elevatorMotion", false);
   }
 
   public double getPosition() {
@@ -112,8 +130,11 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Elevator sensor position", talon.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
     SmartDashboard.putNumber("Elevator percent output", talon.get());
-    SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
+    SmartDashboard.putNumber("Elevator sensor velocity", talon.getSelectedSensorVelocity());
+    if (talon.getControlMode() == ControlMode.Position || talon.getControlMode() == ControlMode.MotionMagic) {
+      SmartDashboard.putNumber("Elevator closed loop error", talon.getClosedLoopError());
+      SmartDashboard.putNumber("Elevator closed loop target", talon.getClosedLoopTarget());
+    }
   }
 }

@@ -5,30 +5,33 @@ import frc.robot.subsystems.Elevator.ElevatorPosition;
 
 public class SystemStateHandler {
     public enum SystemState {
-        TOP_CONE(ArmPosition.TOP_CONE, ElevatorPosition.TOP_CONE, true, false),
-        TOP_CUBE(ArmPosition.TOP_CUBE, ElevatorPosition.TOP_CUBE, true, false),
-        MID_CONE(ArmPosition.MID_CONE, ElevatorPosition.MID_CONE, true, false),
-        MID_CUBE(ArmPosition.MID_CUBE, ElevatorPosition.MID_CUBE, true, false),
-        HYBRID(ArmPosition.HYBRID, ElevatorPosition.HYBRID, true, true),
-        FLOOR(ArmPosition.FLOOR, ElevatorPosition.FLOOR, true, true),
-        HOME(ArmPosition.HOME, ElevatorPosition.HOME, false, false),
-        DOUBLE_SUBSTATION(ArmPosition.DOUBLE_SUBSTATION, ElevatorPosition.DOUBLE_SUBSTATION, true, false),
-        SINGLE_SUBSTATION(ArmPosition.HOME, ElevatorPosition.SINGLE_SUBSTATION, false, false);
+        TOP_CONE(ArmPosition.TOP_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.TOP_CONE, true),
+        TOP_CUBE(ArmPosition.TOP_CUBE, ArmPosition.AT_BUMPER, ElevatorPosition.TOP_CUBE, true),
+        MID_CONE(ArmPosition.MID_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.MID_CONE, true),
+        MID_CUBE(ArmPosition.MID_CUBE, ArmPosition.AT_BUMPER, ElevatorPosition.MID_CUBE, true),
+        FLOOR_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CONE, true),
+        FLOOR_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.HOME, true),
+        DOUBLE_SUBSTATION_CONE(ArmPosition.DOUBLE_SUBSTATION_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true),
+        DOUBLE_SUBSTATION_CUBE(ArmPosition.DOUBLE_SUBSTATION_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CUBE, true),
+        SINGLE_SUBSTATION_CONE(ArmPosition.SINGLE_SUBSTATION_CONE, ArmPosition.SINGLE_SUBSTATION_CONE, ElevatorPosition.SINGLE_SUBSTATION_CONE, false),
+        SINGLE_SUBSTATION_CUBE(ArmPosition.SINGLE_SUBSTATION_CUBE, ArmPosition.SINGLE_SUBSTATION_CUBE, ElevatorPosition.SINGLE_SUBSTATION_CUBE, false),
+        HOME(ArmPosition.HOME, ArmPosition.HOME, ElevatorPosition.HOME, false),
+        CARRY(ArmPosition.AT_BUMPER, ArmPosition.AT_BUMPER, ElevatorPosition.HOME, false);
 
-        public final ArmPosition armExtendActionPosition;
+        public final ArmPosition armActionExtension;
+        public final ArmPosition armBaseExtension;
         public final ElevatorPosition elevatorPosition;
         public final boolean rotateArmDown;
-        public final boolean preExtendArm;
 
         SystemState(
-            ArmPosition e_armExtendActionPosition, 
+            ArmPosition e_armActionExtension,
+            ArmPosition e_armBaseExtension,
             ElevatorPosition e_elevatorPosition, 
-            boolean e_rotateArmDown,
-            boolean e_preExtendArm) {
-            armExtendActionPosition = e_armExtendActionPosition;
+            boolean e_rotateArmDown) {
+            armActionExtension = e_armActionExtension;
+            armBaseExtension = e_armBaseExtension;
             elevatorPosition = e_elevatorPosition;
             rotateArmDown = e_rotateArmDown;
-            preExtendArm = e_preExtendArm;
         }
     }
 
@@ -53,19 +56,41 @@ public class SystemStateHandler {
     public double getDriveThrottle() {
         switch (superstructureState) {
             case TOP_CONE:
-            case DOUBLE_SUBSTATION:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
             case TOP_CUBE:
-                return 0.30;
             case MID_CONE:
             case MID_CUBE:
-                return 0.4;
-            case HYBRID:
-            case FLOOR:
-            case SINGLE_SUBSTATION:
-                return 0.5;
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
+                return 0.6;
             case HOME:
+            case CARRY:
             default:
-                return 0.75;
+                return 1;
+        }
+    }
+
+    public double getRotationThrottle() {
+        switch (superstructureState) {
+            case TOP_CONE:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
+            case TOP_CUBE:
+            case MID_CONE:
+            case MID_CUBE:
+                return 0.6;
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
+                return 0.8;
+            case HOME:
+            case CARRY:
+            default:
+                return 1;
         }
     }
 

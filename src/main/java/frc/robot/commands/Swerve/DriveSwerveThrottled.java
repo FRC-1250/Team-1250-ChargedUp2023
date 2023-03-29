@@ -5,24 +5,30 @@
 package frc.robot.commands.Swerve;
 
 import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveSwerve extends CommandBase {
+public class DriveSwerveThrottled extends CommandBase {
 
   private final Drivetrain drivetrain;
+  private final DoubleSupplier throttleSupplier;
+  private final DoubleSupplier rotationThrottleSupplier;
   private final DoubleSupplier yInputSupplier;
   private final DoubleSupplier xInputSupplier;
   private final DoubleSupplier rotationInputSupplier;
   private final boolean fieldRelative;
-  private final int fullThrottle = 1;
 
-  public DriveSwerve(
+  public DriveSwerveThrottled(
+      DoubleSupplier throttleSupplier,
+      DoubleSupplier rotationThrottleSupplier,
       DoubleSupplier yInputSupplier,
       DoubleSupplier xInputSupplier,
       DoubleSupplier rotationInputSupplier,
       boolean fieldRelative,
       Drivetrain drivetrain) {
+    this.throttleSupplier = throttleSupplier;
+    this.rotationThrottleSupplier = rotationThrottleSupplier;
     this.yInputSupplier = yInputSupplier;
     this.xInputSupplier = xInputSupplier;
     this.rotationInputSupplier = rotationInputSupplier;
@@ -34,10 +40,10 @@ public class DriveSwerve extends CommandBase {
   @Override
   public void execute() {
     drivetrain.drive(
-      drivetrain.calculateSpeed(-yInputSupplier.getAsDouble(), fullThrottle), 
-      drivetrain.calculateSpeed(-xInputSupplier.getAsDouble(), fullThrottle), 
-      drivetrain.calculateRotationSpeed(-rotationInputSupplier.getAsDouble(), fullThrottle), 
-      fieldRelative);
+        drivetrain.calculateSpeed(-yInputSupplier.getAsDouble(), throttleSupplier.getAsDouble()),
+        drivetrain.calculateSpeed(-xInputSupplier.getAsDouble(), throttleSupplier.getAsDouble()),
+        drivetrain.calculateRotationSpeed(-rotationInputSupplier.getAsDouble(), rotationThrottleSupplier.getAsDouble()),
+        fieldRelative);
   }
 
   @Override

@@ -41,7 +41,7 @@ public class SwerveModuleTalonFX {
         driveTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.DRIVE_TALON_VELOCITY_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
         driveTalon.setNeutralMode(NeutralMode.Brake);
         driveTalon.setSelectedSensorPosition(0, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
-        driveTalon.configAllowableClosedloopError(Constants.TALONFX_PRIMARY_PID_LOOP_ID, 40, Constants.CONFIG_TIMEOUT_MS);
+        driveTalon.configAllowableClosedloopError(Constants.TALONFX_PRIMARY_PID_LOOP_ID, 100, Constants.CONFIG_TIMEOUT_MS);
     }
 
     private void configureCanCoder(double canCoderOffsetDegrees) {
@@ -57,17 +57,17 @@ public class SwerveModuleTalonFX {
         turningTalon.setSensorPhase(true);
         turningTalon.configRemoteFeedbackFilter(canCoder, 0, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.CONFIG_TIMEOUT_MS);
-        turningTalon.configClosedloopRamp(0.5, Constants.CONFIG_TIMEOUT_MS);
+        turningTalon.configClosedloopRamp(0, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.setInverted(TalonFXInvertType.CounterClockwise);
         turningTalon.config_kF(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kF, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kP(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kP, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kI(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kI, Constants.CONFIG_TIMEOUT_MS);
         turningTalon.config_kD(Constants.TALONFX_PRIMARY_PID_LOOP_ID, Constants.DrivetrainCalibration.TURNING_TALON_POSITION_GAINS.kD, Constants.CONFIG_TIMEOUT_MS);
-        turningTalon.configAllowableClosedloopError(Constants.TALONFX_PRIMARY_PID_LOOP_ID, 40, Constants.CONFIG_TIMEOUT_MS);
+        turningTalon.configAllowableClosedloopError(Constants.TALONFX_PRIMARY_PID_LOOP_ID, 100, Constants.CONFIG_TIMEOUT_MS);
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(driveTalon.getSelectedSensorVelocity(), getFromHeading());
+        return new SwerveModuleState(driveTalon.getSelectedSensorVelocity() / Constants.DrivetrainCalibration.METERS_PER_SECOND_TO_TALON_TICKS_CONVERSION_FACTOR, getFromHeading());
     }
 
     public SwerveModulePosition getPosition() {
@@ -95,7 +95,7 @@ public class SwerveModuleTalonFX {
         var actualDegreeChange = optimizedAngle.minus(currentAngle).getDegrees();
     
         // Rotation 2d minus can result in some very small numbers, throw those out.
-        if (actualDegreeChange > 0.01 || actualDegreeChange < -0.01) {
+        if (actualDegreeChange > 0.05 || actualDegreeChange < -0.05) {
             return actualDegreeChange;
           } else {
             return 0;

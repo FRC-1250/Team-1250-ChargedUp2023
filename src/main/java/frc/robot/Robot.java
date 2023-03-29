@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,8 +52,10 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    DataLogManager.start();
     SmartDashboard.putString("System State", SystemStateHandler.getInstance().getSystemState().toString());
-    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putNumber("Drive speed throttle", SystemStateHandler.getInstance().getDriveThrottle());
+    SmartDashboard.putNumber("Drive rotation throttle", SystemStateHandler.getInstance().getRotationThrottle());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -8,10 +8,15 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.function.BooleanSupplier;
 
+import com.pathplanner.lib.PathPoint;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,15 +25,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.PneumaticHubCalibrations;
 import frc.robot.commands.Arm.ResetArmPosition;
-import frc.robot.commands.Arm.RotateArmDown;
-import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Elevator.ResetElevatorPosition;
+import frc.robot.commands.Swerve.DriveSwereAutoBalance;
 import frc.robot.commands.Swerve.DriveSwerve;
+import frc.robot.commands.Swerve.DriveSwerveOffsetCenter;
+import frc.robot.commands.Swerve.DriveSwerveTargetLock;
+import frc.robot.commands.Swerve.DriveSwerveThrottled;
 import frc.robot.commands.Swerve.ResetPoseAndHeading;
+import frc.robot.commands.Swerve.SwerveBrake;
 import frc.robot.modules.CommandFactory;
 import frc.robot.modules.SystemStateHandler;
+import frc.robot.modules.TrajectoryBuilder;
 import frc.robot.modules.TrajectoryModule;
 import frc.robot.modules.SystemStateHandler.SystemState;
+import frc.robot.modules.TrajectoryBuilder.TrajectoryLocation;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 
@@ -39,10 +49,11 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator(pneumaticHub);
   private final EndEffector endEffector = new EndEffector();
   private final Arm arm = new Arm(pneumaticHub);
-
+  private final TrajectoryBuilder trajectoryBuilder = new TrajectoryBuilder();
   private final TrajectoryModule trajectoryModule = new TrajectoryModule();
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private final CommandFactory commandFactory = new CommandFactory(arm, elevator, drivetrain, endEffector, limelight, trajectoryModule);
+  private final CommandFactory commandFactory = new CommandFactory(arm, elevator, drivetrain, endEffector, limelight,
+      trajectoryModule);
 
   private final XboxController driverXboxController = new XboxController(0);
   Trigger startButton = new Trigger(driverXboxController::getStartButton);
@@ -67,6 +78,13 @@ public class RobotContainer {
     @Override
     public boolean getAsBoolean() {
       return driverXboxController.getRightTriggerAxis() > 0.5;
+    }
+  });
+
+  Trigger pov = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      return driverXboxController.getPOV() != -1;
     }
   });
 
@@ -114,56 +132,57 @@ public class RobotContainer {
     }
   });
 
-  Trigger upLeftJoystick = new Trigger(new BooleanSupplier() {
+  // Joysticks defined here (Defined Joystick)
+  Trigger leftJoystickUp = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getLeftY() < -0.5;
     }
   });
 
-  Trigger downLeftJoystick = new Trigger(new BooleanSupplier() {
+  Trigger leftJoystickDown = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getLeftY() > 0.5;
     }
   });
 
-  Trigger rightLeftJoystick = new Trigger(new BooleanSupplier() {
+  Trigger leftJoystickRight = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getLeftX() > 0.5;
     }
   });
 
-  Trigger leftLeftJoystick = new Trigger(new BooleanSupplier() {
+  Trigger leftJoystickLeft = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getLeftX() < -0.5;
     }
   });
 
-  Trigger upRightJoystick = new Trigger(new BooleanSupplier() {
+  Trigger rightJoystickUp = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getRightY() < -0.5;
     }
   });
 
-  Trigger downRightJoystick = new Trigger(new BooleanSupplier() {
+  Trigger rightJoystickDown = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getRightY() > 0.5;
     }
   });
 
-  Trigger rightRightJoystick = new Trigger(new BooleanSupplier() {
+  Trigger rightJoystickRight = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getRightX() > 0.5;
     }
   });
 
-  Trigger leftRightJoystick = new Trigger(new BooleanSupplier() {
+  Trigger rightJoystickLeft = new Trigger(new BooleanSupplier() {
     @Override
     public boolean getAsBoolean() {
       return operatorPS4Controller.getRightX() < -0.5;
@@ -173,77 +192,187 @@ public class RobotContainer {
   public RobotContainer() {
     configureAutoCommands();
     configureButtonBindings();
+    SmartDashboard.putData(drivetrain);
+    SmartDashboard.putData(arm);
+    SmartDashboard.putData(elevator);
+    SmartDashboard.putData(endEffector);
   }
 
   private void configureButtonBindings() {
+
+    /*
+     * SmartDashboard controls
+     */
     SmartDashboard.putData(new ResetArmPosition(arm));
     SmartDashboard.putData(new ResetElevatorPosition(elevator));
     SmartDashboard.putData(new ResetPoseAndHeading(drivetrain));
- 
-    // Driver
+
+    /*
+     * Driver controls
+     */
     drivetrain.setDefaultCommand(
-        new DriveSwerve(
-            driverXboxController::getPOV,
-            rightBumper::getAsBoolean, // Boost
+        new DriveSwerveThrottled(
             SystemStateHandler.getInstance()::getDriveThrottle,
+            SystemStateHandler.getInstance()::getRotationThrottle,
             driverXboxController::getLeftY,
             driverXboxController::getLeftX,
             driverXboxController::getRightX,
             true,
             drivetrain));
 
-    xButton.whileTrue(commandFactory.trackAprilTagCommand());
+    rightBumper.whileTrue(
+      new DriveSwerveThrottled(
+       () -> .6,
+        SystemStateHandler.getInstance()::getRotationThrottle,
+        driverXboxController::getLeftY,
+        driverXboxController::getLeftX,
+        driverXboxController::getRightX,
+        true,
+        drivetrain));
+
+    pov.whileTrue(
+        new DriveSwerveOffsetCenter(
+            driverXboxController::getPOV,
+            SystemStateHandler.getInstance()::getDriveThrottle,
+            SystemStateHandler.getInstance()::getRotationThrottle,
+            driverXboxController::getLeftY,
+            driverXboxController::getLeftX,
+            driverXboxController::getRightX,
+            true,
+            drivetrain));
+
+    xButton.whileTrue(
+        new DriveSwerveTargetLock(
+            SystemStateHandler.getInstance()::getDriveThrottle,
+            SystemStateHandler.getInstance()::getRotationThrottle,
+            driverXboxController::getLeftY,
+            driverXboxController::getLeftX,
+            driverXboxController::getRightX,
+            true,
+            drivetrain,
+            limelight));
+
+    yButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
     leftTrigger.whileTrue(commandFactory.endEffectorReleaseConeGraspCubeCommand());
     leftBumper.whileTrue(commandFactory.endEffectorReleaseCubeGraspConeCommand());
-    
-    // Operator
-    // Up and out is positive, Down and in is negative
-    upDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.5, true));
-    downDpad.whileTrue(commandFactory.setElevatorPercentOutputCommand(0.0, true));
-    rightDpad.whileTrue(commandFactory.setArmPercentOutputCommand(0.25, false));
-    leftDpad.whileTrue(commandFactory.setArmPercentOutputCommand(-0.5, false));
-    shareButton.onTrue(new RotateArmDown(arm));
-    optionsButton.onTrue(new RotateArmUp(arm));
-    
-    r1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
-    r2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
-    l1Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
-    l2Button.onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
-    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.HOME));
-    squareButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR));
-    circleButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION));
-    triangleButton.onTrue(commandFactory.extendArmBySystemStateCommand())
-        .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
-    triangleButton.onFalse(commandFactory.preextendCommand())
-        .and(() -> SystemStateHandler.getInstance().getSystemState() != SystemState.HOME);
+    aButton.whileTrue(new DriveSwereAutoBalance(drivetrain));
+    bButton.whileTrue(new SwerveBrake(drivetrain));
+
+    /*
+     * Operator controls
+     * Up and out is positive, Down and in is negative
+     * Priotize automation over manual control
+     */
+    leftJoystickUp.whileTrue(commandFactory.setElevatorPercentOutputCommand(.5, false));
+    leftJoystickDown.whileTrue(commandFactory.setElevatorPercentOutputCommand(0, false));
+    rightJoystickRight.whileTrue(commandFactory.setArmPercentOutputCommand(0.75, false));
+    rightJoystickLeft.whileTrue(commandFactory.setArmPercentOutputCommand(-0.75, false));
+    shareButton.onTrue(commandFactory.rotateArmUpCommand());
+    optionsButton.onTrue(commandFactory.rotateArmDownCommand());
+
+    triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));
+    triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE));
+    triangleButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
+    triangleButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
+    triangleButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
+    squareButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CUBE));
+    squareButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CUBE));
+    squareButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
+    squareButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
+    squareButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CUBE));
+    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.CARRY));
+    circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
+    circleButton.onFalse(commandFactory.retractArmBySystemStateCommand());
   }
 
   private void configureAutoCommands() {
-    autoChooser.setDefaultOption("DoNothing", new WaitCommand(15));
+    /*
+     * Do nothing as default is a human safety condition, this should always be the
+     * default
+     */
+    autoChooser.setDefaultOption("Do nothing", new WaitCommand(15));
+
+    /*
+     * It is safe to modify the X component of each added translation under the
+     * endwith method (Positive = Forward, negative = Backward)
+     * It is NOT SAFE to modify the Y component of each added translation under the
+     * endwith method
+     * The field is not truly mirroed so the Y translation must be mirrored as well
+     * in order for a safe motion to occur
+     */
+    autoChooser.addOption(
+        "Top Cone and mobility",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_1)
+                    .endWith(new PathPoint(
+                        TrajectoryLocation.BLUE_GRID_1.translation2d.plus(new Translation2d(4.5, 0)),
+                        Rotation2d.fromDegrees(0),
+                        Rotation2d.fromDegrees(180)))
+                    .build())));
 
     autoChooser.addOption(
-        "TopConeAndWait",
-        commandFactory.autoScore(SystemState.TOP_CONE));
+        "Top Cube and mobility",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CUBE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_2)
+                    .endWith(new PathPoint(
+                        TrajectoryLocation.BLUE_GRID_2.translation2d.plus(new Translation2d(4.5, 0)),
+                        Rotation2d.fromDegrees(0),
+                        Rotation2d.fromDegrees(180)))
+                    .build())));
 
     autoChooser.addOption(
-        "TopCubeAndWait",
-        commandFactory.autoScore(SystemState.TOP_CUBE));    
+        "Top Cone and balance",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY),
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_4)
+                    .endWith(
+                        new PathPoint(
+                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.5, 0)),
+                            Rotation2d.fromDegrees(0),
+                            Rotation2d.fromDegrees(180)))
+                    .build()),
+            new DriveSwereAutoBalance(drivetrain),
+            new SwerveBrake(drivetrain)));
 
     autoChooser.addOption(
-        "BlueLongSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().blueLongSideMobility));
+        "Top Cone and wait",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CONE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY)));
 
     autoChooser.addOption(
-        "BlueShortSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().blueShortSideMobility));
+        "Top Cube and wait",
+        Commands.sequence(
+            commandFactory.autoScore(SystemState.TOP_CUBE),
+            commandFactory.changeSystemStateCommand(SystemState.CARRY)));
 
     autoChooser.addOption(
-        "RedLongSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redLongSideMobility));
+        "Balance",
+        Commands.sequence(
+            commandFactory.autoFollowPath(
+                trajectoryBuilder
+                    .startWith(TrajectoryLocation.BLUE_GRID_4)
+                    .endWith(
+                        new PathPoint(
+                            TrajectoryLocation.BLUE_GRID_4.translation2d.plus(new Translation2d(1.5, 0)),
+                            Rotation2d.fromDegrees(0),
+                            Rotation2d.fromDegrees(180)))
+                    .build()),
+            new DriveSwereAutoBalance(drivetrain),
+            new SwerveBrake(drivetrain)));
 
-    autoChooser.addOption(
-        "RedShortSideMobility",
-        commandFactory.autoFollowPath(trajectoryModule.getTrajectorySet().redShortSideMobility));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**

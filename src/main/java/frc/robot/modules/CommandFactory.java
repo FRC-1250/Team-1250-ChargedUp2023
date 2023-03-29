@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Arm.SetArmPosition;
-import frc.robot.commands.Arm.SetArmPositionBySystemState;
+import frc.robot.commands.Arm.ExtendArmBySystemState;
+import frc.robot.commands.Arm.RetractArmBySystemState;
 import frc.robot.commands.Arm.SetArmPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -44,22 +45,22 @@ public class CommandFactory {
     }
 
     public Command changeSystemStateCommand(SystemState systemState) {
-        List<Command> commands = new ArrayList<>();
-
-        if (systemState.rotateArmDown == false) {
-            commands.add(rotateArmUpCommand());
-            commands.add(homeArmCommand());
-            commands.add(new SetElevatorPosition(elevator, systemState));
+        if (systemState.rotateArmDown) {
+            return Commands.parallel(
+                    new SetElevatorPosition(elevator, systemState),
+                    Commands.sequence(
+                            new WaitCommand(0.04),
+                            new SetArmPosition(arm, systemState.armBaseExtension),
+                            rotateArmDownCommand()));
+        } else {
+            return Commands.parallel(
+                    Commands.sequence(
+                            rotateArmUpCommand(),
+                            new SetArmPosition(arm, systemState.armBaseExtension)),
+                    Commands.sequence(
+                            new WaitCommand(0.04),
+                            new SetElevatorPosition(elevator, systemState)));
         }
-
-        if (systemState.rotateArmDown == true) {
-            commands.add(new SetElevatorPosition(elevator, systemState));
-            if(systemState.preExtendArm) {
-                commands.add(preextendCommand());
-            }
-            commands.add(rotateArmDownCommand());
-        }
-        return Commands.sequence(commands.toArray(Command[]::new));
     }
 
     public Command rotateArmDownCommand() {
@@ -71,19 +72,11 @@ public class CommandFactory {
     }
 
     public Command extendArmBySystemStateCommand() {
-        return new SetArmPositionBySystemState(arm);
+        return new ExtendArmBySystemState(arm);
     }
 
-    public Command homeArmCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.HOME);
-    }
-
-    public Command preextendCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.PRE_EXTEND);
-    }
-
-    public Command armExtendByDefaultCommand() {
-        return new SetArmPosition(arm, Arm.ArmPosition.HYBRID);
+    public Command retractArmBySystemStateCommand() {
+        return new RetractArmBySystemState(arm);
     }
 
     public Command endEffectorReleaseConeGraspCubeCommand() {
@@ -125,11 +118,13 @@ public class CommandFactory {
             case TOP_CONE:
             case MID_CONE:
                 commands.add(endEffectorReleaseConeGraspCubeCommand().withTimeout(0.5));
+                break;
             default:
                 commands.add(endEffectorReleaseCubeGraspConeCommand().withTimeout(0.5));
+                break;
 
         }
-        commands.add(preextendCommand().withTimeout(1));
+        commands.add(retractArmBySystemStateCommand());
         return Commands.sequence(commands.toArray(Command[]::new));
     }
 

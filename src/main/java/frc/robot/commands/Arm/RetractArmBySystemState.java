@@ -5,20 +5,14 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.modules.SystemStateHandler;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Arm.ArmPosition;
 
-public class SetArmPosition extends CommandBase {
+public class RetractArmBySystemState extends CommandBase {
   private final Arm cmd_arm;
-  private final double cmd_positionInTicks;
 
-  public SetArmPosition(Arm arm, ArmPosition armPosition) {
-    this(arm, armPosition.positionInTicks);
-  }
-
-  public SetArmPosition(Arm arm, double positionInTicks) {
+  public RetractArmBySystemState(Arm arm) {
     cmd_arm = arm;
-    cmd_positionInTicks = positionInTicks;
     addRequirements(arm);
   }
 
@@ -29,7 +23,7 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void execute() {
-    cmd_arm.setPositionMotionMagic(cmd_positionInTicks);
+    cmd_arm.setPositionMotionMagic(SystemStateHandler.getInstance().getSystemState().armBaseExtension.positionInTicks);
   }
 
   @Override
@@ -40,6 +34,6 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return cmd_arm.isAtSetPoint(cmd_positionInTicks);
+    return cmd_arm.isAtSetPoint(SystemStateHandler.getInstance().getSystemState().armBaseExtension.positionInTicks);
   }
 }

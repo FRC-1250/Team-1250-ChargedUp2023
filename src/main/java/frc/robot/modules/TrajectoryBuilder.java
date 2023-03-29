@@ -29,6 +29,7 @@ public class TrajectoryBuilder {
         BLUE_FLOOR_2(new Translation2d(7.08, 2.16)),
         BLUE_FLOOR_3(new Translation2d(7.08, 3.37)),
         BLUE_FLOOR_4(new Translation2d(7.08, 4.58)),
+        BLUE_CHARGE_1(new Translation2d(3, 2.80)),
         RED_GRID_1(reflectOverY(new Translation2d(1.75, 0.5))),
         RED_GRID_2(reflectOverY(new Translation2d(1.75, 1.10))),
         RED_GRID_3(reflectOverY(new Translation2d(1.75, 1.60))),
@@ -41,7 +42,8 @@ public class TrajectoryBuilder {
         RED_FLOOR_1(reflectOverY(new Translation2d(7.08, 0.95))),
         RED_FLOOR_2(reflectOverY(new Translation2d(7.08, 2.16))),
         RED_FLOOR_3(reflectOverY(new Translation2d(7.08, 3.37))),
-        RED_FLOOR_4(reflectOverY(new Translation2d(7.08, 4.58)));
+        RED_FLOOR_4(reflectOverY(new Translation2d(7.08, 4.58))),
+        RED_CHARGE_1(reflectOverY(new Translation2d(3, 2.80)));
 
         public final Translation2d translation2d;
 
@@ -155,6 +157,11 @@ public class TrajectoryBuilder {
         return this;
     }
 
+    public TrajectoryBuilder startWith(TrajectoryLocation point) {
+        startPathPoint = new PathPoint(point.translation2d, new Rotation2d(), Rotation2d.fromDegrees(180));
+        return this;
+    }
+
     public TrajectoryBuilder startWith(TrajectoryLocation point, Rotation2d holonomicHeading) {
         startPathPoint = new PathPoint(point.translation2d, new Rotation2d(), holonomicHeading);
         return this;
@@ -192,9 +199,9 @@ public class TrajectoryBuilder {
 
     private void buildLongSideMobility() {
         List<Pose2d> poses = new ArrayList<>();
-        poses.add(new Pose2d(3.25, 0.8, Rotation2d.fromDegrees(0)));
-        poses.add(new Pose2d(4.5, 0.8, Rotation2d.fromDegrees(0)));
-        poses.add(new Pose2d(6, 0.95, Rotation2d.fromDegrees(0)));
+        poses.add(new Pose2d(3.25, 0.8, Rotation2d.fromDegrees(180)));
+        poses.add(new Pose2d(4.5, 0.8, Rotation2d.fromDegrees(180)));
+        poses.add(new Pose2d(6, 0.95, Rotation2d.fromDegrees(180)));
         blueLongSideMobility.addAll(getPathPoints(poses));
         redLongSideMobility.addAll(getPathPointsOverY(poses));
     }
@@ -208,9 +215,9 @@ public class TrajectoryBuilder {
 
     private void buildShortSideMobility() {
         List<Pose2d> poses = new ArrayList<>();
-        poses.add(new Pose2d(3, 4.7, Rotation2d.fromDegrees(0)));
-        poses.add(new Pose2d(4.5, 4.7, Rotation2d.fromDegrees(0)));
-        poses.add(new Pose2d(6, 4.6, Rotation2d.fromDegrees(0)));
+        poses.add(new Pose2d(3, 4.7, Rotation2d.fromDegrees(180)));
+        poses.add(new Pose2d(4.5, 4.7, Rotation2d.fromDegrees(180)));
+        poses.add(new Pose2d(6, 4.6, Rotation2d.fromDegrees(180)));
         blueShortSideMobility.addAll(getPathPoints(poses));
         redShortSideMobility.addAll(getPathPointsOverY(poses));
     }
