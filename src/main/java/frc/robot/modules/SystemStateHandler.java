@@ -5,10 +5,10 @@ import frc.robot.subsystems.Elevator.ElevatorPosition;
 
 public class SystemStateHandler {
     public enum SystemState {
-        TOP_CONE(ArmPosition.TOP_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.TOP_CONE, true),
-        TOP_CUBE(ArmPosition.TOP_CUBE, ArmPosition.AT_BUMPER, ElevatorPosition.TOP_CUBE, true),
-        MID_CONE(ArmPosition.MID_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.MID_CONE, true),
-        MID_CUBE(ArmPosition.MID_CUBE, ArmPosition.AT_BUMPER, ElevatorPosition.MID_CUBE, true),
+        TOP_CONE(ArmPosition.TOP_CONE, ArmPosition.TOP_CONE, ElevatorPosition.TOP_CONE, true),
+        TOP_CUBE(ArmPosition.TOP_CUBE, ArmPosition.TOP_CUBE, ElevatorPosition.TOP_CUBE, true),
+        MID_CONE(ArmPosition.MID_CONE, ArmPosition.MID_CONE, ElevatorPosition.MID_CONE, true),
+        MID_CUBE(ArmPosition.MID_CUBE, ArmPosition.MID_CUBE, ElevatorPosition.MID_CUBE, true),
         FLOOR_CONE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.FLOOR_CONE, true),
         FLOOR_CUBE(ArmPosition.PAST_BUMPER, ArmPosition.PAST_BUMPER, ElevatorPosition.HOME, true),
         DOUBLE_SUBSTATION_CONE(ArmPosition.DOUBLE_SUBSTATION_CONE, ArmPosition.AT_BUMPER, ElevatorPosition.DOUBLE_SUBSTATION_CONE, true),
@@ -35,26 +35,26 @@ public class SystemStateHandler {
         }
     }
 
-    private SystemState superstructureState;
-    private static SystemStateHandler superstructure;
+    private SystemState currentSystemState;
+    private static SystemStateHandler systemStateHandler;
 
     private SystemStateHandler() {
-        superstructureState = SystemState.HOME;
+        currentSystemState = SystemState.HOME;
     }
 
     public static SystemStateHandler getInstance() {
-        if(superstructure == null) {
-            superstructure = new SystemStateHandler();
+        if(systemStateHandler == null) {
+            systemStateHandler = new SystemStateHandler();
         }
-        return superstructure;
+        return systemStateHandler;
     }
 
     public SystemState getSystemState() {
-        return superstructureState;
+        return currentSystemState;
     }
 
     public double getDriveThrottle() {
-        switch (superstructureState) {
+        switch (currentSystemState) {
             case TOP_CONE:
             case DOUBLE_SUBSTATION_CONE:
             case DOUBLE_SUBSTATION_CUBE:
@@ -74,7 +74,7 @@ public class SystemStateHandler {
     }
 
     public double getRotationThrottle() {
-        switch (superstructureState) {
+        switch (currentSystemState) {
             case TOP_CONE:
             case DOUBLE_SUBSTATION_CONE:
             case DOUBLE_SUBSTATION_CUBE:
@@ -94,7 +94,7 @@ public class SystemStateHandler {
         }
     }
 
-    public void setSuperstructureState(SystemState superstructureState) {
-        this.superstructureState = superstructureState;
+    public void setSystemState(SystemState systemState) {
+        this.currentSystemState = systemState;
     }
 }

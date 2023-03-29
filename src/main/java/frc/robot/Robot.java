@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -36,6 +35,8 @@ public class Robot extends TimedRobot {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
     m_robotContainer = new RobotContainer();
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    DataLogManager.start();
   }
 
   /**

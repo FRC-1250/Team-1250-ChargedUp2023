@@ -27,7 +27,6 @@ import frc.robot.Constants.PneumaticHubCalibrations;
 import frc.robot.commands.Arm.ResetArmPosition;
 import frc.robot.commands.Elevator.ResetElevatorPosition;
 import frc.robot.commands.Swerve.DriveSwereAutoBalance;
-import frc.robot.commands.Swerve.DriveSwerve;
 import frc.robot.commands.Swerve.DriveSwerveOffsetCenter;
 import frc.robot.commands.Swerve.DriveSwerveTargetLock;
 import frc.robot.commands.Swerve.DriveSwerveThrottled;
@@ -189,6 +188,39 @@ public class RobotContainer {
     }
   });
 
+  Trigger inFloorState = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      SystemState currentSystemState = SystemStateHandler.getInstance().getSystemState();
+      return currentSystemState == SystemState.FLOOR_CONE
+          || currentSystemState == SystemState.FLOOR_CUBE;
+    }
+  });
+
+  Trigger inTopMidDoubleSubState = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      SystemState currentSystemState = SystemStateHandler.getInstance().getSystemState();
+      return currentSystemState == SystemState.TOP_CONE
+          || currentSystemState == SystemState.TOP_CUBE
+          || currentSystemState == SystemState.MID_CONE
+          || currentSystemState == SystemState.MID_CUBE
+          || currentSystemState == SystemState.DOUBLE_SUBSTATION_CONE
+          || currentSystemState == SystemState.DOUBLE_SUBSTATION_CUBE;
+    }
+  });
+
+  Trigger inHomeCarrySingleSubState = new Trigger(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() {
+      SystemState currentSystemState = SystemStateHandler.getInstance().getSystemState();
+      return currentSystemState == SystemState.HOME
+          || currentSystemState == SystemState.CARRY
+          || currentSystemState == SystemState.SINGLE_SUBSTATION_CONE
+          || currentSystemState == SystemState.SINGLE_SUBSTATION_CUBE;
+    }
+  });
+
   public RobotContainer() {
     configureAutoCommands();
     configureButtonBindings();
@@ -221,14 +253,14 @@ public class RobotContainer {
             drivetrain));
 
     rightBumper.whileTrue(
-      new DriveSwerveThrottled(
-       () -> .6,
-        SystemStateHandler.getInstance()::getRotationThrottle,
-        driverXboxController::getLeftY,
-        driverXboxController::getLeftX,
-        driverXboxController::getRightX,
-        true,
-        drivetrain));
+        new DriveSwerveThrottled(
+            () -> .6,
+            SystemStateHandler.getInstance()::getRotationThrottle,
+            driverXboxController::getLeftY,
+            driverXboxController::getLeftX,
+            driverXboxController::getRightX,
+            true,
+            drivetrain));
 
     pov.whileTrue(
         new DriveSwerveOffsetCenter(
@@ -270,17 +302,84 @@ public class RobotContainer {
     shareButton.onTrue(commandFactory.rotateArmUpCommand());
     optionsButton.onTrue(commandFactory.rotateArmDownCommand());
 
-    triangleButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CONE));
-    triangleButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CONE));
-    triangleButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CONE));
-    triangleButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CONE));
-    triangleButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CONE));
-    squareButton.and(l1Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.SINGLE_SUBSTATION_CUBE));
-    squareButton.and(l2Button).onTrue(commandFactory.changeSystemStateCommand(SystemState.DOUBLE_SUBSTATION_CUBE));
-    squareButton.and(upDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.TOP_CUBE));
-    squareButton.and(leftDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.MID_CUBE));
-    squareButton.and(downDpad).onTrue(commandFactory.changeSystemStateCommand(SystemState.FLOOR_CUBE));
-    crossButton.onTrue(commandFactory.changeSystemStateCommand(SystemState.CARRY));
+    /*
+     * Moving from floor to other locations
+     */
+    triangleButton.and(l2Button).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.DOUBLE_SUBSTATION_CONE));
+    squareButton.and(l2Button).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.DOUBLE_SUBSTATION_CUBE));
+    triangleButton.and(upDpad).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.TOP_CONE));
+    squareButton.and(upDpad).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.TOP_CUBE));
+    triangleButton.and(leftDpad).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.MID_CONE));
+    squareButton.and(leftDpad).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.MID_CUBE));
+    triangleButton.and(downDpad).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.FLOOR_CONE));
+    squareButton.and(downDpad).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.FLOOR_CUBE));
+    triangleButton.and(l1Button).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.SINGLE_SUBSTATION_CONE));
+    squareButton.and(l1Button).and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.SINGLE_SUBSTATION_CUBE));
+    crossButton.and(inFloorState)
+        .onFalse(commandFactory.handleFloor(SystemState.CARRY));
+
+    /*
+     * Moving from home, carry, or single substation to other locations
+     */
+    triangleButton.and(l2Button).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.DOUBLE_SUBSTATION_CONE));
+    squareButton.and(l2Button).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.DOUBLE_SUBSTATION_CUBE));
+    triangleButton.and(upDpad).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.TOP_CONE));
+    squareButton.and(upDpad).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.TOP_CUBE));
+    triangleButton.and(leftDpad).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.MID_CONE));
+    squareButton.and(leftDpad).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.MID_CUBE));
+    triangleButton.and(downDpad).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.FLOOR_CONE));
+    squareButton.and(downDpad).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.FLOOR_CUBE));
+    triangleButton.and(l1Button).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.SINGLE_SUBSTATION_CONE));
+    squareButton.and(l1Button).and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.SINGLE_SUBSTATION_CUBE));
+    crossButton.and(inHomeCarrySingleSubState)
+        .onFalse(commandFactory.handleHomeCarrySingleSub(SystemState.CARRY));
+
+    /*
+     * Moving from top, mid, or double substation to other locations
+     */
+    triangleButton.and(l2Button).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.DOUBLE_SUBSTATION_CONE));
+    squareButton.and(l2Button).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.DOUBLE_SUBSTATION_CUBE));
+    triangleButton.and(upDpad).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.TOP_CONE));
+    squareButton.and(upDpad).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.TOP_CUBE));
+    triangleButton.and(leftDpad).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.MID_CONE));
+    squareButton.and(leftDpad).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.MID_CUBE));
+    triangleButton.and(downDpad).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.FLOOR_CONE));
+    squareButton.and(downDpad).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.FLOOR_CUBE));
+    triangleButton.and(l1Button).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.SINGLE_SUBSTATION_CONE));
+    squareButton.and(l1Button).and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.SINGLE_SUBSTATION_CUBE));
+    crossButton.and(inTopMidDoubleSubState)
+        .onFalse(commandFactory.handleTopMidDoubleSub(SystemState.CARRY));
+
     circleButton.onTrue(commandFactory.extendArmBySystemStateCommand());
     circleButton.onFalse(commandFactory.retractArmBySystemStateCommand());
   }

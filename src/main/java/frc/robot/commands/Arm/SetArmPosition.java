@@ -5,12 +5,17 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.modules.SystemStateHandler.SystemState;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmPosition;
 
 public class SetArmPosition extends CommandBase {
   private final Arm cmd_arm;
   private final double cmd_positionInTicks;
+
+  public SetArmPosition(Arm elevator, SystemState systemState) {
+    this(elevator, systemState.armActionExtension.positionInTicks);
+  }
 
   public SetArmPosition(Arm arm, ArmPosition armPosition) {
     this(arm, armPosition.positionInTicks);
@@ -34,8 +39,8 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    cmd_arm.stop();
     cmd_arm.enableBrake();
+    cmd_arm.stop();
   }
 
   @Override

@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
 import frc.robot.commands.Arm.SetArmPosition;
+import frc.robot.commands.Arm.WaitForArm;
 import frc.robot.commands.Arm.ExtendArmBySystemState;
 import frc.robot.commands.Arm.RetractArmBySystemState;
 import frc.robot.commands.Arm.SetArmPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPercentOutput;
 import frc.robot.commands.Elevator.SetElevatorPosition;
+import frc.robot.commands.Elevator.WaitForElevator;
 import frc.robot.commands.EndEffector.SetEndEffectorSpeed;
 import frc.robot.commands.Swerve.FollowTrajectory;
 import frc.robot.commands.Swerve.TrackTarget;
@@ -61,6 +63,119 @@ public class CommandFactory {
                             new WaitCommand(0.04),
                             new SetElevatorPosition(elevator, systemState)));
         }
+    }
+
+    public Command handleHomeCarrySingleSub(SystemState requestedSystemState) {
+        switch (requestedSystemState) {
+            case TOP_CONE:
+            case TOP_CUBE:
+            case MID_CONE:
+            case MID_CUBE:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
+                return elevatorMotionArmDownArmMotion(requestedSystemState);
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+                return elevatorMotionArmMotionArmDown(requestedSystemState);
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
+            case CARRY:
+            case HOME:
+                return new SetElevatorPosition(elevator, requestedSystemState);
+            default:
+                return Commands.none();
+        }
+    }
+
+    public Command handleFloor(SystemState requestedSystemState) {
+        switch (requestedSystemState) {
+            case TOP_CONE:
+            case TOP_CUBE:
+            case MID_CONE:
+            case MID_CUBE:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
+                return elevatorMotionArmMotion(requestedSystemState);
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
+            case CARRY:
+            case HOME:
+                return elevatorMotionArmUpArmMotion(requestedSystemState);
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+                return new SetElevatorPosition(elevator, requestedSystemState);
+            default:
+                return Commands.none();
+        }
+    }
+
+    public Command handleTopMidDoubleSub(SystemState requestedSystemState) {
+        switch (requestedSystemState) {
+            case TOP_CONE:
+            case TOP_CUBE:
+            case MID_CONE:
+            case MID_CUBE:
+            case DOUBLE_SUBSTATION_CONE:
+            case DOUBLE_SUBSTATION_CUBE:
+            case FLOOR_CONE:
+            case FLOOR_CUBE:
+                return elevatorMotionArmMotion(requestedSystemState);
+            case SINGLE_SUBSTATION_CONE:
+            case SINGLE_SUBSTATION_CUBE:
+            case CARRY:
+            case HOME:
+                return elevatorMotionArmMotionArmUp(requestedSystemState);
+            default:
+                return Commands.none();
+        }
+    }
+
+    public Command elevatorMotionArmMotion(SystemState requestedSystemState) {
+        return Commands.parallel(
+                new SetElevatorPosition(elevator, requestedSystemState),
+                new SetArmPosition(arm, requestedSystemState.armActionExtension))
+                .withName("elevatorMotionArmMotion");
+    }
+
+    public Command elevatorMotionArmUpArmMotion(SystemState requestedSystemState) {
+        return Commands.parallel(
+                new SetElevatorPosition(elevator, requestedSystemState),
+                Commands.sequence(
+                        new RotateArmUp(arm),
+                        new SetArmPosition(arm, requestedSystemState.armBaseExtension)))
+                .withName("elevatorMotionArmUpArmMotion");
+    }
+
+    public Command elevatorMotionArmMotionArmUp(SystemState requestedSystemState) {
+        return Commands.parallel(
+                Commands.sequence(
+                        new WaitForArm(arm, requestedSystemState.armBaseExtension, 0.4),
+                        new SetElevatorPosition(elevator, requestedSystemState)),
+                Commands.sequence(
+                        new SetArmPosition(arm, requestedSystemState.armBaseExtension),
+                        //new WaitCommand(0.2),
+                        new RotateArmUp(arm)))
+                .withName("elevatorMotionArmMotionArmUp");
+    }
+
+    public Command elevatorMotionArmDownArmMotion(SystemState requestedSystemState) {
+        return Commands.parallel(
+                new SetElevatorPosition(elevator, requestedSystemState),
+                Commands.sequence(
+                        new WaitForElevator(elevator, requestedSystemState.elevatorPosition, 0.25),
+                        new RotateArmDown(arm),
+                        new WaitCommand(0.1),
+                        new SetArmPosition(arm, requestedSystemState.armBaseExtension)))
+                .withName("elevatorMotionArmDownArmMotion");
+    }
+
+    public Command elevatorMotionArmMotionArmDown(SystemState requestedSystemState) {
+        return Commands.parallel(
+                new SetElevatorPosition(elevator, requestedSystemState),
+                Commands.sequence(
+                        new SetArmPosition(arm, requestedSystemState.armBaseExtension),
+                        new RotateArmDown(arm)))
+                .withName("elevatorMotionArmMotionArmDown");
     }
 
     public Command rotateArmDownCommand() {
