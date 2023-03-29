@@ -73,8 +73,8 @@ public class SwerveModuleTalonFX {
     public SwerveModulePosition getPosition() {
         double wheelRadius = Units.inchesToMeters(2);
         double talonFXintegratedSensorResolution = 2048; 
-        double mk4iL1DriveRatio = 1 / 8.14; // Drive gear ratio for SES mk4i module
-        double RotationToDistanceMath = 2*Math.PI*wheelRadius/talonFXintegratedSensorResolution*mk4iL1DriveRatio;
+        double mk4iL2DriveRatio = 1 / 6.75; // Drive gear ratio for SES mk4i module
+        double RotationToDistanceMath = 2*Math.PI*wheelRadius/talonFXintegratedSensorResolution*mk4iL2DriveRatio;
         return new SwerveModulePosition(driveTalon.getSelectedSensorPosition() * RotationToDistanceMath, getFromHeading());
     }
     

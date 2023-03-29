@@ -64,17 +64,17 @@ public final class Constants {
      *      "https://www.swervedrivespecialties.com/products/mk4-swerve-module">MK4
      *      Swerve Module L1 - Standard </a>
      */
-    public static final double MAX_DRIVE_SPEED = 4.115;
+    public static final double MAX_DRIVE_SPEED = Units.feetToMeters(16.3);
 
     /**
      * @see MAX_DRIVE_SPEED
      */
-    public static final double MAX_AUTO_DRIVE_SPEED = 4.115;
+    public static final double MAX_AUTO_DRIVE_SPEED = Units.feetToMeters(16.3);
 
      /**
      * The acceleration of the swerve module.
      */
-    public static final double MAX_DRIVE_ACCELERATION = 3;
+    public static final double MAX_DRIVE_ACCELERATION = Units.feetToMeters(16.3) * 0.75;
 
     /**
      * The maxmimum angular velocity that the swerve module is capable of in
@@ -147,7 +147,7 @@ public final class Constants {
 
     public static final PIDGains DRIVE_TALON_VELOCITY_GAINS = new PIDGains(0.1, 0.0, 1, 0.0);
     public static final PIDGains TURNING_TALON_POSITION_GAINS = new PIDGains(0.5, 0.0, 5, 0.0);
-    public static final double METERS_PER_SECOND_TO_TALON_TICKS_CONVERSION_FACTOR = 5293;
+    public static final double METERS_PER_SECOND_TO_TALON_TICKS_CONVERSION_FACTOR = 18000 / MAX_DRIVE_SPEED;
     public static final double DEGRESS_TO_TALON_TICKS_CONVERSION_FACTOR = 4096 / 360;
   }
 }
