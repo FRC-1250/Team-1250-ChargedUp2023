@@ -22,16 +22,16 @@ public class Newarm {
     private final Solenoid airBrake;
     private final DoubleSolenoid angleToggle;
     private final PneumaticHub pneumaticHub;
-    private boolean reverseLocked = false;
-    private Timer reverseLockTimer = new Timer();
+    //private boolean reverseLocked = false;
+    //private Timer reverseLockTimer = new Timer();
 
     public Newarm(PneumaticHub sPneumaticHub) {
     pneumaticHub = sPneumaticHub;
     angleToggle = pneumaticHub.makeDoubleSolenoid(Constants.ArmCalibrations.ANGLE_SOLENOID_FORWARD_PORT, Constants.ArmCalibrations.ANGLE_SOLENOID_REVERSE_PORT);
     airBrake = pneumaticHub.makeSolenoid(Constants.ArmCalibrations.BRAKE_SOLENOID_PORT);
-    talon.setNeutralMode(NeutralMode.Brake);
-    talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    talon.setInverted(true);
+    //talon.setNeutralMode(NeutralMode.Brake);
+   // talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    //talon.setInverted(true);
 
         
 
