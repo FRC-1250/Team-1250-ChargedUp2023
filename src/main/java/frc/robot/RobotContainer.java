@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Newarm;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -39,11 +40,12 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator(pneumaticHub);
   private final EndEffector endEffector = new EndEffector();
   private final Arm arm = new Arm(pneumaticHub);
+  private final Newarm newarm = new Newarm(pneumaticHub);
 
   private final TrajectoryModule trajectoryModule = new TrajectoryModule();
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final CommandFactory commandFactory = new CommandFactory(arm, elevator, drivetrain, endEffector, limelight,
-      trajectoryModule);
+      trajectoryModule, newarm);
 
   private final XboxController driverXboxController = new XboxController(0);
   Trigger startButton = new Trigger(driverXboxController::getStartButton);
