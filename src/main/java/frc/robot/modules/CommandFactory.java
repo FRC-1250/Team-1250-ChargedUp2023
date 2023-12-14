@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
+import frc.robot.commands.Arm.RotateNewArmdown;
 import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.Arm.SetArmPositionBySystemState;
 import frc.robot.commands.Arm.SetArmPercentOutput;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Newarm;
 
 public class CommandFactory {
 
@@ -32,15 +34,17 @@ public class CommandFactory {
     private final EndEffector endEffector;
     private final Limelight limelight;
     private final TrajectoryModule trajectoryModule;
+    private final Newarm newarm; 
 
     public CommandFactory(Arm arm, Elevator elevator, Drivetrain drivetrain, EndEffector endEffector,
-            Limelight limelight, TrajectoryModule trajectoryModule) {
+            Limelight limelight, TrajectoryModule trajectoryModule, Newarm newarm) {
         this.arm = arm;
         this.elevator = elevator;
         this.drivetrain = drivetrain;
         this.endEffector = endEffector;
         this.limelight = limelight;
         this.trajectoryModule = trajectoryModule;
+        this.newarm = newarm;
     }
 
     public Command changeSystemStateCommand(SystemState systemState) {
@@ -75,6 +79,9 @@ public class CommandFactory {
         return new RotateArmDown(arm);
     }
 
+    public Command rotatenewarmdownCommand() {
+        return new RotateNewArmdown(newarm);
+    }
     public Command rotateArmUpCommand() {
         return new RotateArmUp(arm);
     }

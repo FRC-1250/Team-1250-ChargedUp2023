@@ -15,10 +15,11 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Arm.RotateArmDown;
 
 public class Newarm {
     
-    private final WPI_TalonFX talon = new WPI_TalonFX(Constants.ArmCalibrations.TALON_CAN_ID);
+    //private final WPI_TalonFX talon = new WPI_TalonFX(Constants.ArmCalibrations.TALON_CAN_ID);
     private final Solenoid airBrake;
     private final DoubleSolenoid angleToggle;
     private final PneumaticHub pneumaticHub;
@@ -36,5 +37,10 @@ public class Newarm {
         
 
     }
-    
+    public void rotateArmDown() {
+        angleToggle.set(DoubleSolenoid.Value.kForward);
+    }
+    public void rotateArmUp(){
+        angleToggle.set(DoubleSolenoid.Value.kReverse);
+    }
 }
