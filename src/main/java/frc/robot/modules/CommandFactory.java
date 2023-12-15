@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Arm.RotateArmDown;
 import frc.robot.commands.Arm.RotateArmUp;
+import frc.robot.commands.Arm.RotateNewArmUp;
 import frc.robot.commands.Arm.RotateNewArmdown;
 import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.Arm.SetArmPositionBySystemState;
@@ -86,6 +87,9 @@ public class CommandFactory {
         return new RotateArmUp(arm);
     }
 
+    public Command rotateNewArmUpCommand() {
+        return new RotateNewArmUp(newarm);
+    }
     public Command extendArmBySystemStateCommand() {
         return new SetArmPositionBySystemState(arm);
     }
